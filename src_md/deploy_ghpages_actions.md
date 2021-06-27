@@ -1,4 +1,4 @@
-<h1>Deploy project on GitHub Pages with GitHub Actions</h1>
+<h1>🚀 Deploy project on GitHub Pages with GitHub Actions</h1>
 
 ## Create GitHub Actions YAML file.
 
