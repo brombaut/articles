@@ -1,0 +1,42 @@
+<h1>
+Publish a TypeScript project to NPM
+</h1>
+<h2 id="add-publishing-related-scripts">Add publishing related scripts</h2>
+<p>Only take what you need form this (e.g., if you don’t have linting, you don’t need <code>preversion</code>). At a minimum, you should have <code>prepare</code>, <code>version</code>, and <code>postversion</code>.</p>
+<ul>
+<li><strong>prepare</strong> will run both BEFORE the package is packed and published, and on local npm install. Perfect for running building the code. Add this script to package.json</li>
+<li><strong>prepublishOnly</strong> will run BEFORE prepare and ONLY on npm publish. Here we will run our test and lint to make sure we don’t publish bad code</li>
+<li><strong>preversion</strong> will run before bumping a new package version. To be extra sure that we’re not bumping a version with bad code, why not run lint here as well?</li>
+<li><strong>version</strong> will run after a new version has been bumped. If your package has a git repository, like in our case, a commit and a new version-tag will be made every time you bump a new version. This command will run BEFORE the commit is made. One idea is to run the formatter here and so no ugly code will pass into the new version:</li>
+<li><strong>postversion</strong> will run after the commit has been made. A perfect place for pushing the commit as well as the tag.</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="er">//</span> <span class="er">...package.json</span> <span class="er">snippet</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;scripts&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;prepare&quot;</span> <span class="fu">:</span> <span class="st">&quot;npm run build&quot;</span><span class="fu">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;prepublishOnly&quot;</span> <span class="fu">:</span> <span class="st">&quot;npm test &amp;&amp; npm run lint&quot;</span><span class="fu">,</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;preversion&quot;</span> <span class="fu">:</span> <span class="st">&quot;npm run lint&quot;</span><span class="fu">,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;version&quot;</span> <span class="fu">:</span> <span class="st">&quot;npm run format &amp;&amp; git add -A src&quot;</span><span class="fu">,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;postversion&quot;</span> <span class="fu">:</span> <span class="st">&quot;git push &amp;&amp; git push --tags&quot;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h2 id="only-include-what-you-need-in-your-npm-package">Only include what you need in your npm package</h2>
+<p>Add the files attribute to package.json. This assumes your output build folder is <code>lib</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="er">//</span> <span class="er">...package.json</span> <span class="er">snippet</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;files&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;lib/**/*&quot;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h2 id="commit-and-push-to-git">Commit and push to git</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-A</span> <span class="kw">&amp;&amp;</span> <span class="fu">git</span> commit <span class="at">-m</span> <span class="st">&quot;Setup Package&quot;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div>
+<h2 id="publish-to-npm">Publish to NPM</h2>
+<p>First login in console</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> login</span></code></pre></div>
+<p>Then publish. If you are using scoped packages, you have to add the <code>--access public</code> flag.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> publish <span class="at">--access</span> public</span></code></pre></div>
+<h2 id="bump-version">Bump version</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> version patch</span></code></pre></div>
+<p>Our preversion, version, and postversion will run, create a new tag in git and push it to our remote repository. Now publish again.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> publish <span class="at">--access</span> public</span></code></pre></div>
