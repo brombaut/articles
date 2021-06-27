@@ -62,12 +62,21 @@ export class AuthoredArticlesProxy {
     console.info(`Reading existing authored articles from ${this._file}`);
     const rawData = fs.readFileSync(this._file, {encoding:'utf8', flag:'r'});
     const jsonData = JSON.parse(rawData);
-    this._authoredArticles = jsonData.authoredArticles as AuthoredArticle[];
+    const mapper = (dto: any): AuthoredArticle  => {
+      return new AuthoredArticle(
+        dto._id,
+        dto._title,
+        dto._createdAt,
+        dto._updatedAt,
+        dto._body,
+        dto._tags,
+        dto._show
+      )
+    };
+    this._authoredArticles = jsonData.authoredArticles.map(mapper);
   }
 
-  private syncRawArticle(rawArticle: RawArticle) {
-     // Only update updatedAt, body
-    
+  private syncRawArticle(rawArticle: RawArticle) {    
     const matchedExistingArticleIndex = this._authoredArticles.findIndex((aa: AuthoredArticle) => {
       // id is the file name of the original md file
       return aa.id === rawArticle.id;

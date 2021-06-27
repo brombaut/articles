@@ -15,6 +15,8 @@ npm init -y
 
 Set your package.json to look similar to the example below.
 
+Note the `main` and `types` attributes. Other things (like the npm `scripts`) depend on them
+
 ```JSON
 // package.json
 {
