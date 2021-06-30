@@ -178,7 +178,7 @@ export class AuthoredArticlesProxy {
 
   private writeJsonFile<T>(path: string, data: T[]): void {
     console.info(`Writing ${path}`);
-    const rawData = JSON.stringify(data);
+    const rawData = JSON.stringify(data, null, 2);
     fs.writeFileSync(path, rawData);
   }
 }
