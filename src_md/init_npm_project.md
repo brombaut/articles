@@ -1,5 +1,3 @@
-<h1>Initialize an NPM TypeScript project</h1>
-
 ## Initialize Project
 
 ```bash
@@ -48,7 +46,7 @@ Note the `main` and `types` attributes. Other things (like the npm `scripts`) de
 
 TypeScript has Implicit, Explicit, and Ambient types. Ambient types are types that get added to the global execution scope. Since we're using Node, it would be good if we could get type safety and auto-completion on the Node apis like `file`, `path`, `process`, etc. That's what installing the DefinitelyTyped type definition for Node will do.
 
-```
+```bash
 npm install typescript --save-dev
 npm install @types/node --save-dev
 npm install rimraf
@@ -68,14 +66,17 @@ tsc --init
 - **exclude**: We don’t want to transpile node_modules, neither tests since these are only used during development.
 
 ```JSON
-//  minimum tsconfig.json
-// if you use tsc --init, it will look different, but you should make sure to copy the "outDir", "include", and "exclude" attributes.
+// minimum tsconfig.json
+// if you use tsc --init, it will look different,
+// but you should make sure to copy the "outDir",
+// "include", and "exclude" attributes.
 {
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
     "declaration": true,
     "outDir": "./build",
+    "rootDir": "./src", 
     "strict": true
   },
   "include": ["src"],

@@ -1,5 +1,3 @@
-<h1>🚀 Deploy project on GitHub Pages with GitHub Actions</h1>
-
 ## Create GitHub Actions YAML file.
 
 Will use James Ives' github-pages-deploy-action
@@ -18,7 +16,10 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2.3.1
 
-      - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
+      - name: Install and Build 🔧 # This example project is built using 
+      # npm and outputs the result to the 'build' folder. Replace with 
+      # the commands required to build your project, or remove this step 
+      # entirely if your site is pre-built.
         run: |
           npm install
           npm run lint

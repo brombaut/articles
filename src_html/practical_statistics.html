@@ -1,0 +1,1315 @@
+<h1 id="practical-analysis-for-data-scientists">Practical Analysis for Data Scientists</h1>
+<p>Key term and ideas from the book.</p>
+<h1 id="chapter-1---exploratory-data-analysis">Chapter 1 - Exploratory Data Analysis</h1>
+<h2 id="data-types">Data Types</h2>
+<h3 id="key-terms">Key Terms</h3>
+<ul>
+<li><p><strong>Numeric</strong></p>
+<p>Data that is expressed on a numeric scale</p>
+<ul>
+<li><p><strong>Continuous</strong></p>
+<p>Data that can take on any value in an interval (Synonyms: interval, float, numeric)</p></li>
+<li><p><strong>Discrete</strong></p>
+<p>Data that can take on only integer values, such as counts. (Synonyms: integer, count)</p></li>
+</ul></li>
+<li><p><strong>Categorical</strong></p>
+<p>Data that can take on only a specific set of values representing a set of possible categories. (Synonyms: enum, enumerated, factors, nominal)</p>
+<ul>
+<li><p><strong>Binary</strong></p>
+<p>A special case of categorical data with just two categories of values, e.g., 0/1, true/false. (Synonyms: dichotomous, logical, indicator, boolean)</p></li>
+<li><p><strong>Ordinal</strong></p>
+<p>Categorical data that has an explicit ordering. (Synonym: ordered factor)</p></li>
+</ul></li>
+</ul>
+<h3 id="key-ideas">Key Ideas</h3>
+<ul>
+<li>Data is typically classified in software by type.</li>
+<li>Data types include numeric (continuous, discrete) and categorical (binary, ordinal).</li>
+<li>Data typing in software acts as a signal to the software on how to process the data.</li>
+</ul>
+<h2 id="rectangular-data">Rectangular Data</h2>
+<h3 id="key-terms-1">Key Terms</h3>
+<ul>
+<li><p><strong>Data frame</strong></p>
+<p>Rectangular data (like a spreadsheet) is the basic data structure for statistical and machine learning models.</p></li>
+<li><p><strong>Feature</strong></p>
+<p>A column within a table is commonly regerred to as a feature. (Synonyms: attribute, input, predictor, variable)</p></li>
+<li><p><strong>Outcome</strong></p>
+<p>Many data science projects involve predicting an outcome - often a yes/no outcome. The <em>features</em> are sometimes used to predict the <em>outcome</em> in an experiment or a study. (Synonyms: dependent variable, response, target, output)</p></li>
+<li><p><strong>Records</strong></p>
+<p>A row within a table is commonly referred to as a record. (Synonyms: case, example, instance obersvation pattern, sample)</p></li>
+</ul>
+<h3 id="key-ideas-1">Key Ideas</h3>
+<ul>
+<li>The basic data structure in data science is a rectangular matrix in which rows are records and columns are variables (features).</li>
+<li>Terminology can be confusing: there are a variety of synonyms arising from the different disciplines that contribute to data science (statistics, computer science, and IT).</li>
+</ul>
+<h2 id="estimates-of-location">Estimates of Location</h2>
+<h3 id="key-terms-2">Key Terms</h3>
+<ul>
+<li><p><strong>Mean</strong></p>
+<p>The sum of all values divided by the number of values. (Synonym: average)</p></li>
+<li><p><strong>Weighted Mean</strong></p>
+<p>The sum of all values times a weight divided by the sum of the weights. (Synonym: weighted average)</p></li>
+<li><p><strong>Median</strong></p>
+<p>The value sucht hat one-half of the data lies above and below. (Synonym: 50th percentile)</p></li>
+<li><p><strong>Percentile</strong></p>
+<p>The value such that P percent of the data lies below. (Synonym: quantile)</p></li>
+<li><p><strong>Weighted Median</strong></p>
+<p>The value such that one-half of the sum of the weights lies aboe and below the sorted data.</p></li>
+<li><p><strong>Trimmed Mean</strong></p>
+<p>The average of all values after dropping a fixed number of extreme values. (Synonym: truncated mean)</p></li>
+<li><p><strong>Robust</strong></p>
+<p>Not sensitive to extreme values. (Synonym: resistant)</p></li>
+<li><p><strong>Outlier</strong></p>
+<p>A data value that is very different from most of the data. (Synonym: extreme value)</p></li>
+</ul>
+<h3 id="key-ideas-2">Key Ideas</h3>
+<ul>
+<li>The basic metric for location is the mean, but it can be sensitive to extreme values (outliers).</li>
+<li>Other metrics (median, trimmed mean) are less sensitive to outliers and unusual distributions and hence are more robust.</li>
+</ul>
+<h2 id="variability-metrics">Variability Metrics</h2>
+<h3 id="key-terms-3">Key Terms</h3>
+<ul>
+<li><p><strong>Deviations</strong></p>
+<p>The difference between the observed values and the estimate of location. (Synonyms: errors, residuals)</p></li>
+<li><p><strong>Variance</strong></p>
+<p>The sum of squared deviations from the mean divided by <em>n-1</em> where <em>n</em> is the number of data values. (Synonym: mean-squared error)</p></li>
+<li><p><strong>Standard Deviation</strong></p>
+<p>The square root of the variance.</p></li>
+<li><p><strong>Mean Absolute Deviation</strong></p>
+<p>The mean of the absolute values of the deviations from the mean. (Synonyms: l1-norm, Manhattan norm)</p></li>
+<li><p><strong>Median Absolute deviation from the median</strong></p>
+<p>The median of the absolute values of the deviations from the median.</p></li>
+<li><p><strong>Range</strong></p>
+<p>The difference between the largest and the smallest values in the data set.</p></li>
+<li><p><strong>Order Statistics</strong></p>
+<p>Metrics based on the data values sorted from smallest to biggest. (Synonym: rank)</p></li>
+<li><p><strong>Percentile</strong></p>
+<p>The value such that P percent of the values take on this value or less and (100-P) percent take on this value or more. (Synonym: quantile)</p></li>
+<li><p><strong>Interquartile Range</strong></p>
+<p>The difference between the 75th percentile and the 25th percentile. (Synonym: IQR)</p></li>
+</ul>
+<h3 id="key-ideas-3">Key Ideas</h3>
+<ul>
+<li>Variance and standard deviation are the most widespread and routinely reported statistics of variability</li>
+<li>Both are sensitive to outliers.</li>
+<li>More robust metrics include mean absolute deviation, median absolute deviation from the median, and percentiles (quantiles)</li>
+</ul>
+<h2 id="exploring-the-distribution">Exploring the Distribution</h2>
+<h3 id="key-terms-4">Key Terms</h3>
+<ul>
+<li><p><strong>Boxplot</strong></p>
+<p>A plot introduced by Turkey as a quick way to visualize the distribution of data. (Synonym: box and whiskers plot)</p></li>
+<li><p><strong>Frequency Table</strong></p>
+<p>A tally of the count of numeric data values that fall into a set of intervals (bins)</p></li>
+<li><p><strong>Histogram</strong></p>
+<p>A plot of the frequency table with the bins on the x-axis and the count (or proportion) on the y-axis. While visually similar, bar charts should not be confused with histograms.</p></li>
+<li><p><strong>Density plot</strong></p>
+<p>A smoothed version of the histogram, often based on a <em>kernel density estimate</em>.</p></li>
+</ul>
+<h3 id="key-ideas-4">Key Ideas</h3>
+<ul>
+<li>A freqency histogram plots frequency counts on the y-axis and variable values on the x-axis: it gives a sense of the distribution of the data at a glance</li>
+<li>A frequency table is a tabular version of the frequency counts found in a histogram.</li>
+<li>A boxplot - with the top and bottom of the box at the 75th and 25th percentiles, respectively - also gives a quick sens of the distribution of the data; it is often used in side-by-side displays to compare distributions.</li>
+<li>A density plot is a smoothed version of a histogram; it requires a function to estimate a plot based on the data (multiple estimates are possible, of course)</li>
+</ul>
+<h2 id="exploring-categorical-data">Exploring Categorical Data</h2>
+<h3 id="key-terms-5">Key Terms</h3>
+<ul>
+<li><p><strong>Mode</strong></p>
+<p>The most commonly occuring category or value in a data set.</p></li>
+<li><p><strong>Expected value</strong></p>
+<p>When the categories can be associated with a numeric value, this gives an average value based on a category’s probability of occurence.</p></li>
+<li><p><strong>Bar Charts</strong></p>
+<p>The frequency or proportion for each category plotted as bars.</p></li>
+<li><p><strong>Pie Charts</strong></p>
+<p>The frequency or proportion for each category plotted as wedges in a pie.</p></li>
+</ul>
+<h3 id="key-ideas-5">Key Ideas</h3>
+<ul>
+<li>Categorical data is typically summed up in proportions and can be visualized in a bar chart.</li>
+<li>Categories might represent distinct things (apples and oranges, male and female), levels of a factor variable (low, medium, high), or numeric data that has been binned.</li>
+<li>Expected value is the sum of values times their probability of occurrence, often used to sum up factor variable lengths.</li>
+</ul>
+<h2 id="correlation">Correlation</h2>
+<h3 id="key-terms-6">Key Terms</h3>
+<ul>
+<li><p><strong>Correlation Coefficient</strong></p>
+<p>A metric that measures the extent to which numeric variables are associated with one another (ranges from -1 to +1).</p></li>
+<li><p><strong>Correlation Matrix</strong></p>
+<p>A table where the variables are shown on both rows and columns, and the cell values are the correlations between variables.</p></li>
+<li><p><strong>Scatterplot</strong></p>
+<p>A plot in which the x-axis is the value of one variable, and the y-axis the value of another.</p></li>
+</ul>
+<h3 id="key-ideas-6">Key Ideas</h3>
+<ul>
+<li>The correlation coefficient measures the extent to which two paired variables (e.g. height and weight for individuals) are associated with one another.</li>
+<li>When high values of v1 go with high values of v2, v1 and v2 are positively associated.</li>
+<li>When high values of v1 go with low values of v2, v1 and v2 are negatively associated.</li>
+<li>The correlation coefficient is a standardized metric, so that it always ranges from -1 (perfect negative correlation) to +1 (perfect positive correlation).</li>
+<li>A correlation coefficient of zero indicates no correlation, but be aware that random arrangements of data will produce both positive and negative values for the correlation coefficient just by chance.</li>
+</ul>
+<h2 id="exploring-two-or-more-variables">Exploring Two or more Variables</h2>
+<h3 id="key-terms-7">Key Terms</h3>
+<ul>
+<li><p><strong>Contingency Table</strong></p>
+<p>A tally of counts between two eor more categorical variables.</p></li>
+<li><p><strong>Hexagonal Binning</strong></p>
+<p>A plot of two numeric variables with the records binned into hexagons.</p></li>
+<li><p><strong>Contour Plot</strong></p>
+<p>A plot showing the density of two numeric variables like a topographical map.</p></li>
+<li><p><strong>Violin Plot</strong></p>
+<p>Similar to a boxplot but showing the density estimate.</p></li>
+</ul>
+<h3 id="key-ideas-7">Key Ideas</h3>
+<ul>
+<li>Hexagonal binning and contour plots are useful tools that permit graphical examination of two numeric variables at a time, without being overwhelmed by huge amounts of data.</li>
+<li>Contingency tables are the standard tool for looking at the counts of two categorical variables.</li>
+<li>Boxplots and violin plots allow you to plot a numeric variable against a categorical variable.</li>
+</ul>
+<h1 id="chapter-2---data-and-sampling-distributions">Chapter 2 - Data and Sampling Distributions</h1>
+<h2 id="random-sampling">Random Sampling</h2>
+<h3 id="key-terms-8">Key Terms</h3>
+<ul>
+<li><p><strong>Sample</strong></p>
+<ul>
+<li>A subset from a larger data set.</li>
+</ul></li>
+<li><p><strong>Population</strong></p>
+<ul>
+<li>The larger data set or idea of a data set.</li>
+</ul></li>
+<li><p><strong>N (n)</strong></p>
+<ul>
+<li>The size of the population (sample).</li>
+</ul></li>
+<li><p><strong>Random Sampling</strong></p>
+<ul>
+<li>Drawing elements into a sample at random.</li>
+</ul></li>
+<li><p><strong>Stratified Sampling</strong></p>
+<ul>
+<li>Dividing the population into strata and randomly sampling from each strata.</li>
+</ul></li>
+<li><p><strong>Stratum (pl., strata)</strong></p>
+<ul>
+<li>A homogeneous subgroup of a population with common characteristics.</li>
+</ul></li>
+<li><p><strong>Simple Random Sample</strong></p>
+<ul>
+<li>The sample that results from random sampling without stratifying the population.</li>
+</ul></li>
+<li><p><strong>Bias</strong></p>
+<ul>
+<li>Systematic error.</li>
+</ul></li>
+<li><p><strong>Sample Bias</strong></p>
+<ul>
+<li>A sample that misrepresents the population.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-8">Key Ideas</h3>
+<ul>
+<li>Even in the era of big data, random sampling remains an important arrow in the data scientist’s quiver.</li>
+<li>Bias occurs when measurements or observations are systematically in error because they are not representative of the full population.</li>
+<li>Data quality is often more important than data quantity, and random sampling can reduce bias and facilitate quality improvements that would otherwise be prohibitively expensive.</li>
+</ul>
+<h2 id="selection-bias">Selection Bias</h2>
+<h3 id="key-terms-9">Key Terms</h3>
+<ul>
+<li><p><strong>Selection Bias</strong></p>
+<ul>
+<li>Bias resulting from the way in which observations are selected.</li>
+</ul></li>
+<li><p><strong>Data Snooping</strong></p>
+<ul>
+<li>Extensive hunting through data in search of something interesting.</li>
+</ul></li>
+<li><p><strong>Vast search effect</strong></p>
+<ul>
+<li>Bias or nonreproducibility resulting from repeated data modeling, or modeling data with large numbers of predictor variables.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-9">Key Ideas</h3>
+<ul>
+<li>Specifying a hypothesis and then collecting data following randomization and random sampling principles ensures against bias.</li>
+<li>All other forms of data analysis run the risk of bias resulting from the data collection/analysis process (repeated running of models in data mining, data snooping in research, and after-the-fact selection of interesting events).</li>
+</ul>
+<h2 id="sampling-distribution">Sampling Distribution</h2>
+<h3 id="key-terms-10">Key Terms</h3>
+<ul>
+<li><p><strong>Sample Statistic</strong></p>
+<ul>
+<li>A metric calculated for a sample of data drawn from a larger population.</li>
+</ul></li>
+<li><p><strong>Data Distribution</strong></p>
+<ul>
+<li>The frequency distribution of individual values in a data set.</li>
+</ul></li>
+<li><p><strong>Sampling Distribution</strong></p>
+<ul>
+<li>The frequency distribution of a sample statistic over many samples or resamples.</li>
+</ul></li>
+<li><p><strong>Central Limit Theorem</strong></p>
+<ul>
+<li>The tendency of the sampling distribution to take on a normal shape as a sample size rises.</li>
+</ul></li>
+<li><p><strong>Standard Error</strong></p>
+<ul>
+<li>The variability (standard deviation) of a sample <em>statistic</em> over many values (not to be confused wuth <em>standard deviation</em>, which by itself, refers to variability of individual data <em>values</em>).</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-10">Key Ideas</h3>
+<ul>
+<li>The frequency distribution of a sample statistic tells us how that metric would turn out differently from sample to sample.</li>
+<li>This sampling distribution can be estimated via the bootstrap, or via formulas that rely on the central limit theorem.</li>
+<li>A key metric that sums up the variability of a sample statistic is its standard error.</li>
+</ul>
+<h2 id="the-bootstrap">The Bootstrap</h2>
+<h3 id="key-terms-11">Key Terms</h3>
+<ul>
+<li><p><strong>Bootstrap Sample</strong></p>
+<ul>
+<li>A sample taken with replacement from an observed data set.</li>
+</ul></li>
+<li><p><strong>Resampling</strong></p>
+<ul>
+<li>The process of taking repeated samples from observed data; includes both bootstrap and permutation (shuffling) procedures.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-11">Key Ideas</h3>
+<ul>
+<li>The bootstrap (sampling with replacement from a data set) is a powerful tool for assessing the variability of a sample statistic.</li>
+<li>The bootstrap can be applied in similar fashion in a wide variety of circumstances, without extensive study of mathematical approxumations to sampling distributions.</li>
+<li>It also allows us to estimate sampling distributions for statistics where no mathematical approximation has been developed.</li>
+<li>When applied to predictive models, aggregating multiple bootstrap sample predictions (bagging) outperforms the use of a single model.</li>
+</ul>
+<h2 id="confidence-intervals">Confidence Intervals</h2>
+<h3 id="key-terms-12">Key Terms</h3>
+<ul>
+<li><p><strong>Confidence Level</strong></p>
+<ul>
+<li>The percentage of confidence intervals, constructed in the same way from the same population, that are expected to contain the statistic of interest.</li>
+</ul></li>
+<li><p><strong>Interval Endpoints</strong></p>
+<ul>
+<li>The top and bottom of the confidence interval.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-12">Key Ideas</h3>
+<ul>
+<li>Confidence intervals are the typical way to present estimates as an interval range.</li>
+<li>The more data you have, the less variable a sample estimate will be.</li>
+<li>The lower the level of confidence you can tolerate, the narrower the confidence interval will be.</li>
+<li>The bootstrap is an effective way to construct confidence intervals.</li>
+</ul>
+<h2 id="normal-distribution">Normal Distribution</h2>
+<h3 id="key-terms-13">Key Terms</h3>
+<ul>
+<li><p><strong>Error</strong></p>
+<ul>
+<li>The difference between a data point and a predicted or average value.</li>
+</ul></li>
+<li><p><strong>Standardize</strong></p>
+<ul>
+<li>Subtract the mean and divide by the standard deviation.</li>
+</ul></li>
+<li><p><strong>z-score</strong></p>
+<ul>
+<li>The result of standardizing an individual data point.</li>
+</ul></li>
+<li><p><strong>Standard normal</strong></p>
+<ul>
+<li>A normal distribution with mean = 0 and standard deviation = 1.</li>
+</ul></li>
+<li><p><strong>QQ-Plot</strong></p>
+<ul>
+<li>A plot to visualize how close a sample distribution is to a specified distribution. e.g. normal distribution.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-13">Key Ideas</h3>
+<ul>
+<li>The normal distribution was essential to the historical development of statistics, as it permitted mathematical approximations of uncertainty and variability.</li>
+<li>While raw data is typically not normally distributed, errors often are, as are averages and totals in large samples.</li>
+<li>To convert data to <em>z-scores</em>, you subtract the mean of the data and divide by the standard deviation; you can then compare the data to a normal distribution.</li>
+</ul>
+<h2 id="long-tailed-distribution">Long-Tailed Distribution</h2>
+<h3 id="key-terms-14">Key Terms</h3>
+<ul>
+<li><p><strong>Tail</strong></p>
+<ul>
+<li>The long narrow portion of a frequency distribution, where relatively extreme values occure at low frequency.</li>
+</ul></li>
+<li><p><strong>Skew</strong></p>
+<ul>
+<li>Where one tail of a distribution is longer than the other.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-14">Key Ideas</h3>
+<ul>
+<li>Most data is not normally distributed.</li>
+<li>Assuming a normal distribution can lead to underestimates of extreme events (“black swans”).</li>
+</ul>
+<h2 id="students-t-distribution">Students t-Distribution</h2>
+<h3 id="key-terms-15">Key Terms</h3>
+<ul>
+<li><p><strong>n</strong></p>
+<ul>
+<li>Sample size.</li>
+</ul></li>
+<li><p><strong>Degrees of Freedom</strong></p>
+<ul>
+<li>A parameter that allows the t-distribution to adjust to different sample sizes, statistics, and numbers of groups.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-15">Key Ideas</h3>
+<ul>
+<li>The t-distribution is actually a family of distributions resembling the normal distribution but with thicker tails.</li>
+<li>The t-distribution is widely used as a reference basis for the distribution of sample means, differences between two sample means, regression parameters, and more.</li>
+</ul>
+<h2 id="binomial-distribution">Binomial Distribution</h2>
+<h3 id="key-terms-16">Key Terms</h3>
+<ul>
+<li><p><strong>Trial</strong></p>
+<ul>
+<li>An event with a discrete outcome (e.g. a coin flip).</li>
+</ul></li>
+<li><p><strong>Success</strong></p>
+<ul>
+<li>The outcome of interest for a trial. (Synonym: “1” as opposed to “0”)</li>
+</ul></li>
+<li><p><strong>Binomial</strong></p>
+<ul>
+<li>Having two outcomes.</li>
+</ul></li>
+<li><p><strong>Binomial Trial</strong></p>
+<ul>
+<li>A trial with two outcomes. (Synonym: Bernoulli trial)</li>
+</ul></li>
+<li><p><strong>Binomial Distribution</strong></p>
+<ul>
+<li>Distribution of number of successes in <em>x</em> trials. (Synonym: Bernoulli distribution).</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-16">Key Ideas</h3>
+<ul>
+<li>Binamial outcomes are important to model, since they represent, among other things, fundamental decisions (buy or don’t buy, click or don’t click, survive or die, etc.).</li>
+<li>A binomial trial is an experiment with two possible outcomes: one with probability <em>p</em> and the other with probability <em>1 - p</em>.</li>
+<li>With large <em>n</em>, and provided <em>p</em> is not too close to 0 or 1, the binomial distribution can be approximated by the normal distribution.</li>
+</ul>
+<h2 id="chi-square-distribution">Chi-Square Distribution</h2>
+<h3 id="key-ideas-17">Key Ideas</h3>
+<ul>
+<li>The chi-square distribution is typically concerned with counts of subjects or items falling into categories.</li>
+<li>The chi-square statistic measures the extent of departure from what you would expect in a null model.</li>
+</ul>
+<h2 id="f-distribution">F-Distribution</h2>
+<h3 id="key-ideas-18">Key Ideas</h3>
+<ul>
+<li>The F-distribution is used with experiments and linear models involving measured data.</li>
+<li>The F-statistic compares variation due to factors of interest to overall variation.</li>
+</ul>
+<h2 id="poisson-and-related-distributions">Poisson and Related Distributions</h2>
+<h3 id="key-terms-17">Key Terms</h3>
+<ul>
+<li><p><strong>Lambda</strong></p>
+<ul>
+<li>The rate (per unit of time or space) at which events occur.</li>
+</ul></li>
+<li><p><strong>Poisson Distribution</strong></p>
+<ul>
+<li>The frequency distribution of the number of events in sampled units of time or space.</li>
+</ul></li>
+<li><p><strong>Exponential Distribution</strong></p>
+<ul>
+<li>The frequency distribution of the time or distance from one event to the next event.</li>
+</ul></li>
+<li><p><strong>Weibull Distribution</strong></p>
+<ul>
+<li>A generalized version of the exponential distribution in which the event rate is allowed to shift over time.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-19">Key Ideas</h3>
+<ul>
+<li>For events that occur at a constant rate, the number of events per unit time or space can be modeled as a Poisson distribution.</li>
+<li>You can also model the time or distance between one event and the next as an exponential distribution.</li>
+<li>A changing event rate over time (e.g., an increasing probability of device failure) can be modeled with the Weibull distribution.</li>
+</ul>
+<h1 id="chapter-3---statistical-experiments-and-significance-testing">Chapter 3 - Statistical Experiments and Significance Testing</h1>
+<h2 id="ab-testiing">A/B Testiing</h2>
+<h3 id="key-terms-18">Key Terms</h3>
+<ul>
+<li><p><strong>Treatment</strong></p>
+<ul>
+<li>Something (drug, price, web headline) to which a subject is exposed.</li>
+</ul></li>
+<li><p><strong>Treatment Group</strong></p>
+<ul>
+<li>A group of subjects exposed to a specific treatment.</li>
+</ul></li>
+<li><p><strong>Control Group</strong></p>
+<ul>
+<li>A group of subjects exposed to no (or standard) treatment.</li>
+</ul></li>
+<li><p><strong>Randomization</strong></p>
+<ul>
+<li>The process of randomly assigning subjects to treatment.</li>
+</ul></li>
+<li><p><strong>Subjects</strong></p>
+<ul>
+<li>The items (web visitors, patients, etc.) that are exposed to treatment.</li>
+</ul></li>
+<li><p><strong>Test Statistics</strong></p>
+<ul>
+<li>The metric used to measure the effect of the treatment.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-20">Key Ideas</h3>
+<ul>
+<li>Subjects are assigned to two (or more) groups that are treated exactly alike, except that the treatment under study differs from one group to another.</li>
+<li>Ideally, subjects are assigned randomly to the groups.</li>
+</ul>
+<h2 id="hypothesis-tests">Hypothesis Tests</h2>
+<h3 id="key-terms-19">Key Terms</h3>
+<ul>
+<li><p><strong>Null hypothesis</strong></p>
+<ul>
+<li>The hypothesis that chance is to blame.</li>
+</ul></li>
+<li><p><strong>Alternative hypothesis</strong></p>
+<ul>
+<li>Counterpoint to the null (what you hope to prove).</li>
+</ul></li>
+<li><p><strong>One-way test</strong></p>
+<ul>
+<li>Hypothesis test that counts chance results only in one direction.</li>
+</ul></li>
+<li><p><strong>Two-way test</strong></p>
+<ul>
+<li>Hypothesis test that counts chance results in two directions.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-21">Key Ideas</h3>
+<ul>
+<li>A null hypothesis is a logical contruct embodying the notion that nothing special gas gappened, and any effect you observe is due to random chance.</li>
+<li>The hypothesis test assumes that the null hypothesis is true, creates a “null model” (a probability model), and tests whether the effect you observe is a reasonable outcome of that model.</li>
+</ul>
+<h2 id="resampling">Resampling</h2>
+<h3 id="key-terms-20">Key Terms</h3>
+<ul>
+<li><p><strong>Permutation Test</strong></p>
+<ul>
+<li>The procedure of combining two or more samples together and randomly (or exhaustively) reallocating the observations to resamples. (Synonyms: Randomization test, random permutation test, exact test).</li>
+</ul></li>
+<li><p><strong>Resampling</strong></p>
+<ul>
+<li>Drawing additionsl samples (“resamples”) from an observed data set.</li>
+</ul></li>
+<li><p><strong>With or without replacement</strong></p>
+<ul>
+<li>In sampling, whether or not an item is returned to the sample before the next draw.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-22">Key Ideas</h3>
+<ul>
+<li>In a permutation test, multiple samples are combined and then shuffled.</li>
+<li>The shuffled values are then divided into resamples, and the statistic of interest is calculated.</li>
+<li>This process is then repeated, and the resampled statistic is tabulated.</li>
+<li>Comparing the observed value of the statistic to the resampled distribution allows you to judge whether an observed difference between samples might occur by chance.</li>
+</ul>
+<h2 id="statistical-significant-and-p-values">Statistical Significant and p-Values</h2>
+<h3 id="key-terms-21">Key Terms</h3>
+<ul>
+<li><p><strong>p-value</strong></p>
+<ul>
+<li>Given a chance model that embodies the null hypothesis, the p-value is the probability of obtaining results as unusual or extreme as the observed results.</li>
+</ul></li>
+<li><p><strong>Alpha</strong></p>
+<ul>
+<li>The probability threshold of “unusualness” that chance results must surpass for actual outcomes to be deemed statistically significant.</li>
+</ul></li>
+<li><p><strong>Type 1 error</strong></p>
+<ul>
+<li>Mistakenly concluding an effect is real (when it is due to chance).</li>
+</ul></li>
+<li><p><strong>Type 2 error</strong></p>
+<ul>
+<li>Mistakenly concluding an effect is due to chance (when it is real).</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-23">Key Ideas</h3>
+<ul>
+<li>Significant tests are used to determine whether an observed effect is within the range of chance variation for a null hypothesis.</li>
+<li>The p-value is the probability that results as extreme as the observed results might occur, given a null hypothesis model.</li>
+<li>The alpha value is the threshold of “unusualness” in a null hypothesis chance model.</li>
+<li>Significance testing has been much more relevant for formal reporting of research than for data science (but has been fading recently, even for the former).</li>
+</ul>
+<h2 id="t-tests">t-Tests</h2>
+<h3 id="key-terms-22">Key Terms</h3>
+<ul>
+<li><p><strong>Test statistic</strong></p>
+<ul>
+<li>A metric for the difference or effect of interest.</li>
+</ul></li>
+<li><p><strong>t-statistic</strong></p>
+<ul>
+<li>A standardized version of common test statistic such as means.</li>
+</ul></li>
+<li><p><strong>t-distribution</strong></p>
+<ul>
+<li>A reference distribution (in this case derived from the null hypothesis), to which the observed t-statistic can be compared.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-24">Key Ideas</h3>
+<ul>
+<li>Before the advent of computers, resampling tests were not practical, and statisticians used standard reference distributions.</li>
+<li>A test statistic could then be standardized and compared to the reference distribution.</li>
+<li>One such widely used standardized statistic is the t-statistic.</li>
+</ul>
+<h2 id="multiple-testing">Multiple Testing</h2>
+<h3 id="key-terms-23">Key Terms</h3>
+<ul>
+<li><p><strong>Type 1 error</strong></p>
+<ul>
+<li>Mistakenly concluding that an effect is statistically significant.</li>
+</ul></li>
+<li><p><strong>False recovery rate</strong></p>
+<ul>
+<li>Across multiple tests, the rate of making a Type 1 error.</li>
+</ul></li>
+<li><p><strong>Alpha inflation</strong></p>
+<ul>
+<li>The multiple testing phenomenon, in whic alpha, the probability of making a Type 1 error, increases as you conduct more tests.</li>
+</ul></li>
+<li><p><strong>Adjustment of p-values</strong></p>
+<ul>
+<li>Accounting for doing multiple tests on the same data.</li>
+</ul></li>
+<li><p><strong>Overfitting</strong></p>
+<ul>
+<li>Fitting the noise.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-25">Key Ideas</h3>
+<ul>
+<li>Multiplicity in a research study or data mining project (multiple comparisons, many variables, many models, etc.) increase the risk of concluding that something is significant just by chance.</li>
+<li>For situations involving multiple statistical comparisons (i.e. multiple tests of significant), there are statistical adjustment procedures.</li>
+<li>In a data mining situation, use of a holdout sample with labeled outcome variables can help avoid misleading results.</li>
+</ul>
+<h2 id="degrees-of-freedom">Degrees of Freedom</h2>
+<h3 id="key-terms-24">Key Terms</h3>
+<ul>
+<li><p><strong>n or sample size</strong></p>
+<ul>
+<li>The number of observations (also called rows or records) in the data.</li>
+</ul></li>
+<li><p><strong>d.f.</strong></p>
+<ul>
+<li>Degrees of freedom.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-26">Key Ideas</h3>
+<ul>
+<li>The number of degrees of freedom (d.f.) forms part of the calculation to standardize test statistics so they can be compared to reference distributions (t-distributions, F-distributions, etc.).</li>
+<li>The conecpt of degrees of freedom lies behind factoring of categorical variables into n - 1 indicator or dummy variables when doing a regression (to avoid multicollinearity).</li>
+</ul>
+<h2 id="anova-analysis-of-variance">ANOVA (Analysis of Variance)</h2>
+<h3 id="key-terms-25">Key Terms</h3>
+<ul>
+<li><p><strong>Pairwise comparison</strong></p>
+<ul>
+<li>A hypothesis test (e.g. of means) between two groups among multiple groups.</li>
+</ul></li>
+<li><p><strong>Omnibus test</strong></p>
+<ul>
+<li>A single hypothesis test of the overall variance among multiple group means.</li>
+</ul></li>
+<li><p><strong>Decomposition of variance</strong></p>
+<ul>
+<li>Separation of components contributing to an individual value (e.g. from the overall average, from a treatment mean, and from a residual error).</li>
+</ul></li>
+<li><p><strong>F-statistic</strong></p>
+<ul>
+<li>A standardized statistic that measures the extent to which differences among group means exceed what might be expected in a chance model.</li>
+</ul></li>
+<li><p><strong>SS</strong></p>
+<ul>
+<li>“Sum of squares”, referring to deviations from some average value.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-27">Key Ideas</h3>
+<ul>
+<li>ANOVA is a statistical procedure for analysing the results of an experiment with multiple groups.</li>
+<li>It is the extension of similar procedures for the A/B test, used to assess whether the overall variation among groups is within the range of chance variation.</li>
+<li>A useful outcome of ANOVA is the identification of variance components associated with group treatments, interaction effects, and errors</li>
+</ul>
+<h2 id="chi-square-test">Chi-Square test</h2>
+<h3 id="key-terms-26">Key Terms</h3>
+<ul>
+<li><p><strong>Chi-square statistic</strong></p>
+<ul>
+<li>A measure of the exten to which some observed data departs from expectation.</li>
+</ul></li>
+<li><p><strong>Expectation or expected</strong></p>
+<ul>
+<li>How we would expect the data to turn out under some assumption, typically the null hypothesis.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-28">Key Ideas</h3>
+<ul>
+<li>A common procedure in statistics is to test whether observed data counts are consistent with an assumption of independence (e.g., propensity to buy a particular item is independent of gender).</li>
+<li>The chi-square distribution is the reference distribution (which embodies the assumption of independence) to which the observed calculate chi-square statistic must be compared.</li>
+</ul>
+<h2 id="multi-arm-bandits">Multi-Arm Bandits</h2>
+<h3 id="key-terms-27">Key Terms</h3>
+<ul>
+<li><p><strong>Multi-arm bandit</strong></p>
+<ul>
+<li>An imaginary slot machine with multiple arms for the customer to choose from, each with different payoffs, here taken to be an analogy for a multitreatment experiment.</li>
+</ul></li>
+<li><p><strong>Arm</strong></p>
+<ul>
+<li>A treatment in an experiment (e.g., “headline A in a web test”).</li>
+</ul></li>
+<li><p><strong>Win</strong></p>
+<ul>
+<li>The experimental analog of a win at the slot machine (e.g., “customer clicks on the link”).</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-29">Key Ideas</h3>
+<ul>
+<li>Traditional A/B tests envision a random sampling process, which can lead to excessive exposure to the inferior treatment.</li>
+<li>Multi-arm bandits, in contrast, alter the sampling process to incorporate information learned during the experiment and reduce the frequency of the inferior treatment.</li>
+<li>They also facilitate efficient treatment of more than two treatments.</li>
+<li>There are different algorithms for shifting sampling probability away from the inferior treatment(s) and to the p(presumed) superior one.</li>
+</ul>
+<h2 id="power-and-sample-size">Power and Sample Size</h2>
+<h3 id="key-terms-28">Key Terms</h3>
+<ul>
+<li><p><strong>Effect Size</strong></p>
+<ul>
+<li>The minimum size of the effect that you hope to be able to detect in a statistical test, such as “20% improvement in click rates”.</li>
+</ul></li>
+<li><p><strong>Power</strong></p>
+<ul>
+<li>The probability of detecting a given effect size with a given sample size.</li>
+</ul></li>
+<li><p><strong>Significance level</strong></p>
+<ul>
+<li>The statistical significance level at which the test will be conducted.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-30">Key Ideas</h3>
+<ul>
+<li>Finding out how big a sample size you need requires thinking ahead to the statistical test you plan to conduct.</li>
+<li>You must specify the minimum size of the effect that you want to detect.</li>
+<li>You must also specify the required probability of detecting that effect size (power).</li>
+<li>Finally, you must specify the significance level (alpha) at which the test will be conducted.</li>
+</ul>
+<h1 id="chapter-4---regression-and-prediction">Chapter 4 - Regression and Prediction</h1>
+<h2 id="simple-linear-regression">Simple Linear Regression</h2>
+<h3 id="key-terms-29">Key Terms</h3>
+<ul>
+<li><p><strong>Response</strong></p>
+<ul>
+<li>The variable we are trying to predict. (Synonys: dependent variable, Y variable, target, outcome)</li>
+</ul></li>
+<li><p><strong>Independent Variable</strong></p>
+<ul>
+<li>The variable used to predict the response. (Synonyms: X variable, feature, attribute, predictor)</li>
+</ul></li>
+<li><p><strong>Record</strong></p>
+<ul>
+<li>The vector of predictor and outcome values for a specific individual or case. (Synonym: row, case, instance, example)</li>
+</ul></li>
+<li><p><strong>Intercept</strong></p>
+<ul>
+<li>The intercept of the regression line - that is, the predicted value when X = 0.</li>
+</ul></li>
+<li><p><strong>Regression coefficient</strong></p>
+<ul>
+<li>The slope of the regression line. (Synonyms: Parameter estimates, weights)</li>
+</ul></li>
+<li><p><strong>Fitted Values</strong></p>
+<ul>
+<li>The estimates obtained from the regression line. (Synonym: predicted values)</li>
+</ul></li>
+<li><p><strong>Residuals</strong></p>
+<ul>
+<li>The difference between the observed values and the fitted values. (Synonym: errors)</li>
+</ul></li>
+<li><p><strong>Least Squares</strong></p>
+<ul>
+<li>The method of fitting a regression by minimizing the sum of squared residuals. (Synonyms: ordinary least squares, OLS)</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-31">Key Ideas</h3>
+<ul>
+<li>The regression equation models the relationship between a response variable Y and a predictor variable X as a line.</li>
+<li>A regression model yields fitted values and residuals - predictions of the response and the errors of the predictions.</li>
+<li>Regression models are typically fit by the method of least squares.</li>
+<li>Regression is used both for prediction and explanation.</li>
+</ul>
+<h2 id="multiple-linear-regression">Multiple Linear Regression</h2>
+<h3 id="key-terms-30">Key Terms</h3>
+<ul>
+<li><p><strong>Root mean square error</strong></p>
+<ul>
+<li>The square root of the average squared error of the regression (this is the most widely used metric to compare regression models). (Synonym: RMSE)</li>
+</ul></li>
+<li><p><strong>Residual standard error</strong></p>
+<ul>
+<li>The same as the root mean squared error, but adjusted for degrees of freedom. (Synonym: RSE)</li>
+</ul></li>
+<li><p><strong>R-squared</strong></p>
+<ul>
+<li>The proportion of variance explained by the model, from 0 to 1. (Synonym: coefficient of determination)</li>
+</ul></li>
+<li><p><strong>t-statistic</strong></p>
+<ul>
+<li>The coefficient for a predictor, divided by the standard error of the coefficient, giving a metric to compare the importance of variables in the model.</li>
+</ul></li>
+<li><p><strong>Weighted regression</strong></p>
+<ul>
+<li>Regression with the records having different weights.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-32">Key Ideas</h3>
+<ul>
+<li>Multiple linear regression models the relationship between a response variable Y and multiple predictor variables X1 … Xp.</li>
+<li>The most important metrics to evaluate a model are root mean squared error (RMSE) and R-squared (R^2).</li>
+<li>The standard error of the coefficients can be used to measure the reliability of a variable’s contribution to a model.</li>
+<li>Stepwise regression is a way to automatically determine which variables should be included in the model.</li>
+<li>Weighted regression is used to give certain records more or less weight in fitting the equation.</li>
+</ul>
+<h2 id="prediction-using-regression">Prediction Using Regression</h2>
+<h3 id="key-terms-31">Key Terms</h3>
+<ul>
+<li><p><strong>Prediction Interval</strong></p>
+<ul>
+<li>An uncertainty interval around an individual predicted value.</li>
+</ul></li>
+<li><p><strong>Extrapolation</strong></p>
+<ul>
+<li>Extension of a model beyond the range of the data used to fit it.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-33">Key Ideas</h3>
+<ul>
+<li>Extrapolation beyond the range of the data can lead to error.</li>
+<li>Confidence intervals quantify uncertainty around regression coefficients.</li>
+<li>Prediction intervals quantify uncertainty in individual predictions.</li>
+<li>Most software, R included, will produce prediction and confidence intervals in default or specified output, using formulas.</li>
+<li>The bootstrap can also be used to produce prediction and confidence intervals; the interpretation and idea are the same.</li>
+</ul>
+<h2 id="factor-variables">Factor Variables</h2>
+<h3 id="key-terms-32">Key Terms</h3>
+<ul>
+<li><p><strong>Dummy Variables</strong></p>
+<ul>
+<li>Binary 0-1 variables derived by recording factor data for use in regression and other models.</li>
+</ul></li>
+<li><p><strong>Reference coding</strong></p>
+<ul>
+<li>The most common type of coding used by statisticians, in which one level of a factor is used as a reference and other factors are compared to that level. (Synonym: treatment coding)</li>
+</ul></li>
+<li><p><strong>One hot encoder</strong></p>
+<ul>
+<li>A common type of coding used in the machine learning community in which all factor levels are retained. While useful for certain machine learning algorithms, this approach is not appropriate for multiple linear regression.</li>
+</ul></li>
+<li><p><strong>Deviation coding</strong></p>
+<ul>
+<li>A type of coding that compares each level against the overall mean as opposed to the reference level. (Synonym: sum contrast)</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-34">Key Ideas</h3>
+<ul>
+<li>Factor variables need to be converted into numeric variables for us in a regression.</li>
+<li>The most common method to encode a factor variable with P distinct values is to represent them using P - 1 dummy variables.</li>
+<li>A factor variable with many levels, even in very big data sets, may need to be consolidated into a variable with fewer levels.</li>
+<li>Some factors have levels that are ordered and can be represented as a single numeric variable.</li>
+</ul>
+<h2 id="interpreting-the-regression-equation">Interpreting the Regression Equation</h2>
+<h3 id="key-terms-33">Key Terms</h3>
+<ul>
+<li><p><strong>Correlated Variables</strong></p>
+<ul>
+<li>When the predictor variables are highly correlated, it is difficult to interpret the individual coefficients.</li>
+</ul></li>
+<li><p><strong>Multicollinearity</strong></p>
+<ul>
+<li>When the predictor variables have perfect, or near perfect, correlation, the regression can be unstable or impossible to compute. (Synonym: collinearity)</li>
+</ul></li>
+<li><p><strong>Confounding Variables</strong></p>
+<ul>
+<li>An important predictor that, when omitted, leads to spurious relationships in a regression equation.</li>
+</ul></li>
+<li><p><strong>Main Effects</strong></p>
+<ul>
+<li>The relationship between a predictor and the outcome variable, independent of other variables.</li>
+</ul></li>
+<li><p><strong>Interactions</strong></p>
+<ul>
+<li>An interdependent relationship between two or more predictors and the response.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-35">Key Ideas</h3>
+<ul>
+<li>Because of correlation between predictors, care must be taken in the interpretation of the coefficients in multiple linear regression.</li>
+<li>Multicollinearity can cause numerical instability in fitting the regression equation.</li>
+<li>A confounding variable is an important predictor that is omitted from a model and can lead to a regression equation with spurious relationships.</li>
+<li>An interaction term between two variables is needed if the relationship between the variables and the response is interdependent.</li>
+</ul>
+<h2 id="regression-diagnostics">Regression Diagnostics</h2>
+<h3 id="key-terms-34">Key Terms</h3>
+<ul>
+<li><p><strong>Standardized Residuals</strong></p>
+<ul>
+<li>Residuals divided by the standard error of the residuals.</li>
+</ul></li>
+<li><p><strong>Outliers</strong></p>
+<ul>
+<li>Records (or outcome values) that are distant from the rest of the data (or the predicted outcome).</li>
+</ul></li>
+<li><p><strong>Influential Value</strong></p>
+<ul>
+<li>A value or record whose presence or absence makes a big difference in the regression equation.</li>
+</ul></li>
+<li><p><strong>Leverage</strong></p>
+<ul>
+<li>The degree of influence that a single record has on a regression equation. (Synonym: hat-value)</li>
+</ul></li>
+<li><p><strong>Non-normal residuals</strong></p>
+<ul>
+<li>Non-normally distributed residuals can invalidate some technical requirements of regression but are usually not a concern in data science.</li>
+</ul></li>
+<li><p><strong>Heteroskedasticity</strong></p>
+<ul>
+<li>When some ranges of the outcome experience residuals with higher variance (may indicate a predictor missing from the equation).</li>
+</ul></li>
+<li><p><strong>Partial Residual Plots</strong></p>
+<ul>
+<li>A diagnostic plot to illuminate the relationship between the outcome variable and a single predictor. (Synonym: added variable plot)</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-36">Key Ideas</h3>
+<ul>
+<li>While outliers can cause problems for small data sets, the primary interest with outliers it to identify problems with the data, or locate anomalies.</li>
+<li>Single records (including regression outliers) can have a big influence on a regression equation with small data, but this effect washes out in big data.</li>
+<li>If the regression model is used for formal inference (p-values and the like), then certain assumptions about the distribution of the residuals should be checked. In general, however, the distribution of redisuals is not critical in data science.</li>
+<li>The partial residuals plot can be used to qualitatively assess the fit for each regression term, possibly leading to alternative model specifications.</li>
+</ul>
+<h2 id="nonlinear-regression">Nonlinear Regression</h2>
+<h3 id="key-terms-35">Key Terms</h3>
+<ul>
+<li><p><strong>Polynomial regression</strong></p>
+<ul>
+<li>Adds polynomial terms (squares, cubes, etc.) to a regression.</li>
+</ul></li>
+<li><p><strong>Spline regression</strong></p>
+<ul>
+<li>Fitting a smooth curve with a series of polynomial segments.</li>
+</ul></li>
+<li><p><strong>Knots</strong></p>
+<ul>
+<li>Values that separate spline segments.</li>
+</ul></li>
+<li><p><strong>Generalized additive models</strong></p>
+<ul>
+<li>Spline models with automated selection of knots. (Synonym: GAM)</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-37">Key Ideas</h3>
+<ul>
+<li>Outliers in regression are records with a large residual.</li>
+<li>Multicollinearity can cause numerical instability in fitting the regression equation.</li>
+<li>A confounding variable is an important predictor that is omitted from a model and can lead to a regression equation with spurious relationships.</li>
+<li>An interaction term between two bariables is needed if the effect of one variable depends on the level or magnitude of the other.</li>
+<li>Polynomial regression can fit nonlinear relationships between predictos and the outcome variable.</li>
+<li>Splines are series of polynomial segments strung together, joining at knots.</li>
+<li>We can automate the process of specifying the knots in splines using generalized additive models (GAM).</li>
+</ul>
+<h1 id="chapter-5---classification">Chapter 5 - Classification</h1>
+<h2 id="naive-bayes">Naive Bayes</h2>
+<h3 id="key-terms-36">Key Terms</h3>
+<ul>
+<li><p><strong>Conditional Probability</strong></p>
+<ul>
+<li>The probability of observing some event (say, x = i) given some other event (say, Y = i), written as P(X<sub>i</sub>|Y<sub>i</sub>)</li>
+</ul></li>
+<li><p><strong>Posterior Probability</strong></p>
+<ul>
+<li>The probability of an outcome after the predictor information has been incorporated (in contrast to the <em>prior probability</em> of outcomes, not taking predictor information into account).</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-38">Key Ideas</h3>
+<ul>
+<li>Naive Bayes works with categorical (factor) predictors and outcomes.</li>
+<li>It asks, “Within each outcome category, which predictor categories are most probable?”</li>
+<li>That information is then inverted to estimate probabilities of outcome categories, given predictor values.</li>
+</ul>
+<h2 id="discriminant-analysis">Discriminant Analysis</h2>
+<h3 id="key-terms-37">Key Terms</h3>
+<ul>
+<li><p><strong>Covariance</strong></p>
+<ul>
+<li>A measure of the extent to which one variable varies in concert with another (i.e., similar magnitude and direction).</li>
+</ul></li>
+<li><p><strong>Discriminant function</strong></p>
+<ul>
+<li>The function that, when applied to the predictor variables, maximizes the separation of the classes.</li>
+</ul></li>
+<li><p><strong>Discriminant weights</strong></p>
+<ul>
+<li>The scores that result from the applications of the discriminant function and are used to estimate probabilities belonging to one class or another.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-39">Key Ideas</h3>
+<ul>
+<li>Discriminant analysis works with continuous or categorical predictors, as well as with categorical outcomes.</li>
+<li>Using the covariance matrix, it calculates a <em>linear discriminant function</em>, which is used to distinguish records belonging to one class from those belonging to another.</li>
+<li>This function is applied to the records to derive weights, or scores, for each record (one weight for each possible class), which determines its estimated class.</li>
+</ul>
+<h2 id="logistic-regression">Logistic Regression</h2>
+<h3 id="key-terms-38">Key Terms</h3>
+<ul>
+<li><p><strong>Logit</strong></p>
+<ul>
+<li>The function that maps class membership probability to a range from plus/minus infinity (instead of 0 to 1).</li>
+</ul></li>
+<li><p><strong>Odds</strong></p>
+<ul>
+<li>The ration of “success” (1) to “not success” (0).</li>
+</ul></li>
+<li><p><strong>Log odds</strong></p>
+<ul>
+<li>The response in the transformed model (now linear), which gets mapped back to a probability.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-40">Key Ideas</h3>
+<ul>
+<li>Logistic regression is like linear regression, except that the outcomes ia a binary variable.</li>
+<li>Several transformations are needed to get the model into a form that can be fit as a linear model, with the log of the odds ration as the response variable.</li>
+<li>After the linear model is fit (by an iterative process), the log odds is mapped back to a probability.</li>
+<li>Logistic regression is popular because it is computationally fast and produces a model that can be scored to new data with only a few arithmetic operations.</li>
+</ul>
+<h2 id="evaluating-classification-models">Evaluating Classification Models</h2>
+<h3 id="key-terms-39">Key Terms</h3>
+<ul>
+<li><p><strong>Accuracy</strong></p>
+<ul>
+<li>The percent (or proportion) of cases classified correctly.</li>
+</ul></li>
+<li><p><strong>Confusion Matrix</strong></p>
+<ul>
+<li>A tabular display (2x2 in the binary case) of the record counts by their predicted and actual classification status.</li>
+</ul></li>
+<li><p><strong>Sensitivity</strong></p>
+<ul>
+<li>The percent (or proportion) of all 1s that are correctly classified as 1s. (Synonym: Recall)</li>
+</ul></li>
+<li><p><strong>Specificity</strong></p>
+<ul>
+<li>The percent (or proportion) of all 0s that are correctly classified as 0s.</li>
+</ul></li>
+<li><p><strong>Precision</strong></p>
+<ul>
+<li>The percent (proportion) of predicted 1s that are actually 1s.</li>
+</ul></li>
+<li><p><strong>ROC Curve</strong></p>
+<ul>
+<li>A plot of sensitivity versus specificity.</li>
+</ul></li>
+<li><p><strong>Lift</strong></p>
+<ul>
+<li>A measure of how effective the model is at identifying (comparatively rare) 1s at different probability cutoffs.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-41">Key Ideas</h3>
+<ul>
+<li>Accuracy (the percent of predicted classifications that are correct) is but a first step in evaluating a model.</li>
+<li>Other metrics (recall, specificity, precision) focus on more specific performance characteristics (e.g., recall measures how good a model is at correctly identifying 1s).</li>
+<li>AUC (area under the ROC curve) is a common metric for the ability of a model to distinguish 1s from 0s.</li>
+<li>Similarly, lift measures how effective a model is in identifying the 1s, and it is often calculated decile by decile, starting with the most probable 1s.</li>
+</ul>
+<h2 id="imbalanced-data">Imbalanced Data</h2>
+<h3 id="key-terms-40">Key Terms</h3>
+<ul>
+<li><p><strong>Undersample</strong></p>
+<ul>
+<li>Use fewer of the prevalent class records in the classification model. (Synonym: Downsample)</li>
+</ul></li>
+<li><p><strong>Oversample</strong></p>
+<ul>
+<li>Use more of the rare class recprds in the classification model, bootstrapping if necessary. (Synonym: Upsample)</li>
+</ul></li>
+<li><p><strong>Up weight or down weight</strong></p>
+<ul>
+<li>Attach more (or less) weight to the rare (or prevalent) class in the model.</li>
+</ul></li>
+<li><p><strong>Data generation</strong></p>
+<ul>
+<li>Like bootstrapping, except each new bootstrapped record is slightly different from its source.</li>
+</ul></li>
+<li><p><strong>z-score</strong></p>
+<ul>
+<li>The value that results after standardization.</li>
+</ul></li>
+<li><p><strong>K</strong></p>
+<ul>
+<li>The number of neighbors considered in the nearest neighbor calculation.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-42">Key Ideas</h3>
+<ul>
+<li>Highly imbalanced data (i.e., where the interesting outcomes, the 1s, are rare) are problematic for classification algorithms.</li>
+<li>One strategy for working with imbalanced data is to balance the training data via undersampling the abundant case (or oversampling the rare case).</li>
+<li>If using all the 1s still leaves you with too few 1s, you can bootstrap the rare cases, or use SMOTE to create synthetic data similar to existing rare cases.</li>
+<li>Imbalanced data usually indicates that correctly classifying one class (the 1s) has higher value, and that value ration should be built into the assessment metric.</li>
+</ul>
+<h1 id="chapter-6---statistical-machine-learning">Chapter 6 - Statistical Machine Learning</h1>
+<h2 id="k-nearest-neighbors">K-Nearest Neighbors</h2>
+<h3 id="key-terms-41">Key Terms</h3>
+<ul>
+<li><p><strong>Neighbor</strong></p>
+<ul>
+<li>A record that has similar predictor values to another record.</li>
+</ul></li>
+<li><p><strong>Distance Metrics</strong></p>
+<ul>
+<li>Measures that sum up in a single number how far one record is from another.</li>
+</ul></li>
+<li><p><strong>Standardization</strong></p>
+<ul>
+<li>Subtract the mean and divide by the standard deviation. (Synonym: Normalization)</li>
+</ul></li>
+<li><p><strong>z-score</strong></p>
+<ul>
+<li>The value that results after standardization.</li>
+</ul></li>
+<li><p><strong>K</strong></p>
+<ul>
+<li>The number of neighbors considered in the nearest neighbor calculation.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-43">Key Ideas</h3>
+<ul>
+<li>K-Nearest Neighbors (KNN) classifies a record by assigning it to the class that similar records belong to.</li>
+<li>Similarity (distance) is determined by Euclidian distance or other related metrics.</li>
+<li>The number of nearest neighbors to compare a record to, K, is determined by how well the algorithm performs on training data, using different values for K.</li>
+<li>Typically, the predictor variables are standardized so that variables of large scale do not dominate the distance metric.</li>
+<li>KNN is often used as a first stage in predictive modeling, and the <em>predictor</em> value is added back into the data as a predictor for second-stage (non-KNN) modeling</li>
+</ul>
+<h2 id="trees">Trees</h2>
+<h3 id="key-terms-42">Key Terms</h3>
+<ul>
+<li><p><strong>Recursive partitioning</strong></p>
+<ul>
+<li>Repeatedly dividing and subdividing the data with the goal of making the outcomes in each final subdivision as homogeneous as possible.</li>
+</ul></li>
+<li><p><strong>Split value</strong></p>
+<ul>
+<li>A predictor value that divides the records into those where that predictor is less than the split value, and those where it is more.</li>
+</ul></li>
+<li><p><strong>Node</strong></p>
+<ul>
+<li>In the decision tree, or in the set of corresponding branching rules, a node is the graphical or rule representation of a split value.</li>
+</ul></li>
+<li><p><strong>Leaf</strong></p>
+<ul>
+<li>The end of a set of if-then rules, or branches of a tree - the rules that bring you to that leaf provide one of the classification rules for any record in a tree.</li>
+</ul></li>
+<li><p><strong>Loss</strong></p>
+<ul>
+<li>The number of misclassifications at a stage in the splitting process; the more losses, the more impurity.</li>
+</ul></li>
+<li><p><strong>Impurity</strong></p>
+<ul>
+<li>The extent to which a mix of classes is found in a subpartition of the data (the more mixed, the more impure). (Synonym: Heterogeneity) (Antonyms: Homogeneity, purity)</li>
+</ul></li>
+<li><p><strong>Pruning</strong></p>
+<ul>
+<li>The process of taking a fully grown tree and progressively cutting its branches back to reduce overfitting.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-44">Key Ideas</h3>
+<ul>
+<li>Decision trees produce a set of rules to classify or predict an outcome.</li>
+<li>The rules correspond to successive partitioning of the data into subpartitions.</li>
+<li>Each partition, or split, references a specific value of a predictor variable and divides the data into records where that predictor value is above or below that split value.</li>
+<li>At each stage, the tree algorithm chooses the split that minimizes the outcome impurity within each subpartition.</li>
+<li>When no further splits can be made, the tree is fully grown and each terminal node, or leaf, has records of a single class; new cases folling that rule (split) path would be assigned that class.</li>
+<li>A fully grown tree overfits data and must be pruned back so that it captures signal and not noise.</li>
+<li>Multiple-tree algorithms like random forests and boosted trees yield better predictive performance, but they lose the rule-based communicative power of single trees</li>
+</ul>
+<h2 id="bagging-and-the-random-forst">Bagging and the Random Forst</h2>
+<h3 id="key-terms-43">Key Terms</h3>
+<ul>
+<li><p><strong>Ensemble</strong></p>
+<ul>
+<li>Forming a prediction by using a collection of models. (Synonym: Model averaging)</li>
+</ul></li>
+<li><p><strong>Bagging</strong></p>
+<ul>
+<li>A general technique to form a collection of models by bootstrapping the data. (Synonym: Bootstrap aggregation)</li>
+</ul></li>
+<li><p><strong>Random Forest</strong></p>
+<ul>
+<li>A type of bagged estimate based on decision tree models. (Synonym: Bagged decision trees)</li>
+</ul></li>
+<li><p><strong>Variable Importance</strong></p>
+<ul>
+<li>A measure of the importance of a precitor variable in the performance of the model.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-45">Key Ideas</h3>
+<ul>
+<li>Ensemble models improve model accuracy by combining the results from many models.</li>
+<li>Bagging is a particular type of ensemble model based on fitting many models to bootstrapped samples of the data and averaging the models.</li>
+<li>Random forest is a special type of bagging applied to decision trees. In addition to resampling the data, the random forest algorithm samples the predictor variables when splitting the trees.</li>
+<li>A useful output from the random forest is a measure of variable importance that ranks the predictors in terms of their contribution to model accuracy.</li>
+<li>The random forest has a set of hyperparameters that should be tuned using cross-validation to avoid overfitting.</li>
+</ul>
+<h2 id="boosting">Boosting</h2>
+<h3 id="key-terms-44">Key Terms</h3>
+<ul>
+<li><p><strong>Ensemble</strong></p>
+<ul>
+<li>Forming a prediction by using a collection of models. (Synonym: Model averaging)</li>
+</ul></li>
+<li><p><strong>Boosting</strong></p>
+<ul>
+<li>A general technique to fit a sequence of models by giving more weight to the records with large residuals for each successive round.</li>
+</ul></li>
+<li><p><strong>Adaboost</strong></p>
+<ul>
+<li>An early version of boosting that reqeights the data based on the residuals.</li>
+</ul></li>
+<li><p><strong>Gradient Boosting</strong></p>
+<ul>
+<li>A more general form of boosting that is cast in terms of minimizing a cost function.</li>
+</ul></li>
+<li><p><strong>Stochastic Gradient Boosting</strong></p>
+<ul>
+<li>The most general algorithm for boosting that incorporates resampling of records and columns in each round.</li>
+</ul></li>
+<li><p><strong>Regularization</strong></p>
+<ul>
+<li>A technique to avoid overfitting by adding a penalty term to the cost function on the number of parameters in the model.</li>
+</ul></li>
+<li><p><strong>Hyperparameters</strong></p>
+<ul>
+<li>Parameters that need to be set before fitting the algorithm.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-46">Key Ideas</h3>
+<ul>
+<li>Boosting is a class of ensemble models based on fitting a sequence of models, with more weight given to records with large errors in successive rounds.</li>
+<li>Stochastic gradient boosting is the most general type of boosting and offers the best performance. The most common form of stochastic gradient boosting uses tree models.</li>
+<li>XGBoost is a popular and computationally efficient software package for stochastic gradient boosting: it is available is all commong languages used in data science.</li>
+<li>Boosting is prone to overfitting the data, and the hyperparameters need to be tuned to avoid this.</li>
+<li>Regularization is one way to avoid overfitting by including a penalty term on the number of parameters (e.g., tree size) in a model.</li>
+<li>Cross-validation is especially important for boosting due to the large number of hyperparameters that need to be set.</li>
+</ul>
+<h1 id="chapter-7---unsupervised-learning">Chapter 7 - Unsupervised Learning</h1>
+<h2 id="principal-component-analysis">Principal Component Analysis</h2>
+<h3 id="key-terms-45">Key Terms</h3>
+<ul>
+<li><p><strong>Principal Component</strong></p>
+<ul>
+<li>A linear combination of the predictor variables.</li>
+</ul></li>
+<li><p><strong>Loadings</strong></p>
+<ul>
+<li>The weights that transform the predictors into the components. (Synonym: Weights)</li>
+</ul></li>
+<li><p><strong>Screeplot</strong></p>
+<ul>
+<li>A plot of the variances of the components, showing the relative importance of the components, either as explained variance or as proportion of explained variance.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-47">Key Ideas</h3>
+<ul>
+<li>Principal components are linear combinations of the predictor variables (numeric data only).</li>
+<li>Principal components are calculated so as to minimize correlation between components, reducing redundancy.</li>
+<li>A limited number of components will typically explain most of the variance in the outcome variable.</li>
+<li>The limited set of principal components can then be used in place of the (more numerous) original predictors, reducing dimensionality.</li>
+<li>A superficially similar technique for categorical data is correspondence analysis, but it is not useful in a big data context.</li>
+</ul>
+<h2 id="k-means-clustering">K-Means Clustering</h2>
+<h3 id="key-terms-46">Key Terms</h3>
+<ul>
+<li><p><strong>Cluster</strong></p>
+<ul>
+<li>A group of records that are similar.</li>
+</ul></li>
+<li><p><strong>Cluster mean</strong></p>
+<ul>
+<li>The vector of variable means for the records in a cluster.</li>
+</ul></li>
+<li><p><strong>K</strong></p>
+<ul>
+<li>The nuber of clusters.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-48">Key Ideas</h3>
+<ul>
+<li>The number of desired clusters, K, is chosen by the user.</li>
+<li>The algorithm develops clusters by iteratively assigning records to the nearest cluster mean until clust assignments do not chance.</li>
+<li>Practical considerations usually dominate the choice of K; there is no statistically determined optimal number of clusters.</li>
+</ul>
+<h2 id="hierarchical-clustering">Hierarchical Clustering</h2>
+<h3 id="key-terms-47">Key Terms</h3>
+<ul>
+<li><p><strong>Dendrogram</strong></p>
+<ul>
+<li>A visual representation of the records and the hierarchy of clusters to which they belong.</li>
+</ul></li>
+<li><p><strong>Distance</strong></p>
+<ul>
+<li>A measure of how close one record is to another.</li>
+</ul></li>
+<li><p><strong>Dissimilarity</strong></p>
+<ul>
+<li>A measure of how close one cluster is to another.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-49">Key Ideas</h3>
+<ul>
+<li>Hierarchical clustering starts with every record in its own cluster.</li>
+<li>Progressively, clusters are joined to nerby clusters until all records belong to a single cluster (the agglomerative algorithm).</li>
+<li>The agglomeration history is retained and plotted, and the user (without specifying the number of clusters beforehand) can visualize the number and the structure of clusters at different stages.</li>
+<li>Inter-cluster distances are computed in different ways, all relying on the set of all inter-record distances.</li>
+</ul>
+<h2 id="model-based-clustering">Model-Based Clustering</h2>
+<h3 id="key-ideas-50">Key Ideas</h3>
+<ul>
+<li>Clusters are assumed to derive from different data-generating processes with different probability distributions.</li>
+<li>Different models are fit, assuming different numbers of (typically normal) distributions.</li>
+<li>The method chooses the model (and the associated number of clusters) that fits the data well without using too many parameters (i.e., overfitting).</li>
+</ul>
+<h2 id="scaling-data">Scaling Data</h2>
+<h3 id="key-terms-48">Key Terms</h3>
+<ul>
+<li><p><strong>Scaling</strong></p>
+<ul>
+<li>Squashing or expanding data, usually to bring multiple variables to the same scale.</li>
+</ul></li>
+<li><p><strong>Normalization</strong></p>
+<ul>
+<li>One method of scaling - subtracting the mean and dividing by the standard deviation. (Synonym: Standardization)</li>
+</ul></li>
+<li><p><strong>Gower’s Distance</strong></p>
+<ul>
+<li>A scaling algorithm applied to mixed numeric and categorical data to bring all variables to a 0-1 range.</li>
+</ul></li>
+</ul>
+<h3 id="key-ideas-51">Key Ideas</h3>
+<ul>
+<li>Variables measured on different scaled need to be transformed to similar scales so that their impact on algorithms is not determined mainly by their scale.</li>
+<li>A common scaling method is normalization (standardization) - subtracting the mean and dividing by the standard deviation.</li>
+<li>Another method is Gower’s distance, which scales all variables to the 0-1 range (it is often used with mixed numeric and categorical data).</li>
+</ul>
