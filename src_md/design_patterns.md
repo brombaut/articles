@@ -10,7 +10,7 @@
 
 - ### Loose Coupling
 
-  Strive for loosely coupled designed between objects that interact. Loosely coupled designes allow us to build flexible OO systems that can handle change because they minimize the interdependency between objects.
+  Strive for loosely coupled designes between objects that interact. Loosely coupled designes allow us to build flexible systems that can handle change because they minimize the interdependency between objects.
 
 - ### Open-Closed Principle
 
@@ -22,7 +22,7 @@
 
 - ### Principle of Least Knowledge
 
-  Talk only to your immediate friends. When you are designing a system, be careful of the number of classes it interacts with and also how it comes to interact with those classes. This prevents us from creating designs that have a large number of classes coupled together so that changes in one part of the system cascade to other parts, When you build a lot of dependencoes between many classes, you are building a fragile system that will be costly to maintain and comple for others to understand. The principle provides some guidelines (Law of Demeter): take any object; now from any method in that object, the principle tells us that we should only invoke methods that belong to:
+  Talk only to your immediate friends. When you are designing a system, be careful of the number of classes it interacts with and also how it comes to interact with those classes. This prevents us from creating designs that have a large number of classes coupled together so that changes in one part of the system cascade to other parts, When you build a lot of dependencoes between many classes, you are building a fragile system that will be costly to maintain and complicated for others to understand. The principle provides some guidelines (Law of Demeter): take any object; now from any method in that object, the principle tells us that we should only invoke methods that belong to:
 
   - The object itself
   - Objects passed in as a parameter to the method
@@ -45,15 +45,15 @@ NOTE: Code examples and classes that are referenced are found [here](https://git
 
 ---
 
-### **Simple Factory**
+### **[Simple Factory](https://github.com/brombaut/BEC/tree/master/design-patterns/simplefactory)**
 
 Simple Factory isn't an actual design pattern, more of a programming idiom that is commonly used.
 
-### **Abstract Factory**
+### **[Abstract Factory](https://github.com/brombaut/BEC/tree/master/design-patterns/abstractfactory)**
 
 The Abstract Factory Pattern provides an interface for creating families of related or dependent objects without specifying their concrete classes.
 
-### **Factory Method**
+### **[Factory Method](https://github.com/brombaut/BEC/tree/master/design-patterns/factorymethod)**
 
 The Factory Method Pattern defines an interface for creating an object, but lets subclasses decide which clas to instantiate. Factory method lets a class defer instantiation to subclasses.
 
@@ -61,7 +61,7 @@ The Factory Method Pattern defines an interface for creating an object, but lets
 abstract Product factoryMethod(String type)
 ```
 
-### **Singleton**
+### **[Singleton](https://github.com/brombaut/BEC/tree/master/design-patterns/singleton)**
 
 The Singleton Pattern ensures a class has only one instannce, and provides a global point of access to it.
 
@@ -79,15 +79,15 @@ _DoubleCheckedLockingSingleton_ - With double-checked locking, we first check to
 
 ---
 
-### **Adapter**
+### **[Adapter](https://github.com/brombaut/BEC/tree/master/design-patterns/adapter)**
 
 The Adapter Pattern converts the interface of a class into another interface the clients expect. Adapter lets classes work together that couldn't otherwise because of incompatible interfaces.
 
-### **Composite**
+### **[Composite](https://github.com/brombaut/BEC/tree/master/design-patterns/composite)**
 
 The Composite Pattern allows you to compose objects into tree structures to represent part-whole hierarchies. Composite lets clients treat individual objects and compositions of objects uniformly. Using a composite structures, we can apply the same operations over both composites and individual objects. In other words, in most cases, we can ignore the differences between compositions of objects and individual objects.
 
-### **Decorator**
+### **[Decorator](https://github.com/brombaut/BEC/tree/master/design-patterns/decorator)**
 
 The Decorator Pattern attaches additional responsibilities to an object dynamically. Decorators provide a flexible alternative to subclassing for extending functionality.
 
@@ -95,7 +95,7 @@ The java.io package heavily uses the decorator design pattern.
 
 Each decorator HAS-A (wraps) a components, which means the decorator has an instance variable that holds a reference to a components. Decorators implement the same interface or abstract class as the component they are going to decorate.
 
-### **Facade**
+### **[Facade](https://github.com/brombaut/BEC/tree/master/design-patterns/facade)**
 
 The Facade Pattern provides a unified interface to a set of interfaces in a subsystem. Facade defines a higher-level interface that makes the subsystem easier to use.
 
@@ -103,19 +103,19 @@ The Facade Pattern provides a unified interface to a set of interfaces in a subs
 
 ---
 
-### **Command**
+### **[Command](https://github.com/brombaut/BEC/tree/master/design-patterns/command)**
 
 The Command pattern encapsulates a request as an object, thereby letting you parameterize other objects with different requests, queue or log requests, and support undoable operations.
 
 Command declares an interface for all commands. A command is invoked through its `execute()` method, which asks a receiver to perform an action. It can also perform `undo()` actions.
 
-### **Iterator**
+### **[Iterator](https://github.com/brombaut/BEC/tree/master/design-patterns/iterator)**
 
 The Iterator Pattern provides a way to access the elements of an aggregate object sequentially without exposing its underlying representation. It also places the task of traversal on the iterator object, not on the aggregate, which simplifies the aggregate interface and implementation, and places the responsibility where it should be.
 
 The Iterator interface provides the interface that all iterators must implement, and a set of methods for traversing over elements of a collection. Here we're using the java.util.Iterator. If you don't want to use Java's Iterator interface, you can always create your own.
 
-### **Observer**
+### **[Observer](https://github.com/brombaut/BEC/tree/master/design-patterns/observer)**
 
 The Oberver Pattern defines a one-to-many dependency between objects so that when one object changes state, all of its dependets are notified and updated automatically.
 
@@ -127,7 +127,7 @@ All potential observers need to implement the Observer interface. This interface
 
 Concrete observers can be any class that implements the Observer interface. Each observer registers with a concrete subject to recieve updates.
 
-### **State**
+### **[State](https://github.com/brombaut/BEC/tree/master/design-patterns/state)**
 
 The State Pattern allows an object to alter its behavior when its internal state changes. The object will appear to change its class.
 
@@ -140,11 +140,11 @@ ConcreteStates handle requests from the Context. Each ConcreteState provides its
 
 Many concrete states are possible
 
-### **Strategy**
+### **[Strategy](https://github.com/brombaut/BEC/tree/master/design-patterns/strategy)**
 
 The Strategy pattern defines a family of algorithms, encapsulates each one, and makes them interchangeable. Strategy lets the algorithm vary indepentently from clients that use it.
 
-### **Template Method**
+### **[Template Method](https://github.com/brombaut/BEC/tree/master/design-patterns/templatemethod)**
 
 The Template Method Pattern defines the skelwton of an algorithm in a method, deferring some steps to subclasses. Template Method lets subclasses redefine certain steps of an algorithm without changing the algorithm's structure
 
@@ -154,7 +154,7 @@ There may be many ConcreteClasses, each implementing the full set of operations 
 
 A hook is a method that is declared in the abstract class, but only given an empty or default implementation. This gives subclasses the ability to "hook into" the algorithm at various points, if they wish; a subclass is also free to ignore the hook.
 
-## Compound - A collection of design patterns used together
+## [Compound](https://github.com/brombaut/BEC/tree/master/design-patterns/compound) - A collection of design patterns used together
 
 ---
 
