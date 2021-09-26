@@ -7,6 +7,7 @@ git init
 echo "node_modules" >> .gitignore
 echo "build" >> .gitignore
 npm init -y
+mkdir src && touch src/index.ts
 ```
 
 ## Update `package.json`
@@ -76,7 +77,7 @@ tsc --init
     "module": "commonjs",
     "declaration": true,
     "outDir": "./build",
-    "rootDir": "./src", 
+    "rootDir": "./src",
     "strict": true
   },
   "include": ["src"],
