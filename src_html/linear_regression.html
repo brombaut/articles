@@ -1,0 +1,50 @@
+<h2 id="fitting-a-line">Fitting a Line</h2>
+<p>Linear regression is the statistical method for fitting a line to data where the relationship between two variables, x and y, can be modeled by a straight line with some error:</p>
+<p>y = β<sub>0</sub> + β<sub>1</sub>x + ε</p>
+<p>The values β<sub>0</sub> and β<sub>1</sub> represent the model’s parameters (β is the Greek letter beta), and the error is represented by ε (the Greek letter epsilon). The parameters are estimated using data, and we write their point estimates as b<sub>0</sub> and b<sub>1</sub>. When we use x to predict y, we usually call x the explanatory or predictor variable, and we call y the response; we also often drop the term when writing down the model since our main focus is often on the prediction of the average outcome.</p>
+<h2 id="residuals">Residuals</h2>
+<p><strong>Residuals</strong> are the leftover variation in the data after accounting for the model fit:</p>
+<blockquote>
+<p>Data = Fit + Residual</p>
+</blockquote>
+<p>If an observation is above the regression line, then its residual, the vertical distance from the observation to the line, is positive. Observations below the line have negative residuals. One goal in picking the right linear model is for these residuals to be as small as possible.</p>
+<blockquote>
+<p><b>RESIDUAL: DIFFERENCE BETWEEN OBSERVED AND EXPECTED</b><br />
+The residual of the i<sup>th</sup> observation (x<sup>i</sup>, y<sup>i</sup>) is the difference of the observed response (y<sup>i</sup>) and the response we would predict based on the model fit (y^<sup>i</sup>):<br />
+e<sup>i</sup> = y<sup>i</sup> − yˆ<sup>i</sup><br />
+We typically identify y^<sup>i</sup> by plugging x<sup>i</sup> into the model.</p>
+</blockquote>
+<p>Residuals are helpful in evaluating how well a linear model fits a data set. We often display them in a <strong>residual plot</strong>. The residuals are plotted at their original horizontal locations but with the vertical coordinate as the residual. For instance, the point (85.0, 98.6) had a residual of 7.45, so in the residual plot it is placed at (85.0, 7.45)</p>
+<h2 id="correlation">Correlation</h2>
+<blockquote>
+<p><b>CORRELATION: STRENGTH OF A LINEAR RELATIONSHIP</b><br />
+<b>Correlation</b>, which always takes values between -1 and 1, describes the strength of the linear relationship between two variables. We denote the correlation by <b>R</b>.</p>
+</blockquote>
+<p>Only when the relationship is perfectly linear is the correlation either -1 or 1. If the relationship is strong and positive, the correlation will be near +1. If it is strong and negative, it will be near -1. If there is no apparent linear relationship between the variables, then the correlation will be near zero. The correlation is intended to quantify the strength of a linear trend. Nonlinear trends, even when strong, sometimes produce correlations that do not reflect the strength of the relationship.</p>
+<h2 id="least-squares-regression">Least Squares Regression</h2>
+<h3 id="an-objective-measure-for-finding-the-best-line">An objective measure for finding the best line</h3>
+<p>We begin by thinking about what we mean by “best”. Mathematically, we want a line that has small residuals. The first option that may come to mind is to minimize the sum of the residual magnitudes:</p>
+<p>|e<sub>1</sub>| + |e<sub>2</sub>| + ··· + |e<sub>n</sub>|</p>
+<p>However, a more common practice is to choose the line that minimizes the sum of the squared residuals:</p>
+<p>e<sub>1</sub><sup>2</sup> + e<sub>2</sub><sup>2</sup> + ··· + e<sub>n</sub><sup>2</sup></p>
+<p>The line that minimizes this <strong>least squares criterion</strong> is commonly called the <strong>least squares line</strong>. It is usually chosen over minimizing the sum of residual magnitudes without any squaring because, in many applications, a residual twice as large as another residual is more than twice as bad. For example, being off by 4 is usually more than twice as bad as being off by 2. Squaring the residuals accounts for this discrepancy.</p>
+<h3 id="conditions-for-the-least-squares-line">Conditions for the least squares line</h3>
+<p>When fitting a least squares line, we generally require:</p>
+<ul>
+<li>Linearity</li>
+<li>Nearly normal residuals</li>
+<li>Constant variability</li>
+<li>Independent observations</li>
+</ul>
+<h3 id="interpreting-regression-model-parameter-estimates.">Interpreting regression model parameter estimates.</h3>
+<p>The slope describes the estimated difference in the y variable if the explanatory variable x for a case happened to be one unit larger. The intercept describes the average outcome of y if x = 0 and the linear model is valid all the way to x = 0, which in many applications is not the case.</p>
+<h3 id="extrapolation-is-treacherous">Extrapolation is treacherous</h3>
+<p>Linear models can be used to approximate the relationship between two variables. However, these models have real limitations. Linear regression is simply a modeling framework. The truth is almost always much more complex than our simple line. For example, we do not know how the data outside of our limited window will behave.</p>
+<h2 id="using-r2-to-describe-the-strength-of-fit">Using <i>R<sup>2</sup></i> to Describe the Strength of Fit</h2>
+<p>We evaluated the strength of the linear relationship between two variables earlier using the correlation, <em>R</em>. However, it is more common to explain the strength of a linear fit using <i>R<sup>2</sup></i>, called <strong>R-squared</strong>. If provided with a linear model, we might like to describe how closely the data cluster around the linear fit. The <i>R<sup>2</sup></i> of a linear model describes the amount of variation in the response that is explained by the least squares line.</p>
+<!-- TODO: Types of outliers in linear regression -->
+<hr>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://www.openintro.org/book/os/">OpenIntro Statistics - Fourth Edition</a></li>
+</ul>

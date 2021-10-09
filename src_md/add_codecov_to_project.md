@@ -7,9 +7,12 @@ npm install codecov --save-dev
 ## Get Codecov Token for Repo
 
 Navigate directly to the specific repository using:
-`https://codecov.io/<repo-provider>/<account-name>/<repo-name>`
 
-E.g., https://app.codecov.io/gh/brombaut/article-scraper
+```bash
+https://codecov.io/<repo-provider>/<account-name>/<repo-name>
+```
+
+E.g., [https://app.codecov.io/gh/brombaut/article-scraper](https://app.codecov.io/gh/brombaut/article-scraper)
 
 ## Uploading From Local Machine
 
