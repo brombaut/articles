@@ -1,0 +1,80 @@
+<h2 id="common-shell-programs">Common Shell Programs</h2>
+<h3 id="basename">basename</h3>
+<p>If you need to strip the extension from a filename or get rid of the directories in a full pathname, use the <strong>basename</strong> command. Some examples:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> basename example.html .html</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> basename /usr/local/bin/example</span></code></pre></div>
+<p>In both cases, <strong>basename</strong> returns <em>example</em>. The firs command strips the <em>.html</em> suffix from <em>example.html</em>, and the second removes the directories from the full pathname.</p>
+<p>This example shows how you can use <strong>basename</strong> in a script to convert GIF image files to the PNG format:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.gif<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># exit if there are no files</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="bu">[</span> <span class="ot">!</span> <span class="ot">-f</span> <span class="va">$file</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">exit</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">fi</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="va">b</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .gif<span class="va">)</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> Converting <span class="va">$b</span>.gif to <span class="va">$b</span>.png</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">giftopnm</span> <span class="va">$b</span>.gif <span class="kw">|</span> <span class="ex">pnmtopng</span> <span class="op">&gt;</span> <span class="va">$b</span>.png</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
+<h3 id="awk">awk</h3>
+<p>The <strong>awk</strong> command is not a simple single-purpose command; it’s actually a powerful programming language. However, many people use <strong>awk</strong> only to do one thing - to pick a single field out of an input stream like this:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> ls <span class="at">-l</span> <span class="kw">|</span> <span class="fu">awk</span> <span class="st">&#39;{print $5}&#39;</span></span></code></pre></div>
+<p>This command prints the fifth field of the <strong>ls</strong> output (ths file size). The result is a list of file sizes.</p>
+<h3 id="sed">sed</h3>
+<p>The <strong>sed</strong> (“stream editor”) program is an automatic text editor that takes an input stream (a file or the standard input), alters it according to some expression, and prints the results to standard output. In general, <strong>sed</strong> takes an address and an operation as one argument. The address is a set of lines, and the command determines what to do with the lines.</p>
+<p>A very common task for <strong>sed</strong> is to substitute some text for a regular expression, like this:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> sed <span class="st">&#39;s/exp/text/&#39;</span></span></code></pre></div>
+<p>If you wanted to replace the first colon in each line of <em>/etc/passwd</em> with a <em>%</em> and send the result to the standard output, then you’d do it like this:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> sed <span class="st">&#39;s/:/%/&#39;</span> /etc/passwd</span></code></pre></div>
+<p>To substitute <em>all</em> colons in <em>/etc/passwd</em>, add the <strong>g</strong> (global) modifier to the end of the operation, like this:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> sed <span class="st">&#39;s/:/%/g&#39;</span> /etc/passwd</span></code></pre></div>
+<p>Here’s a command that operates on a per-line basis; it reads <em>/etc/passwd</em>, deletes lines three through six, and sends the result to the standard output:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> sed 3,6d /etc/passwd</span></code></pre></div>
+<p>In this example, <strong>3,6</strong> is the address (a range of lines), and <strong>d</strong> is the operation (delete). If you omit the address, <strong>sed</strong> operates on all lines in its input stream. The two most common <strong>sed</strong> operations are probably <strong>s</strong> (search and replace) and <strong>d</strong>.</p>
+<p>You can also use a regular expression as the address. This command deletes any line that matches the regular expression <strong>exp</strong>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> sed <span class="st">&#39;/exp/d&#39;</span></span></code></pre></div>
+<p>In all of these examples, <strong>sed</strong> writes to the standard output, and this is by far the most common usage. With no file arguments, <strong>sed</strong> reads from the standard input, a pattern that you’ll frequently encounter in shell pipelines.</p>
+<h3 id="xargs">xargs</h3>
+<p>When you have to run one command on a huge number of files, the command or shell may respond that it can’t fit all of the arguments in its buffer. Use <strong>xargs</strong> to get around this problem by running a command on each file name in its standard input stream.</p>
+<p>Many people use <strong>xargs</strong> with the <strong>find</strong> command. For example, the following script can help you verify that every file in the current directory tree that ends with <em>.gif</em> is actually a GIF image:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> find . <span class="at">-name</span> <span class="st">&#39;*.gif&#39;</span> <span class="at">-print</span> <span class="kw">|</span> <span class="fu">xargs</span> file</span></code></pre></div>
+<p>Here, <strong>xargs</strong> runs the <strong>file</strong> command. However, this invocation can cause errors or leave your system open to security problems, because filenames can include spaces and newlines. When writing a script, use the following form instead, which changes the <strong>find</strong> output separator and the <strong>xargs</strong> argument delimiter from a newline to a NULL character:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> find . <span class="at">-name</span> <span class="st">&#39;*.gif&#39;</span> <span class="at">-printO</span> <span class="kw">|</span> <span class="fu">xargs</span> <span class="at">-O</span> file</span></code></pre></div>
+<p><strong>xargs</strong> starts a <em>lot</em> of processes, so don’t expect great performance if you have a large list of files.</p>
+<p>You may need to add two dashes (–) to the end of your <strong>xargs</strong> command if there’s a chance that any of the target files start with a single dash (-). The double dash (–) tells a program that any arguments that follow are filenames, not options. However, keep in mind that not all programs support the use of a double dash.</p>
+<p>When using <strong>find</strong>, there’s an alternative to <strong>xargs</strong>: the <strong>-exec</strong> option. However, the syntax is somewhat tricky because you need to supply braces, {}, to substitute the filename and a literal <strong>;</strong> to indicate the end of the command. Here’s how to perforom the preceding task using only <strong>find</strong>:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> find . <span class="at">-name</span> <span class="st">&#39;*.gif&#39;</span> <span class="at">-exec</span> file {} <span class="dt">\;</span></span></code></pre></div>
+<h3 id="expr">expr</h3>
+<p>If you need to use arithmetic operations in your shell scripts, the <strong>expr</strong> command can help (and even do some string operations). For example, the command <strong>expr 1 + 2</strong> prints 3. (Run <strong>expr –help</strong> for a full list of operations.)</p>
+<p>The <strong>expr</strong> command is a clumsy, slow way of doing math. If you find yourself using it frequently, you should probably be using a language like Python instead of a shell script.</p>
+<h3 id="exec">exec</h3>
+<p>The <strong>exec</strong> command is a built-in shell feature that replaces the current shell process with the program you name after <strong>exec</strong>. It carries out the <strong>exec()</strong> system call. This feature is designed for saving system resources, but remember tgar rgere’s no return; when you run <strong>exec</strong> in a shell script, the script and shell running the script are gone, replaced by the new command.</p>
+<p>To test this in a shell window, try running <strong>exec cat</strong>. After you cress <strong>CTRL-D</strong> or <strong>CTRL-C</strong> to terminate the <strong>cat</strong> program, your window should disappear because its child process no longer exists.</p>
+<h2 id="archiving-and-compressing-files">Archiving and Compressing Files</h2>
+<p>Two common utilities for compressing and bundling files and directories are <code>gzip</code> and <code>tar</code></p>
+<h3 id="gzip">gzip</h3>
+<p>The program <code>gzip</code> (GNU Zip) is one of the current standard Unix compression programs. A file that ends with <em>.gz</em> is a GNU Zip archive. Use <code>gunzip file.gz</code> to uncompress <em>&lt;file&gt;.gz</em> and remove the suffix; to compress the file again, use <code>gzip file</code>.</p>
+<h3 id="tar">tar</h3>
+<p>Unlike the ZIP programs for other operating systems, <code>gzip</code> does not create archives of files; that is, it doesn’t pack multiple files and directories into a single file. To create an archive, use <code>tar</code> instead:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> tar cvf archive.tar file1 file2 ...</span></code></pre></div>
+<p>Archives created by <code>tar</code> usually have a <em>.tar</em> suffix. The <em>c</em> flag activates <em>create mode</em>. The <em>v</em> flag activates verbose output (you can also do <em>vv</em>). The <em>f</em> flag denotes the file option. The next argument on the command line after the <em>f</em> flag must be the archive file for <code>tar</code> to create. You <strong>must</strong> use this option followed by a filename at all times, except with tape drives. To use standard input or output, set the filename to a dash (-).</p>
+<h4 id="unpacking-.tar-files">Unpacking .tar files</h4>
+<p>To unpack a <em>.tar</em> file with <code>tar</code> use the <em>x</em> flag:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> tar xvf archive.tar</span></code></pre></div>
+<h3 id="compressed-archives-.tar.gz">Compressed Archives (<em>.tar.gz</em>)</h3>
+<p>To unpack compressed archives, work from right to left; get rid of the <em>.gz</em> first and then worry about the <em>.tar</em>. For example:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> gunzip file.tar.gz</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> tar xvf file.tar</span></code></pre></div>
+<h3 id="zcat">zcat</h3>
+<p>A better way to do what was just shown is to combine archival and compression functions with a pipeline. For example, this command pipeline unpackage <em>&lt;file&gt;.tar.gz</em>:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> zcat file.tar.gx <span class="kw">|</span> <span class="fu">tar</span> xvf <span class="at">-</span></span></code></pre></div>
+<p>The <code>zcat</code> command is the same as <code>gunzip -dc</code>. The <em>-d</em> option decompresses and the <em>-c</em> option sends the result to standard output (in this case, to the <code>tar</code> command).</p>
+<p>Because it’s so common to use <code>zcat</code>, the version of <code>tar</code> that comes with Linux has a shortcut. You can use <em>z</em> as an option to automatically invoke <code>gzip</code> on the archive; this works both for extracting an archive (with the <em>x</em> or <em>t</em> modes in <code>tar</code>) and creating one (with <em>c</em>). For example, use the following command to verify (search for tar table-of-contents mode) a compressed archive:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> tar ztvf file.tar.gz</span></code></pre></div>
+<p>However, try to remember that you’re actually performing two steps when taking the shortcut.</p>
+<blockquote>
+<p>NOTE: A .tgz file is the same as a .tar.gz file. The suffix is meant to fit into FAT (MS-DOS-based filesystems).</p>
+</blockquote>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://nostarch.com/howlinuxworks3">How Linux Works - 3rd Edition</a></li>
+</ul>

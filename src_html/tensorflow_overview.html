@@ -1,0 +1,82 @@
+<h2 id="tensorflow-overview">Tensorflow Overview</h2>
+<p>What does TensorFlow offer?</p>
+<ul>
+<li>Its core is very similar to NumPy, but with GPU support.</li>
+<li>It supports distributed computing (across multiple devices and servers).</li>
+<li>It includes a kind of just-in-time (JIT) compiler that allows it to optimize computations for speed and memory usage. It works by extracting the <em>computation graph</em> from a Python function, then optimizing it (e.g., by pruning unused nodes), and finally running it efficiently (e.g., by automatically running independent operations in parallel).</li>
+<li>Computation graphs can be exported to a portable format, so you can train a TensorFlow model in one environment (e.g., using Python on Linux) and run it in another (e.g., using Java on an Android device).</li>
+<li>It implements autodiff and provides some excellent optimizers so you can easily minimize all sorts of of loss functions.</li>
+</ul>
+<p>At the lowest level, each TensorFlow operation (<em>op</em> for short) is implemented using highly efficient C++ code. Many operations have multiple implementations called <em>kernels</em>: each kernel is dedicated to a specific device type, such as CPUs, GPUs, or even TPUs (<em>tensor processing units</em>). GPUs can dramatically speed up computations by splitting them into many smaller chuncks and running them in parallel across many GPU threads. TPUs are even faster: they are custom ASIC chips built specifically for Deep Learning operations.</p>
+<h3 id="high-level-deep-learning-apis">High-level Deep Learning APIs</h3>
+<blockquote>
+<p><a href="https://www.tensorflow.org/api_docs/python/tf/keras">tf.keras</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/estimator">tf.estimator</a></p>
+</blockquote>
+<h3 id="low-level-deep-learning-apis">Low-level Deep Learning APIs</h3>
+<blockquote>
+<p><a href="https://www.tensorflow.org/api_docs/python/tf/nn">tf.nn</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/losses">tf.losses</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/metrics">tf.metrics</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/optimizers">tf.optimizers</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/train">tf.train</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/initializers">tf.initializers</a></p>
+</blockquote>
+<h3 id="autodiff">Autodiff</h3>
+<blockquote>
+<p><a href="https://www.tensorflow.org/api_docs/python/tf/GradientTape">tf.GradientTape</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/gradients">tf.gradients()</a></p>
+</blockquote>
+<h3 id="io-and-preprocessing">I/O and Preprocessing</h3>
+<blockquote>
+<p><a href="https://www.tensorflow.org/api_docs/python/tf/data">tf.data</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/feature_column">tf.feature_column</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/audio">tf.audio</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/image">tf.image</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/io">tf.io</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/queue">tf.queue</a></p>
+</blockquote>
+<h3 id="visualization-with-tensorboard">Visualization with TensorBoard</h3>
+<blockquote>
+<p><a href="https://www.tensorflow.org/api_docs/python/tf/summary">tf.summary</a><br />
+</p>
+</blockquote>
+<h3 id="deployment-and-optimization">Deployment and Optimization</h3>
+<blockquote>
+<p><a href="https://www.tensorflow.org/api_docs/python/tf/distribute">tf.distribute</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/saved_model">tf.saved_model</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/autograph">tf.autograph</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/graph_util">tf.graph_util</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/lite">tf.lite</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/quantization">tf.quantization</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/tpu">tf.tpu</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/xla">tf.xla</a></p>
+</blockquote>
+<h3 id="special-data-structures">Special Data Structures</h3>
+<blockquote>
+<p><a href="https://www.tensorflow.org/api_docs/python/tf/lookup">tf.lookup</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/nest">tf.nest</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/ragged">tf.ragged</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/sets">tf.sets</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/sparse">tf.sparse</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/strings">tf.strings</a></p>
+</blockquote>
+<h3 id="mathematics-including-linear-algebra-and-signal-processing">Mathematics (including linear algebra and signal processing)</h3>
+<blockquote>
+<p><a href="https://www.tensorflow.org/api_docs/python/tf/math">tf.math</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/linalg">tf.linalg</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/signal">tf.signal</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/random">tf.random</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/bitwise">tf.bitwise</a></p>
+</blockquote>
+<h3 id="miscellaneous">Miscellaneous</h3>
+<blockquote>
+<p><a href="https://www.tensorflow.org/api_docs/python/tf/compat">tf.compat</a><br />
+<a href="https://www.tensorflow.org/api_docs/python/tf/config">tf.config</a><br />
+and more…</p>
+</blockquote>
+<h3 id="references">References</h3>
+<ul>
+<li><a href="https://www.tensorflow.org/api_docs/python/tf">TensorFlow API Docs</a></li>
+<li><a href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781492032632/">Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow, 2nd Edition</a></li>
+</ul>
