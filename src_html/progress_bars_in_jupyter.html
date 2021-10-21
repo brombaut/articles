@@ -1,0 +1,19 @@
+<h2 id="tqdm">TQDM</h2>
+<p>I’ve found myself mapping functions onto large data sets lately, which sometimes takes minutes or even hours to complete. Using <a href="https://github.com/tqdm/tqdm">TQDM</a> has been super helpful for giving me an idea of how long these operations can take. Of course the next step is to parallelize everything…</p>
+<h2 id="quick-bonus-pip-install-from-a-notebook">[Quick Bonus] Pip Install from a Notebook</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>{sys.executable} <span class="op">-</span>m pip install ipywidgets</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># If using Jupyter Labs</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>{sys.executable} <span class="op">-</span>m jupyter labextension install <span class="op">@</span>jupyter<span class="op">-</span>widgets<span class="op">/</span>jupyterlab<span class="op">-</span>manager</span></code></pre></div>
+<h2 id="import-tqdm-and-setup">Import TQDM and Setup</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tqdm.notebook <span class="im">import</span> tqdm, trange</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>tqdm.pandas()</span></code></pre></div>
+<h2 id="now-you-can-use-progress-bars">Now you can use progress bars</h2>
+<p>For loops:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, row <span class="kw">in</span> tqdm(df.iterrows()):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Do something on each row</span></span></code></pre></div>
+<p>Apply on DataFrame:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> foo(row):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Do something on each row</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df.progress_apply(foo, axis<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div>
