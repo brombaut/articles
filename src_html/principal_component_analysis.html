@@ -1,0 +1,45 @@
+<p><em>Principal Component Analysis</em> (PCA) is by far the most popular dimensionality reduction algorithm. First it identifies the hyperplace that lies closest to the data, and then it projects the data onto it.</p>
+<h2 id="preserving-the-variance">Preserving the Variance</h2>
+<p>Before you can project the training set onto a lower-dimensional hyperplace, you first need to choose the right hyperplace. For example, in the image below, a simple 2D dataset is represented on the left plot, along with three different axes (i.e., 1D hyperplanes). On the right is the result of the projection of the dataset onto each of these axes. It can be seen that the projection onto the solid line preserves the maximum variance, while the projection onto the dotted line preserves very little variance and the projection onto the dashed line preserves an intermediate amount of variance.</p>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/principal_component_analysis/selecting_subspace_to_project_on.png" /></p>
+<p>It seems reasonable to select the axis that preserves the maximum amount of variance, as it will most likely lose less information than the other projections. Another way to justify this choice is that it is the axis that minimizes the mean squared distance between the original dataset and its projection onto that axis. This is the rather simple idea behind PCA.</p>
+<h2 id="principal-components">Principal Components</h2>
+<p>PCA identifies the axis that accounts for the largest amount of variance in the training set. In the image above, it is the solid line. It also finds a second axis, orthogonal to the first one, that accounts for the largest amount of the remaining variance. In this 2D example there is no choice: it is the dotted line. If it were a higher-dimensional dataset, PCA would also find a third axis, orthogonal to both previous axes, and a fourth, and a fifth, and so on - as many axes as the number of dimensions in the dataset.</p>
+<p>The <em>i<sup>th</sup></em> axis is called the <em>i<sup>th</sup> principal component</em> (PC) of the data. In the example above, the first PC is the axis on which vector <strong>c<sub>1</sub></strong> lies, and the second PC is the axis on which vector <strong>c<sub>2</sub></strong> lies.</p>
+<p>So how can you find the principal components of a training set? Luckily, there is a standard matrix factorization technique called <em>Singular Value Decomposition</em> (SVD) that can decompose the training set matrix <strong>X</strong> into the matrix multiplication of three matrices <strong>U</strong> <strong>Σ</strong> <strong>V</strong><sup>T</sup>, where <strong>V</strong> contains the unit vectors that define all principal components that we are looking for:</p>
+<blockquote>
+<p><strong>V</strong> = [<strong>c<sub>1</sub></strong> <strong>c<sub>2</sub></strong> … <strong>c<sub>n</sub></strong>]</p>
+</blockquote>
+<h2 id="projecting-down-to-d-dimensions">Projecting Down to d Dimensions</h2>
+<p>Once you have identified all the principal components, you can reduce the dimensionality of the dataset down to <em>d</em> dimensions by projecting it onto the hyperplace defined by the first <em>d</em> principal components. Selecting this hyperplane ensures that the projection will preserve as much variance as possible.</p>
+<p>To project the training set onto the hyperplace and obtain a reduced dataset <strong>X</strong><sub><em>d</em>-proj</sub> of dimensionality <em>d</em>, compute the matrix multiplication of the training set matrix <strong>X</strong> by the matrix <strong>W</strong><sub>d</sub>, defined as the matrix containing the first <em>d</em> columns of <strong>V</strong>:</p>
+<blockquote>
+<p><strong>X</strong><sub><em>d</em>-proj</sub> = <strong>XW</strong><sub>d</sub></p>
+</blockquote>
+<h2 id="using-scikit-learn">Using Scikit-Learn</h2>
+<p>Scikit-Learn’s PCA class uses SVD decomposition to implement PCA. The following code applies PCA to reduce the dimensionality of the dataset downt o two dimensions (note that it automatically takes care of centering the data):</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>X2D <span class="op">=</span> pca.fit_transform(x)</span></code></pre></div>
+<p>After fitting the PCA transformer to the dataset, its <code>components<em></code> attribute holds the transpose of <strong>W</strong><sub>d</sub> (e.g., the unit vectore that defines the first principal component is equal to <code>pca.components</em>.T[:, 0]</code>).</p>
+<h2 id="explained-variance-ratio">Explained Variance Ratio</h2>
+<p>Another useful piece of information is the <em>explained variance ratio</em> of each principal component, available via the <code>explained<em>variance_ratio</em></code> variable. The ratio indicates the proportion of the dataset’s variance that lies along each principal component. For example:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> pca.explained_variance_ratio_</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>array([<span class="fl">0.84248607</span>, <span class="fl">0.14631839</span>])</span></code></pre></div>
+<p>This output tells yout hat 84.2% of the dataset’s variance lies along the first PC, and 14.6% lies along the second PC. This leaves less than 1.2% for the third PC, so it is reasonable to assume that the third PC probably carries little information.</p>
+<h2 id="chooising-the-right-number-of-dimensions.">Chooising the Right Number of Dimensions.</h2>
+<p>Instead of arbitrarily choosing the number of dimensions to reduce down to, it is simpler to choose the number of dimensions that add up to a sufficiently large portion of the variance (e.g., 95%). Unless, of course, you are reducing dimensionality for data visualization - in that case you will want to reduce the dimensionality down to 2 or 3.</p>
+<p>The following code performs PCA without reducing dimensionality, then computes the minimum number of dimensions required to preserve 95% of the traiing set’s variance:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> PCA()</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>pca.fit(X_train)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>cumsum <span class="op">=</span> np.cumsum(pca.explained_variance_ratio_)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> np.argmax(cumsum <span class="op">&gt;=</span> <span class="fl">0.95</span>) <span class="op">+</span> <span class="dv">1</span></span></code></pre></div>
+<p>You could then set <code>n_components=d</code> and run PCA again, But there is a much better option: instead of specifying the number of principal components you want to preserve, you can set <code>n_components</code> to be a float between 0.0. and 1.0, indicating the ratio of variance you wish to preserve:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="fl">0.95</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>X_reduced <span class="op">=</span> pca.fit_transform(X_train)</span></code></pre></div>
+<p>Yet another option is to plot the explained variance as a function of the number of dimensions (simply plot <code>cumsum</code>). There will usually be an elbow in the curve, where the explained variance stops growing fast.</p>
+<h3 id="references">References</h3>
+<ul>
+<li><a href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781492032632/">Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow, 2nd Edition</a></li>
+</ul>
