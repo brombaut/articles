@@ -48,9 +48,9 @@ Another useful piece of information is the _explained variance ratio_ of each pr
 array([0.84248607, 0.14631839])
 ```
 
-This output tells yout hat 84.2% of the dataset's variance lies along the first PC, and 14.6% lies along the second PC. This leaves less than 1.2% for the third PC, so it is reasonable to assume that the third PC probably carries little information.
+This output tells you that 84.2% of the dataset's variance lies along the first PC, and 14.6% lies along the second PC. This leaves less than 1.2% for the third PC, so it is reasonable to assume that the third PC probably carries little information.
 
-## Chooising the Right Number of Dimensions.
+## Choosing the Right Number of Dimensions.
 
 Instead of arbitrarily choosing the number of dimensions to reduce down to, it is simpler to choose the number of dimensions that add up to a sufficiently large portion of the variance (e.g., 95%). Unless, of course, you are reducing dimensionality for data visualization - in that case you will want to reduce the dimensionality down to 2 or 3.
 

@@ -1,0 +1,147 @@
+<h2 id="what-are-lock-files">What are lock files?</h2>
+<p>A lock file describes the entire dependency tree as it is resolved when created including nested dependencies with specific versions. In <code>npm</code> these are called <code>package-lock.json</code> and in <code>yarn</code> they are called <code>yarn.lock</code>. In both <code>npm</code> and <code>yarn</code> they are placed alongside the <code>package.json</code> file.</p>
+<p>A <code>package-lock.json</code> looks similar to this:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;lockfile-demo&quot;</span><span class="fu">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;version&quot;</span><span class="fu">:</span> <span class="st">&quot;1.0.0&quot;</span><span class="fu">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;lockfileVersion&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;requires&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;dependencies&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;ansi-styles&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;version&quot;</span><span class="fu">:</span> <span class="st">&quot;3.2.1&quot;</span><span class="fu">,</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;resolved&quot;</span><span class="fu">:</span> <span class="st">&quot;https://registry.npmjs.org/ansi-styles/-/ansi-styles-3.2.1.tgz&quot;</span><span class="fu">,</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;integrity&quot;</span><span class="fu">:</span> <span class="st">&quot;sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==&quot;</span><span class="fu">,</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;requires&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;color-convert&quot;</span><span class="fu">:</span> <span class="st">&quot;^1.9.0&quot;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;chalk&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;version&quot;</span><span class="fu">:</span> <span class="st">&quot;2.4.2&quot;</span><span class="fu">,</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;resolved&quot;</span><span class="fu">:</span> <span class="st">&quot;https://registry.npmjs.org/chalk/-/chalk-2.4.2.tgz&quot;</span><span class="fu">,</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;integrity&quot;</span><span class="fu">:</span> <span class="st">&quot;sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==&quot;</span><span class="fu">,</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;requires&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;ansi-styles&quot;</span><span class="fu">:</span> <span class="st">&quot;^3.2.1&quot;</span><span class="fu">,</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;escape-string-regexp&quot;</span><span class="fu">:</span> <span class="st">&quot;^1.0.5&quot;</span><span class="fu">,</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;supports-color&quot;</span><span class="fu">:</span> <span class="st">&quot;^5.3.0&quot;</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>A <code>yarn.lock</code> is formatted differently but contains similar information:</p>
+<pre><code># THIS IS AN AUTOGENERATED FILE. DO NOT EDIT THIS FILE DIRECTLY.
+# yarn lockfile v1
+
+
+ansi-styles@^3.2.1:
+  version &quot;3.2.1&quot;
+  resolved &quot;https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-3.2.1.tgz#41fbb20243e50b12be0f04b8dedbf07520ce841d&quot;
+  integrity sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==
+  dependencies:
+        color-convert &quot;^1.9.0&quot;
+
+chalk@^2.4.2:
+  version &quot;2.4.2&quot;
+  resolved &quot;https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424&quot;
+  integrity sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==
+  dependencies:
+        ansi-styles &quot;^3.2.1&quot;
+        escape-string-regexp &quot;^1.0.5&quot;
+        supports-color &quot;^5.3.0&quot;</code></pre>
+<p>Both of these contain some important pieces of information:</p>
+<ul>
+<li>The actual version of every dependency installed</li>
+<li>The dependencies of every dependency</li>
+<li>The resolved package including a checksum to verify the integrity of the package</li>
+</ul>
+<h2 id="why-do-we-need-lock-files">Why do we need lock files?</h2>
+<p>Lock files are intended to pin down (i.e., lock) all versions for the entire dependency tree at the time that the lock file is created. Why is it important to use a package lock file and lock package versions?</p>
+<p>Without a package lock file, a package manager such as <code>Yarn</code> or <code>npm</code> will resolve the most current version of a package in real-time during the dependencies install of a package, rather than the version that was originally intended for the specific package.</p>
+<p>For example, if a project depends on package <code>dummy-pkg: ^1.0.0</code> then two separate installs executed at different times could retrieve different versions of <em>dummy-pkg</em>. This can happen if a user installs <em>dummy-pkg</em>, which retrieved version 1.0.0 and then that package releases a new version 1.0.1 several minutes later. Thereafter, a second user running an install in the project would end up retrieving dummy-pkg version 1.0.1 instead of version 1.0.0.</p>
+<p>Using lock files ensures that installations remain identical and reproducible throughout their entire dependency tree, across users, such as team members working together, and across systems, such as when running a CI build.</p>
+<h3 id="why-is-this-better-than-simply-locking-down-all-your-dependencies-in-the-package.json-file">Why is this better than simply locking down all your dependencies in the <code>package.json</code> file?</h3>
+<p>For example, just specify:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="er">&quot;express&quot;:</span> <span class="er">&quot;4.14.0&quot;</span></span></code></pre></div>
+<p>In this example, <code>npm</code> will install <code>express</code> package, version <code>4.14.0</code>. But the thing that you won’t think about is “what if express published new version with the same version number?” or “what if express didn’t lock their package versions?”. These are the questions you can’t know an answer for.</p>
+<h3 id="what-about-npm-ci">What about <code>npm ci</code>?</h3>
+<p><code>npm ci</code> bypasses a package’s <code>package.json</code> to install modules from a package’s lockfile. This ensures reproducible builds—you are getting exactly what you expect on every install.</p>
+<p>This command is similar to <code>npm install</code>, except it’s meant to be used in automated environments such as test platforms, continuous integration, and deployment – or any situation where you want to make sure you’re doing a clean install of your dependencies.</p>
+<p>In short, the main differences between using <code>npm install</code> and <code>npm ci</code> are:</p>
+<ul>
+<li>The project <strong>must</strong> have an existing <code>package-lock.json</code> or <code>npm-shrinkwrap.json</code>.</li>
+<li>If dependencies in the package lock do not match those in <code>package.json</code>, <code>npm ci</code> will exit with an error, instead of updating the package lock.</li>
+<li><code>npm ci</code> can only install entire projects at a time: individual dependencies cannot be added with this command.</li>
+<li>If a <code>node_modules</code> is already present, it will be automatically removed before <code>npm ci</code> begins its install.</li>
+<li>It will never write to <code>package.json</code> or any of the package-locks: installs are essentially frozen.</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> ci <span class="co"># will install exactly what&#39;s in the package-lock.json</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">yarn</span> install <span class="at">--frozen-lock-file</span> <span class="co"># will install exactly what&#39;s in yarn.lock without updating it</span></span></code></pre></div>
+<h4 id="references">References:</h4>
+<ul>
+<li><a href="https://docs.npmjs.com/cli/v8/commands/npm-ci">https://docs.npmjs.com/cli/v8/commands/npm-ci</a></li>
+</ul>
+<h3 id="what-about-transitive-dependencies">What about transitive dependencies?</h3>
+<p>Both <code>yarn</code> and <code>npm</code> will never take into account lock files for transient dependencies; these are completely ignored by package managers. Only the top-level project, where an install action is performed, is looked up for its entire dependency tree through a lock file to which the package manager refers as the dependencies manifest.</p>
+<h4 id="references-1">References</h4>
+<ul>
+<li><a href="https://snyk.io/blog/what-is-package-lock-json/">https://snyk.io/blog/what-is-package-lock-json/</a></li>
+</ul>
+<h3 id="what-about-publishing-your-package">What about publishing your package?</h3>
+<p>Contrary to what some people believe, the content that you publish to <code>npm</code> is not always the same as what’s on GitHub or overall in your project. The way that a module is published is that <code>npm</code> will determine the files that should be published by checking for a files key in your <code>package.json</code> and a <code>.npmignore</code> file or if none is present the <code>.gitignore</code> file. There are also some files that are always included and some that will always be excluded. You can find the entire list of those files on the npm page. For example the <code>.git</code> folder will always be ignored.</p>
+<p>Afterwards <code>npm</code> will take the list of files and will package them all up together into a tarball using <code>npm pack</code>. If you want to check out what files are packaged you can run in a project <code>npm pack --dry-run</code> and you’ll see the output with all of the files.</p>
+<p>That <em>tarball</em> will then be uploaded to the <em>npm registry</em>. One thing you might notice when you run this command is that if you already have a <code>package-lock.json</code> it is actually not being bundled. This is because <code>package-lock.json</code> will always be ignored as specified by the list in the <code>npm</code> docs (and mentioned above).</p>
+<p>Subsequently this means that if another developer installs your published package (rather than say a developer cloning your git repo), they’ll never download your package-lock.json and therefore it will be completely ignored during the installation.</p>
+<p>This might cause the “works on my machine” effect by accident since your CI and developer environment might pick up a different version of dependencies than your users.</p>
+<h4 id="references-2">References</h4>
+<ul>
+<li><a href="https://www.twilio.com/blog/lockfiles-nodejs">https://www.twilio.com/blog/lockfiles-nodejs</a></li>
+</ul>
+<h2 id="shrinkwrap-lock-files">Shrinkwrap lock files</h2>
+<p>There is one case in which a special lock file exists that is taken into account even for transient dependencies. The <code>npm-shrinkwrap.json</code> file pins down the dependency tree like the other lock files do, but an <code>npm publish</code> process will also commit this file to the registry. More importantly, when end users consume the library in a typical application and run an npm install – the library’s shrinkwrap file will decide on which versions to pull instead of the semver resolution, which happens during installation.</p>
+<p>What is a shrinkwrap file good for? Well, it allows library maintainers to pin down and curate their own library dependencies in order to ship known versions. It does, however, require careful maintenance for the entire dependency tree. Also, if a shrinkwrap file is used, there is no need for any other lock file to exist in the source control. A good example of a library that takes this approach is the well-known <a href="https://github.com/hapijs/hapi">hapijs</a> project.</p>
+<p>The files have exactly the same content, but there are a handful of differences in how <code>npm</code> handles them, most of which are noted on the docs pages for <a href="https://docs.npmjs.com/cli/v8/configuring-npm/package-lock-json">package-lock.json</a> and <a href="https://docs.npmjs.com/cli/v8/configuring-npm/npm-shrinkwrap-json">npm-shrinkwrap.json</a>:</p>
+<ul>
+<li><code>package-lock.json</code> is never published to npm, whereas <code>npm-shrinkwrap</code> is by default</li>
+<li><code>package-lock.json</code> files that are not in the top-level package are ignored, but shrinkwrap files belonging to dependencies are respected</li>
+<li><code>npm-shrinkwrap.json</code> is backwards-compatible with <code>npm</code> versions 2, 3, and 4, whereas <code>package-lock.json</code> is only recognized by <code>npm</code> 5+</li>
+</ul>
+<p>You can convert an <code>existing package-lock.json</code> to an <code>npm-shrinkwrap.json</code> by running <code>npm shrinkwrap</code>.</p>
+<p>If you are publishing your package to npm, you have a choice between:</p>
+<ol type="1">
+<li><p>using a <code>package-lock.json</code> to record exactly which versions of dependencies you installed, but allowing people installing your package to use any version of the dependencies that is compatible with the version ranges dictated by your <code>package.json</code>, or</p></li>
+<li><p>using an <code>npm-shrinkwrap.json</code> to guarantee that everyone who installs your package gets exactly the same version of all dependencies</p></li>
+</ol>
+<p>The official view described in the docs is that <strong>option 1 should be used for libraries (presumably in order to reduce the amount of package duplication caused when lots of a package’s dependencies all depend on slightly different versions of the same secondary dependency</strong>), but that option 2 might be reasonable for executables that are going to be installed globally.</p>
+<h3 id="issues-with-shrinkwrap-files">Issues with shrinkwrap files</h3>
+<p>One issue is that the shrinkwrap.json file, which contains sensitive information about your dependencies, may be included when publishing a package. Another is that Shrinkwrap makes it more difficult to add new dependencies. There is also a security risk inherent in shrinkwrap, which is vulnerable to remote code execution attack if HTTPS URLs are not used.</p>
+<p>By using a shrinkwrap file you’ll pin the exact version which can be great but it can also block people from getting critical patch fixes that would otherwise be installed automatically. npm strongly discourages the use case of shrinkwrap for libraries and recommends it more for CLIs or similar.</p>
+<blockquote>
+<p>Open Question: I wonder what the consequences are with using shrinkwrap files? For example, how often are they actually used in practice? How much dependency bloat is caused by using them? Would findings related to “<em>technical lag</em>” and “<em>pinning dependencies</em>” be similar?</p>
+</blockquote>
+<h4 id="references-3">References</h4>
+<ul>
+<li><a href="https://stackoverflow.com/a/46132512/5816686">https://stackoverflow.com/a/46132512/5816686</a></li>
+<li><a href="https://snyk.io/blog/what-is-package-lock-json/">https://snyk.io/blog/what-is-package-lock-json/</a></li>
+<li><a href="https://nodejs.org/de/blog/npm/managing-node-js-dependencies-with-shrinkwrap/">https://nodejs.org/de/blog/npm/managing-node-js-dependencies-with-shrinkwrap/</a></li>
+<li><a href="https://jonnyreeves.co.uk/2016/npm-shrinkwrap-sucks/">https://jonnyreeves.co.uk/2016/npm-shrinkwrap-sucks/</a></li>
+<li><a href="https://snyk.io/blog/npm-shrinkwrap-reloaded/">https://snyk.io/blog/npm-shrinkwrap-reloaded/</a></li>
+</ul>
+<h2 id="so-which-should-i-use-package-lock.json-or-npm-shrinkwrap.json">So which should I use? <code>package-lock.json</code> or <code>npm-shrinkwrap.json</code>?</h2>
+<h2 id="when-working-on-a-library">When working on a library</h2>
+<p>If you’re working on a library (as in a package onto which others will depend on), you should use <code>package-lock.json</code>. An alternative is to use shrinkwrap but make sure it never gets published with the package (the new lock file is never published automatically). Why not publish the shrinkwrap? It’s because NPM respects shrinkwraps it finds within packages and since a shrinkwrap always points to a specific version of individual packages, you would not take advantage of the fact that NPM can use the same package to satisfy requirements from multiple packages if the <code>semver</code> range allows it. In other words, by not forcing NPM to install specific versions, you allow NPM to better reuse packages across the dependency tree and make the result smaller and faster to assemble.</p>
+<p>There’s one caveat to this however. When you’re working on your library, you get the exact same dependencies every time because either <code>package-lock.json</code> or <code>npm-shrinkwrap.json</code> is present in the repository. The same goes for your continuous integration server where you check out the same code. Now imagine your <code>package.json</code> specifies a dependency on some package as <code>^1.0.0</code> and that also happens to be the version specified in the lock file and installed every time. Everything works. Now what happens if a new version of the dependency is published, accidentally breaks semver and your package breaks because of it?</p>
+<p>Unfortunately, you might not be able to notice that until a bug report comes in. Without any lock files in the repository, your build would fail at least on the CI because it would always install the latest versions of the dependencies and thus run the tests with the new broken version (provided that the build is run periodically, not just for PRs). With the lock in place however, it will always install the working locked version.</p>
+<p>There’s a couple of solutions to this problem however. First, you could sacrifice the exact reproducibility and not add the lock file to your version control system. Second, you could make a separate build configuration which would run npm update prior running the tests. Third, you simply delete the lock before running the tests in the special build. How to actually deal with the broken dependency once discovered is another topic on its own mainly because semver as implemented by NPM doesn’t have a concept of allowing a wide range but also blacklisting specific versions.</p>
+<p>This of course begs the question whether it’s actually worth it to add the lock file into the version control when working on libraries. A thing to keep in mind however is that the lock file contains not only dependencies but also dev dependencies. In that sense working on a library is similar to working on an application (see the next section) and having the exact same dev dependencies over time and across multiple machines is an advantage.</p>
+<h3 id="when-working-on-an-application">When working on an application</h3>
+<p>Alright, what about packages used by the end users in the terminal or bundled executables in general? In this case, the package is the final result, the application, and you want to make sure that the end users always get the exact dependencies you had while publishing it. This is where you want to use shrinkwrap and make sure to also publish it with the package so that it’s respected by NPM during install. Remember, you can always see what the package would look like if published using npm pack.</p>
+<p>Note that pointing to a specific version of a dependency in package.json is not good enough because you want to make sure the end users get the exact same dependency tree including all of its sub-dependencies. A specific version in package.json guarantees the version only at the top level.</p>
+<p>What about other types of applications, for example projects you start from within their repository? It doesn’t really matter that much in this case. All that matters is that the correct dependencies are installed and both of the locks can satisfy that. Your choice.</p>
+<ul>
+<li><a href="https://jpospisil.com/2017/06/02/understanding-lock-files-in-npm-5.html">https://jpospisil.com/2017/06/02/understanding-lock-files-in-npm-5.html</a></li>
+</ul>
+<h3 id="other-references">Other References</h3>
+<ul>
+<li><a href="https://greenkeeper.io/docs.html#lockfiles">https://greenkeeper.io/docs.html#lockfiles</a></li>
+<li><a href="https://stackoverflow.com/questions/45022048/why-does-npm-install-rewrite-package-lock-json">https://stackoverflow.com/questions/45022048/why-does-npm-install-rewrite-package-lock-json</a></li>
+<li><a href="https://github.com/npm/npm/issues/17979#issuecomment-332701215">https://github.com/npm/npm/issues/17979#issuecomment-332701215</a> (Interesting historical comment on package-lock issue.)</li>
+</ul>

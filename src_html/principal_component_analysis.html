@@ -27,8 +27,8 @@
 <p>Another useful piece of information is the <em>explained variance ratio</em> of each principal component, available via the <code>explained<em>variance_ratio</em></code> variable. The ratio indicates the proportion of the dataset’s variance that lies along each principal component. For example:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> pca.explained_variance_ratio_</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>array([<span class="fl">0.84248607</span>, <span class="fl">0.14631839</span>])</span></code></pre></div>
-<p>This output tells yout hat 84.2% of the dataset’s variance lies along the first PC, and 14.6% lies along the second PC. This leaves less than 1.2% for the third PC, so it is reasonable to assume that the third PC probably carries little information.</p>
-<h2 id="chooising-the-right-number-of-dimensions.">Chooising the Right Number of Dimensions.</h2>
+<p>This output tells you that 84.2% of the dataset’s variance lies along the first PC, and 14.6% lies along the second PC. This leaves less than 1.2% for the third PC, so it is reasonable to assume that the third PC probably carries little information.</p>
+<h2 id="choosing-the-right-number-of-dimensions.">Choosing the Right Number of Dimensions.</h2>
 <p>Instead of arbitrarily choosing the number of dimensions to reduce down to, it is simpler to choose the number of dimensions that add up to a sufficiently large portion of the variance (e.g., 95%). Unless, of course, you are reducing dimensionality for data visualization - in that case you will want to reduce the dimensionality down to 2 or 3.</p>
 <p>The following code performs PCA without reducing dimensionality, then computes the minimum number of dimensions required to preserve 95% of the traiing set’s variance:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> PCA()</span>
