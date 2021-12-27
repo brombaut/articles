@@ -1,0 +1,94 @@
+<h2 id="project-file-structure">Project File Structure</h2>
+<pre class="less"><code>my_project/
+├─ images/
+│ ├─ image1.jpg
+├─ 00_main.tex
+├─ 01_preamble.tex
+├─ 02_title.tex
+├─ 03_abstract.tex
+├─ ...
+├─ references.bib</code></pre>
+<h2 id="main-tex-file">Main Tex File</h2>
+<p>How I structure the main project file. Having the <em></em>, <em></em>, and <em></em> just makes things easier if you ever need to move these documents into a larger parent project (e.g., a thesis).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode latex"><code class="sourceCode latex"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand</span>{<span class="ex">\chptroot</span>}{.}</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand</span>{<span class="ex">\lblroot</span>}{dbcs}</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand</span>{<span class="ex">\imgsroot</span>}{images}</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">% RQs - I&#39;m not convinced this is actually a good idea, but just leaving it here. Alternatively you can just do \rqone, rqtwo, etc.</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand\rqnumberX</span>{1<span class="fu">\xspace</span>}</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand\rqX</span>{RQ1?}</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand\rqnumberY</span>{2<span class="fu">\xspace</span>}</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand\rqY</span>{RQ2?}</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand\rqnumberZ</span>{3<span class="fu">\xspace</span>}</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand\rqZ</span>{RQ3?}</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">% Common helpful commands</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand</span>{<span class="ex">\floor</span>}[1]{<span class="fu">\lfloor</span>#1<span class="fu">\rfloor</span>}</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand</span>{<span class="ex">\ceil</span>}[1]{<span class="fu">\lceil</span>#1<span class="fu">\rceil</span>}</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand</span>{<span class="ex">\code</span>}[1]{<span class="fu">\texttt</span>{#1}}</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand</span>{<span class="ex">\quotes</span>}[1]{``#1&#39;&#39;}</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand</span>{<span class="ex">\fnu</span>}[1]{<span class="fu">\footnote</span>{<span class="fu">\url</span>{#1}}}</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co">% Whatever technologies and other pieces of text you&#39;ll use a lot in the paper</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand</span>{<span class="ex">\npm</span>}{<span class="fu">\textsf</span>{npm}<span class="fu">\xspace</span>}</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">% Reviewing</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand\ben</span>[1]{<span class="fu">\nbc</span>{BEN}{#1}{blue}}</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="fu">\input</span>{<span class="fu">\chptroot</span>/01_preamble}</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co">% Document</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="kw">\begin</span>{<span class="ex">document</span>}</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="co">% \bstctlcite{BSTcontrol}</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">\input</span>{<span class="fu">\chptroot</span>/02_title}</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">\input</span>{<span class="fu">\chptroot</span>/03_authors}</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">\input</span>{<span class="fu">\chptroot</span>/04_abstract}</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="co">% Weird IEEE stuff</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">\maketitle</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">\IEEEdisplaynontitleabstractindextext</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">\IEEEpeerreviewmaketitle</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>  <span class="co">%Sections</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">\input</span>{<span class="fu">\chptroot</span>/05_intro}</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">\input</span>{<span class="fu">\chptroot</span>/06_background}</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">\input</span>{<span class="fu">\chptroot</span>/07_data}</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">\input</span>{<span class="fu">\chptroot</span>/08_findings}</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">\input</span>{<span class="fu">\chptroot</span>/09_discussion}</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">\input</span>{<span class="fu">\chptroot</span>/10_related_work}</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">\input</span>{<span class="fu">\chptroot</span>/11_threats}</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">\input</span>{<span class="fu">\chptroot</span>/12_conclusion}</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">\input</span>{<span class="fu">\chptroot</span>/13_acknowledgements}</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>  <span class="bu">\bibliographystyle</span>{<span class="ex">IEEEtranN</span>}  <span class="co">% basic style, author-year citations</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>  <span class="bu">\bibliography</span>{<span class="ex">dbcs_references.bib</span>}</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">\newpage</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">\input</span>{<span class="fu">\chptroot</span>/14_bios}</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">\newpage</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>  <span class="kw">\begin</span>{<span class="ex">appendices</span>}</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    <span class="fu">\input</span>{<span class="fu">\chptroot</span>/99_app_ci_name_regex}</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>  <span class="kw">\end</span>{<span class="ex">appendices</span>}</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="kw">\end</span>{<span class="ex">document</span>}</span></code></pre></div>
+<h2 id="labeling-for-referencing">Labeling for Referencing</h2>
+<p>When creating labels to reference, if you are labeling a section, follow the pattern below, adding subsections as needed:</p>
+<blockquote>
+<p>\lblroot:section_name:subsection_name:subsubsection_name</p>
+</blockquote>
+<p>If you are labeling another entity (e.g., tables, figures, etc.), then follow the pattern below:</p>
+<blockquote>
+<p>\lblroot:entity_type:label_name:sub_entity_name</p>
+</blockquote>
+<p>Note that the sub)entity name is rarely used (e.g., for when there are multiple figures in a single figure).</p>
+<p>See below for some different examples:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode latex"><code class="sourceCode latex"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">% Sections</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">\label</span>{<span class="ex">\lblroot:findings:existing_score</span>}</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">% Figures</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">\label</span>{<span class="ex">\lblroot:figure:score_distributions</span>}</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">% Tables</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">\label</span>{<span class="ex">\lblroot:table:failure_reasons</span>}</span></code></pre></div>
