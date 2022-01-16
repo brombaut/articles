@@ -1,0 +1,29 @@
+<h2 id="context">Context</h2>
+<p>Let’s say we want to retrieve the transitive (or direct) dependencies of a client package. This means that, for every dependency (a.k.a., provider package) of a client package, we need to retrieve the dependencies of said provider package. We specify the dependencies of a specific package using the following type:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> PackageDependencies <span class="op">=</span> { [packageName<span class="op">:</span> <span class="dt">string</span>]<span class="op">:</span> <span class="dt">string</span> }<span class="op">;</span></span></code></pre></div>
+<p>where the key is the provider package name and the value is the provider package version used by the client.</p>
+<h2 id="make-requests-in-serial">Make requests in serial</h2>
+<p>The following function takes in an object consisting of key-value pairs that represent a client package’s dependencies. We loop over the key-value pairs, and retrieve the dependencies of each provider package, one after the other.</p>
+<blockquote>
+<p>Notice that we only make a new request once the previous request has completed.</p>
+</blockquote>
+<div class="sourceCode" id="cb2"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>async <span class="kw">function</span> <span class="fu">buildDependencyTree</span>(dependencies<span class="op">:</span> PackageDependencies) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  const dependencyTree <span class="op">=</span> {}<span class="op">;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">for</span> (const [dep<span class="op">,</span> version] of Object<span class="op">.</span><span class="fu">entries</span>(dependencies)) {</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    const subDep <span class="op">=</span> await <span class="fu">getDependencies</span>(dep<span class="op">,</span> version)<span class="op">;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    dependencyTree[dep] <span class="op">=</span> { version<span class="op">,</span> dependencies<span class="op">:</span> subDep }<span class="op">;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  return dependencyTree<span class="op">;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h2 id="parallelize-with-promise.all">Parallelize with <code>Promise.all()</code></h2>
+<p>We realize that each request we are making (i.e., retrieving the dependencies of a package) are independent of each other. That is to say that the result of retrieving the dependencies of 1 package is not affected in any way by the results of retrieving the dependencies of another package. This means we do not have to wait until the previous request has finished to make the next request, and we can actually parallelize the whole loop to speed up the process. We do this using <code>Promise.all()</code>, as shown below:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>async <span class="kw">function</span> <span class="fu">buildDependencyTree</span>(dependencies<span class="op">:</span> PackageDependencies) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  const dependencyTree <span class="op">=</span> {}<span class="op">;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  const promises <span class="op">=</span> Object<span class="op">.</span><span class="fu">entries</span>(dependencies)<span class="op">.</span><span class="fu">map</span>(<span class="fu">async</span> ([dep<span class="op">,</span> version]) <span class="kw">=&gt;</span> {</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    const subDep <span class="op">=</span> await <span class="fu">getDependencies</span>(dep<span class="op">,</span> version)<span class="op">;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    dependencyTree[dep] <span class="op">=</span> { version<span class="op">,</span> dependencies<span class="op">:</span> subDep }<span class="op">;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  await <span class="bu">Promise</span><span class="op">.</span><span class="fu">all</span>(promises)<span class="op">;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  return dependencyTree<span class="op">;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Now this function will still only return once all of the requests have completed (because of <code>await Promise.all(promises);</code>), but all of the requests are executed in parralel.</p>
