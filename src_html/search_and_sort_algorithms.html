@@ -1,0 +1,55 @@
+<h2 id="first---a-note-on-big-o">First - a note on Big O</h2>
+<p>Big O notation is special notation that tells you how fast an algorithm is. For example, suppose you have a list of size <em>n</em>. Simple search needs to check each element, so it will take n operations. The run time in Big O notation is O(<em>n</em>). It’s important to note that Big O doesn’t tell you the speed in seconds, but rather lets you compare the number of operations. It tells you have fast the algorithm grows.</p>
+<h3 id="big-o-establishes-a-worst-case-run-time.">Big O establishes a worst-case run time.</h3>
+<p>Suppose you’re using simple search to look for a person in the phone book. You know that simple search takes O(<em>n</em>) time to run, which means in the worst case, you’ll have to look through every single entry in your phone book. In this case, you’re looking for Adit. This guy is the first entry in your phone book. So you didn’t have to look at every entry - you found it on the first try. Did this algorithm take O(<em>n</em>) time? Or did it take O(1) (i.e., constant) time because you found the person on the first try?</p>
+<p>Simple search still takes O(<em>n</em>) time. In this case, you found what you were looking for instantly. That’s the best-case scenario. But Big O notation is about the <em>worst-case</em> scenario. So you can say that, in the <em>worst case</em>, you’ll have to look at every entry in the phone book once. That’s O(<em>n</em>) time. It’s a reassurance - you know that the simple search will never be slower than O(<em>n</em>) time.</p>
+<blockquote>
+<p>Note: Along with worst-case run time, it’s also important to look at the average-case run time. More on that later…</p>
+</blockquote>
+<h3 id="some-common-big-o-run-times">Some common Big O run times:</h3>
+<ul>
+<li>O(log <em>n</em>), also known as <em>log time</em>. Example: Binary search.</li>
+<li>O(<em>n</em>), also known as <em>linear time</em>. Example: Simple search.</li>
+<li>O(<em>n</em> * log <em>n</em>). Example: A fast sorting algorithm, like quicksort.</li>
+<li>O(<em>n<sup>2</sup></em>). Example: A slow sorting algorithm, like selection sort.</li>
+<li>O(<em>n!</em>). Example: A really slow algorithm, like the traveling salesman.</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/search_and_sort_algorithms/big_o.png" /></p>
+<h2 id="simple-search">Simple Search</h2>
+<p>Just start at the beginning of the list and loop over all elements until either the item is found, or the end of the list is reached (in which case, the item is not in the list).</p>
+<p>Time complexity: O(<em>n</em>)</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simple_search(my_list, item):</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  i <span class="op">=</span> <span class="dv">0</span>  <span class="co"># Start searching from the start of the list</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> i <span class="op">&lt;</span> <span class="bu">len</span>(my_list):  <span class="co"># While there are still elements to check in the list...</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  guess <span class="op">=</span> my_list[i]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> guess <span class="op">==</span> item:  <span class="co"># Found the item</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> i</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="va">None</span></span></code></pre></div>
+<h2 id="binary-seach">Binary Seach</h2>
+<p>The idea of binary search is that, with a sorted list and an item to find, you guess the middle item and eliminate half of all possibilities with each guess.</p>
+<blockquote>
+<p>Note: Binary search only works when your list is in sorted order.</p>
+</blockquote>
+<p>Time complexity: O(log <em>n</em>)</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> binary_search(my_list, item):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># low and high keep track of which</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># part of the list you&#39;ll search in.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  low <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  high <span class="op">=</span> <span class="bu">len</span>(my_list) <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> low <span class="op">&lt;=</span> high:  <span class="co"># While you haven&#39;t narrows it down to one element...</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    mid <span class="op">=</span> (low <span class="op">+</span> high) <span class="op">/</span> <span class="dv">2</span>  <span class="co"># ...check the middle element</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    guess <span class="op">=</span> my_list[mid]</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> guess <span class="op">==</span> item:  <span class="co"># Found the item</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> mid</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> guess <span class="op">&gt;</span> item:  <span class="co"># The guess was too high</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      high <span class="op">=</span> mid <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:  <span class="co"># The guess was too low</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>      low <span class="op">=</span> mid <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="va">None</span>  <span class="co"># The item doesn&#39;t exist</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>my_list <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">9</span>]</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(binary_search(my_list, <span class="dv">3</span>))  <span class="co"># =&gt; 1</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(binary_search(my_list, <span class="op">-</span><span class="dv">1</span>)) <span class="co"># =&gt; None</span></span></code></pre></div>
+<h2 id="more-to-come">More to come…</h2>
