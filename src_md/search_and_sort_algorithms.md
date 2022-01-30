@@ -30,9 +30,9 @@ Time complexity: O(_n_)
 def simple_search(my_list, item):
   i = 0  # Start searching from the start of the list
   while i < len(my_list):  # While there are still elements to check in the list...
-  guess = my_list[i]
-    if guess == item:  # Found the item
-      return i
+    guess = my_list[i]
+      if guess == item:  # Found the item
+        return i
   return None
 ```
 
