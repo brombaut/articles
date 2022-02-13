@@ -15,7 +15,8 @@
 <li>O(<em>n!</em>). Example: A really slow algorithm, like the traveling salesman.</li>
 </ul>
 <p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/search_and_sort_algorithms/big_o.png" /></p>
-<h2 id="simple-search">Simple Search</h2>
+<h2 id="searching-algorithms">Searching Algorithms</h2>
+<h3 id="simple-search">Simple Search</h3>
 <p>Just start at the beginning of the list and loop over all elements until either the item is found, or the end of the list is reached (in which case, the item is not in the list).</p>
 <p>Time complexity: O(<em>n</em>)</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simple_search(my_list, item):</span>
@@ -25,7 +26,7 @@
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> guess <span class="op">==</span> item:  <span class="co"># Found the item</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> i</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="va">None</span></span></code></pre></div>
-<h2 id="binary-seach">Binary Seach</h2>
+<h3 id="binary-seach">Binary Seach</h3>
 <p>The idea of binary search is that, with a sorted list and an item to find, you guess the middle item and eliminate half of all possibilities with each guess.</p>
 <blockquote>
 <p>Note: Binary search only works when your list is in sorted order.</p>
@@ -52,4 +53,24 @@
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(binary_search(my_list, <span class="dv">3</span>))  <span class="co"># =&gt; 1</span></span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(binary_search(my_list, <span class="op">-</span><span class="dv">1</span>)) <span class="co"># =&gt; None</span></span></code></pre></div>
+<h2 id="sorting-algorithms">Sorting Algorithms</h2>
+<h3 id="selection-sort">Selection Sort</h3>
+<p>The idea of binary search is that you loop over the list, find the smallest element (assuming you are sorting in ascending order), remove it from the list while adding it to the end of a new (initially empty) list, and then loop back over the original list, again finding the smallest element (remember that the first smallest element has been removed), and repeat this process until you have a sorted list.</p>
+<p>Time complexity: O(<em>n<sup>2</sup></em>)</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> find_smallest(arr):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  smallest_index <span class="op">=</span> <span class="dv">0</span>  <span class="co"># Stores the index of the smallest value</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  smallest <span class="op">=</span> arr[smallest_index]  <span class="co"># Stores the smallest value</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span> (<span class="dv">1</span>, <span class="bu">len</span>(arr)):</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> arr[i] <span class="op">&lt;</span> smallest:</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>      smallest <span class="op">=</span> arr[i]</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      smallest_index <span class="op">=</span> i</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> smallest_index</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> selection_sort(arr):  <span class="co"># Sorts an array</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  new_arr <span class="op">=</span> <span class="bu">list</span>()</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(arr)):</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    smallest <span class="op">=</span> find_smallest(arr)  <span class="co"># Finds the smallest element in the array...</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    new_arr.append(arr.pop(smallest))  <span class="co"># ...and adds it to the new array</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> new_arr</span></code></pre></div>
 <h2 id="more-to-come">More to come…</h2>

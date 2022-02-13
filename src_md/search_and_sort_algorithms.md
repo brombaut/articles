@@ -20,7 +20,9 @@ Simple search still takes O(_n_) time. In this case, you found what you were loo
 
 ![](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/search_and_sort_algorithms/big_o.png)
 
-## Simple Search
+## Searching Algorithms
+
+### Simple Search
 
 Just start at the beginning of the list and loop over all elements until either the item is found, or the end of the list is reached (in which case, the item is not in the list).
 
@@ -36,7 +38,7 @@ def simple_search(my_list, item):
   return None
 ```
 
-## Binary Seach
+### Binary Seach
 
 The idea of binary search is that, with a sorted list and an item to find, you guess the middle item and eliminate half of all possibilities with each guess.
 
@@ -66,6 +68,34 @@ my_list = [1, 3, 5, 7, 9]
 
 print(binary_search(my_list, 3))  # => 1
 print(binary_search(my_list, -1)) # => None
+
+```
+
+## Sorting Algorithms
+
+### Selection Sort
+
+The idea of binary search is that you loop over the list, find the smallest element (assuming you are sorting in ascending order), remove it from the list while adding it to the end of a new (initially empty) list, and then loop back over the original list, again finding the smallest element (remember that the first smallest element has been removed), and repeat this process until you have a sorted list.
+
+Time complexity: O(_n<sup>2</sup>_)
+
+```python
+def find_smallest(arr):
+  smallest_index = 0  # Stores the index of the smallest value
+  smallest = arr[smallest_index]  # Stores the smallest value
+  for i in range (1, len(arr)):
+    if arr[i] < smallest:
+      smallest = arr[i]
+      smallest_index = i
+  return smallest_index
+
+
+def selection_sort(arr):  # Sorts an array
+  new_arr = list()
+  for i in range(0, len(arr)):
+    smallest = find_smallest(arr)  # Finds the smallest element in the array...
+    new_arr.append(arr.pop(smallest))  # ...and adds it to the new array
+  return new_arr
 
 ```
 
