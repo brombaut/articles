@@ -1,0 +1,107 @@
+<p>From <a href="https://ieeexplore.ieee.org/document/7801947">Ravi et al. - “Deep Learning for Health Informatics”</a>.</p>
+<h2 id="deep-neural-network">Deep Neural Network</h2>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/deep_learning_architectures/deep_neural_network.png" /></p>
+<h3 id="description">Description</h3>
+<ul>
+<li>General deep framework usually used for classification or regression.</li>
+<li>Made of many hidden layers (more than 2).</li>
+<li>Allows complex (non-linear) hypotheses to be expressed.</li>
+</ul>
+<h3 id="pros">Pros</h3>
+<ul>
+<li>Widely used with successes in many areas.</li>
+</ul>
+<h3 id="cons">Cons</h3>
+<ul>
+<li>Training is not trivial because once the errors are back-propagated to the first few layers, they become miniscule (vanishing gradient problem).</li>
+<li>The learning process can be very slow.</li>
+</ul>
+<h2 id="deep-autoencoder">Deep Autoencoder</h2>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/deep_learning_architectures/deep_autoencoder.png" /></p>
+<h3 id="description-1">Description</h3>
+<ul>
+<li>Proposed in <a href="https://www.science.org/doi/10.1126/science.1127647">Hinton et al. - “Reducing the Dimensionality of Data with Neural Networks”</a> and is mainly designed for feature extraction or dimensionality reduction.</li>
+<li>Has the same number of input and output nodes.</li>
+<li>Aims to recreate the input vector.</li>
+<li>Unsupervised learning method.</li>
+</ul>
+<h3 id="pros-1">Pros</h3>
+<ul>
+<li>Does not require labelled data for training.</li>
+<li>Many variations have been proposed to make the representation more robust: Sparse AutEnc. (<a href="https://proceedings.neurips.cc/paper/2006/file/87f4d79e36d68c3031ccf6c55e9bbd39-Paper.pdf">Poultney et al. - “Efficient learning of sparse representations with an energy-based model”</a>), Denoising AutEnc. (<a href="https://www.cs.toronto.edu/~larocheh/publications/icml-2008-denoising-autoencoders.pdf">Vincent et al. - “Extracting and composing robust features with denoising autoencoders”</a>), Contractive AutEnc. (<a href="https://icml.cc/2011/papers/455_icmlpaper.pdf">Rifai et al. - “Contractive auto-encoders: Explicit invariance during feature extraction”</a>), Convolutional AutEnc. (<a href="https://people.idsia.ch/~ciresan/data/icann2011.pdf">Masci et al. - “Stacked convo- lutional auto-encoders for hierarchical feature extraction”</a>).</li>
+</ul>
+<h3 id="cons-1">Cons</h3>
+<ul>
+<li>Requires a pre-training stage.</li>
+<li>Training can also suffer from vanishing of the errors.</li>
+</ul>
+<h2 id="deep-belief-network">Deep Belief Network</h2>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/deep_learning_architectures/deep_belief_network.png" /></p>
+<h3 id="description-2">Description</h3>
+<ul>
+<li>Proposed in <a href="https://www.cs.toronto.edu/~hinton/absps/fastnc.pdf">Hinton et al. - “A fast learning algorithm for deep belief nets”</a> - is a composition of RBM where each sub-network’s hidden layer serves as the visible layer for the next.</li>
+<li>Has undirected connections just at the top two layers.</li>
+<li>Allows unsupervised and supervised training of the network.</li>
+</ul>
+<h3 id="pros-2">Pros</h3>
+<ul>
+<li>Proposes a layer-by-layer greedy learning strategy to initialize the network.</li>
+<li>Inferences tractable maximizing the likelihood directly.</li>
+</ul>
+<h3 id="cons-2">Cons</h3>
+<ul>
+<li>Training procedure is computationally expensive due to the initialization process and sampling.</li>
+</ul>
+<h2 id="deep-boltzmann-machine">Deep Boltzmann Machine</h2>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/deep_learning_architectures/deep_boltzmann_machine.png" /></p>
+<h3 id="description-3">Description</h3>
+<ul>
+<li>Proposed in <a href="http://www.cs.toronto.edu/~fritz/absps/dbm.pdf">Salakhutdinov and Hinton - “Deep boltzmann machines”</a>, it is another approach based on the Boltzmann family.</li>
+<li>Processes undirected connections (conditionally independent) between all layers of the network.</li>
+<li>Uses a stochastic maximum likelihood (<a href="https://www.tandfonline.com/doi/abs/10.1080/17442509908834179">Younes - “On the convergence of markovian stochastic algorithms with rapidly decreasing ergodicity rates”</a>) algorithm to maximize the lower bound of the likelihood.</li>
+</ul>
+<h3 id="pros-3">Pros</h3>
+<ul>
+<li>Incoroprates top-down feedback for more robust inferences with ambiguous inputs.</li>
+</ul>
+<h3 id="cons-3">Cons</h3>
+<ul>
+<li>Time complexity for the inference is higher than DBN.</li>
+<li>Optimization of the parameters is not practical for large datasets.</li>
+</ul>
+<h2 id="recurrent-neural-network">Recurrent Neural Network</h2>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/deep_learning_architectures/recurrent_neural_network.png" /></p>
+<h3 id="description-4">Description</h3>
+<ul>
+<li>Proposed in <a href="">Williams and Zipser - “A learning algorithm for continually running fully recurrent neural networks”</a>, is a NN capable of analyzing a stream of data.</li>
+<li>Useful in applications where the output depends on the previous computations.</li>
+<li>Shares the same weights across all steps.</li>
+</ul>
+<h3 id="pros-4">Pros</h3>
+<ul>
+<li>Can memorize sequential events.</li>
+<li>Can model time dependencies.</li>
+<li>Has shown great success in many Natural Language Processing applications.</li>
+</ul>
+<h3 id="cons-4">Cons</h3>
+<ul>
+<li>Learning issues are frequent due to the vanishing gradient and exploding gradient problems.</li>
+</ul>
+<h2 id="convolutional-neural-network">Convolutional Neural Network</h2>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/deep_learning_architectures/convolutional_neural_network.png" /></p>
+<h3 id="description-5">Description</h3>
+<ul>
+<li>Proposed in <a href="https://ieeexplore.ieee.org/document/726791">LeCun et al. - “Gradient-based learning applied to document recognition”</a>, it is well suited for 2D data such as images.</li>
+<li>Every hidden convolutional filter transforms its input to a 3D output volume of neuron activations.</li>
+<li>Inspired by the neurobiological model of the visual cortex (<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1359523/">Hubel and Wiesel - “Receptive fields, binocular interaction and functional architecture in the cat’s visual cortex”</a>).</li>
+</ul>
+<h3 id="pros-5">Pros</h3>
+<ul>
+<li>Few neuron connections required with respect to a typical NN.</li>
+<li>Many variants have been proposed: AlexNet (<a href="https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf">Krizhevsky et al. - “Imagenet classification with deep convolutional neural networks”</a>), Clarifai (<a href="https://cs.nyu.edu/~fergus/papers/zeilerECCV2014.pdf">Zeiler and Fergus - “Visualizing and understanding convolutional networks”</a>), and GoogLeNet (<a href="https://www.cs.unc.edu/~wliu/papers/GoogLeNet.pdf">Szegedy et al. - Going deeper with convolutions”</a>).</li>
+</ul>
+<h3 id="cons-5">Cons</h3>
+<ul>
+<li>It may require many layers to find an entire hierarchy of visual features.</li>
+<li>It usually requires a large dataset of labelled images.</li>
+</ul>
