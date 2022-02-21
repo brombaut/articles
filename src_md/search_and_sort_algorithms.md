@@ -96,6 +96,36 @@ def selection_sort(arr):  # Sorts an array
     smallest = find_smallest(arr)  # Finds the smallest element in the array...
     new_arr.append(arr.pop(smallest))  # ...and adds it to the new array
   return new_arr
+```
+
+### Quick Sort
+
+What's the simplest array that a sorting algorithm can handle? Well, some arrays don't need to be sorted at all. Empty arrays and arrays with only 1 element are already sorted, so if we encounter these, we don't have to do anything because there's nothing to sort (base case).
+
+An array with two elements is pretty easy to sort too. If the first element is larger than the second, just swap them.
+
+If there are 3 elements, we can take a "divide and conquer" approach. First, pick an element from the array. This element is called the <i>pivot</i>. Now find the elements smaller than the pivot and the elements larger than the pivot. This is called <i>partitioning</i>. Now you have:
+
+- A sub-array of all the numbers less than the pivot
+- The pivot
+- A sub-array of all the numbers greater than the pivot.
+  The two sub-arrays aren't sorted. They're just partitioned. But if they were sorted, then you can just combine the whole thing like this - `left array + pivot + right array` - and you get a sorted array.
+
+How do you sort the sub-arrays? Well, the quicksort base case already knows how to sort arrays of 0, 1 (base cases) and 2 (base case + 1 pivot) elements. So if you call quicksort on the two sub-arrays and then combine the results, you get a sorted array!
+
+> No matter what pivot you pick, you can call quicksort recursively on the two sub-arrays.
+
+Time complexity: Average: O(_n_ \* log _n_), Worst Case: O(_n<sup>2</sup>_)
+
+```python
+def quicksort(arr):
+  if len(arr) < 2:  # Base case: arrays with 0 or 1 elements are already "sorted"
+    return arr
+  pivot = arr[0]  # Recursive case
+  less = [i for i in arr[1:] if i <= pivot]  # Sub-array of all the elements less than the pivot
+  greater = [i for i in arr[1:] if i > pivot]  # Sub-array of all the elements greater than the pivot
+
+  return quicksort(less) + pivot + quicksort(greater)
 
 ```
 

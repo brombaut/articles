@@ -73,4 +73,26 @@
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    smallest <span class="op">=</span> find_smallest(arr)  <span class="co"># Finds the smallest element in the array...</span></span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    new_arr.append(arr.pop(smallest))  <span class="co"># ...and adds it to the new array</span></span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> new_arr</span></code></pre></div>
+<h3 id="quick-sort">Quick Sort</h3>
+<p>What’s the simplest array that a sorting algorithm can handle? Well, some arrays don’t need to be sorted at all. Empty arrays and arrays with only 1 element are already sorted, so if we encounter these, we don’t have to do anything because there’s nothing to sort (base case).</p>
+<p>An array with two elements is pretty easy to sort too. If the first element is larger than the second, just swap them.</p>
+<p>If there are 3 elements, we can take a “divide and conquer” approach. First, pick an element from the array. This element is called the <i>pivot</i>. Now find the elements smaller than the pivot and the elements larger than the pivot. This is called <i>partitioning</i>. Now you have:</p>
+<ul>
+<li>A sub-array of all the numbers less than the pivot</li>
+<li>The pivot</li>
+<li>A sub-array of all the numbers greater than the pivot. The two sub-arrays aren’t sorted. They’re just partitioned. But if they were sorted, then you can just combine the whole thing like this - <code>left array + pivot + right array</code> - and you get a sorted array.</li>
+</ul>
+<p>How do you sort the sub-arrays? Well, the quicksort base case already knows how to sort arrays of 0, 1 (base cases) and 2 (base case + 1 pivot) elements. So if you call quicksort on the two sub-arrays and then combine the results, you get a sorted array!</p>
+<blockquote>
+<p>No matter what pivot you pick, you can call quicksort recursively on the two sub-arrays.</p>
+</blockquote>
+<p>Time complexity: Average: O(<em>n</em> * log <em>n</em>), Worst Case: O(<em>n<sup>2</sup></em>)</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> quicksort(arr):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="bu">len</span>(arr) <span class="op">&lt;</span> <span class="dv">2</span>:  <span class="co"># Base case: arrays with 0 or 1 elements are already &quot;sorted&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> arr</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  pivot <span class="op">=</span> arr[<span class="dv">0</span>]  <span class="co"># Recursive case</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  less <span class="op">=</span> [i <span class="cf">for</span> i <span class="kw">in</span> arr[<span class="dv">1</span>:] <span class="cf">if</span> i <span class="op">&lt;=</span> pivot]  <span class="co"># Sub-array of all the elements less than the pivot</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  greater <span class="op">=</span> [i <span class="cf">for</span> i <span class="kw">in</span> arr[<span class="dv">1</span>:] <span class="cf">if</span> i <span class="op">&gt;</span> pivot]  <span class="co"># Sub-array of all the elements greater than the pivot</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> quicksort(less) <span class="op">+</span> pivot <span class="op">+</span> quicksort(greater)</span></code></pre></div>
 <h2 id="more-to-come">More to come…</h2>
