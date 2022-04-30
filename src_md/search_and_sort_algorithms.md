@@ -71,6 +71,55 @@ print(binary_search(my_list, -1)) # => None
 
 ```
 
+### Breadth-First Search
+
+> #### First: A note on _Graphs_
+> A graph models a set of connections. Graphs are made up of nodes and edges. A node can be directly connected to many other nodes. Those nodes are called its neighbors. Graphs are a way to model how different things are connected to one another.
+
+Breadth-first search is a search algorithm that runs on graphs. It can help to answer two types of questions:
+- 1: Is there a path from node A to node B?
+- 2: What is the shortest path from node A to node B?
+
+The idea behind breadth-first search is that you maintain a queue of nodes you need to check (note that a `queue` follows the first in, first out rule (FIFO), as opposed to a `stack`, which follows a first in, last out rule (FILO)). You first visit all of your immediate neighbours (i.e., all the nodes you are directly connected with get added to the queue) and check to see if they are the node you are looking for. 
+
+As you visit a node, you add all of its direct neighbours to your search queue (i.e., enqueue), taking care not to add any nodes to the queue that you have already visited. You then keep dequeueing nodes from your search queue until you either find the node you are looking for, or your queue becomes empty, in which case the node you are looking for is not present in the graph.
+
+In summary, you search the nodes that are closest to you first, and keep expanding your search away from you until you find the node you want or you have searched the whole graph. Bread-first search guarentees that you will find the node in the graph if it is present, as well as that you will find the shortest path to that node.
+
+
+**Time complexity**: If you search your entire graph, that means you'll follow each edge. So the running time is at least O(number of edges). You also keep a queue of every node to search. Adding a node to the queue takes constant time: O(1). Doing this for every node will take O(number of people) total. Therefore, breadth-first search takes O(number of people + number of edges), and is more commonly written as O(V+E) (V for vertices, E for edges)
+
+```python
+from collections import deque
+
+graph = {}
+graph["you"] = ["alice", "bob", "claire"]
+graph["bob"] = ["arthur", "peggy"]
+graph["alice"] = ["peggy"]
+graph["claire"] = ["tom", "jonny"]
+graph["arthur"] = []
+graph["peggy"] = []
+graph["tom"] = []
+graph["jonny"] = []
+
+def search(name):
+  search_queue = deque()
+  search_queue += graph[name]
+  searched = []  # Who you've already searched
+  while search_queue:
+    person = search_queue.popleft()
+    if not person in searched: # Only search this person if you haven't already searched them
+      if person_is_who_we_are_looking_for(person):
+        return True
+      else:
+        search_queue += graph[person]
+        searched.append(person)  # Mark this person as searched
+  return False
+
+search("you")  # Will starting search from the "you" node and return true if we find the person we are looking for (implemented in person_is_who_we_are_looking_for, not included)
+```
+
+
 ## Sorting Algorithms
 
 ### Selection Sort

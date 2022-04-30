@@ -53,26 +53,63 @@
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(binary_search(my_list, <span class="dv">3</span>))  <span class="co"># =&gt; 1</span></span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(binary_search(my_list, <span class="op">-</span><span class="dv">1</span>)) <span class="co"># =&gt; None</span></span></code></pre></div>
+<h3 id="breadth-first-search">Breadth-First Search</h3>
+<blockquote>
+<h4 id="first-a-note-on-graphs">First: A note on <em>Graphs</em></h4>
+<p>A graph models a set of connections. Graphs are made up of nodes and edges. A node can be directly connected to many other nodes. Those nodes are called its neighbors. Graphs are a way to model how different things are connected to one another.</p>
+</blockquote>
+<p>Breadth-first search is a search algorithm that runs on graphs. It can help to answer two types of questions: - 1: Is there a path from node A to node B? - 2: What is the shortest path from node A to node B?</p>
+<p>The idea behind breadth-first search is that you maintain a queue of nodes you need to check (note that a <code>queue</code> follows the first in, first out rule (FIFO), as opposed to a <code>stack</code>, which follows a first in, last out rule (FILO)). You first visit all of your immediate neighbours (i.e., all the nodes you are directly connected with get added to the queue) and check to see if they are the node you are looking for.</p>
+<p>As you visit a node, you add all of its direct neighbours to your search queue (i.e., enqueue), taking care not to add any nodes to the queue that you have already visited. You then keep dequeueing nodes from your search queue until you either find the node you are looking for, or your queue becomes empty, in which case the node you are looking for is not present in the graph.</p>
+<p>In summary, you search the nodes that are closest to you first, and keep expanding your search away from you until you find the node you want or you have searched the whole graph. Bread-first search guarentees that you will find the node in the graph if it is present, as well as that you will find the shortest path to that node.</p>
+<p><strong>Time complexity</strong>: If you search your entire graph, that means you’ll follow each edge. So the running time is at least O(number of edges). You also keep a queue of every node to search. Adding a node to the queue takes constant time: O(1). Doing this for every node will take O(number of people) total. Therefore, breadth-first search takes O(number of people + number of edges), and is more commonly written as O(V+E) (V for vertices, E for edges)</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> deque</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>graph <span class="op">=</span> {}</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>graph[<span class="st">&quot;you&quot;</span>] <span class="op">=</span> [<span class="st">&quot;alice&quot;</span>, <span class="st">&quot;bob&quot;</span>, <span class="st">&quot;claire&quot;</span>]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>graph[<span class="st">&quot;bob&quot;</span>] <span class="op">=</span> [<span class="st">&quot;arthur&quot;</span>, <span class="st">&quot;peggy&quot;</span>]</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>graph[<span class="st">&quot;alice&quot;</span>] <span class="op">=</span> [<span class="st">&quot;peggy&quot;</span>]</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>graph[<span class="st">&quot;claire&quot;</span>] <span class="op">=</span> [<span class="st">&quot;tom&quot;</span>, <span class="st">&quot;jonny&quot;</span>]</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>graph[<span class="st">&quot;arthur&quot;</span>] <span class="op">=</span> []</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>graph[<span class="st">&quot;peggy&quot;</span>] <span class="op">=</span> []</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>graph[<span class="st">&quot;tom&quot;</span>] <span class="op">=</span> []</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>graph[<span class="st">&quot;jonny&quot;</span>] <span class="op">=</span> []</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> search(name):</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  search_queue <span class="op">=</span> deque()</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  search_queue <span class="op">+=</span> graph[name]</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  searched <span class="op">=</span> []  <span class="co"># Who you&#39;ve already searched</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> search_queue:</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    person <span class="op">=</span> search_queue.popleft()</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> person <span class="kw">in</span> searched: <span class="co"># Only search this person if you haven&#39;t already searched them</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> person_is_who_we_are_looking_for(person):</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>      <span class="cf">else</span>:</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        search_queue <span class="op">+=</span> graph[person]</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        searched.append(person)  <span class="co"># Mark this person as searched</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>search(<span class="st">&quot;you&quot;</span>)  <span class="co"># Will starting search from the &quot;you&quot; node and return true if we find the person we are looking for (implemented in person_is_who_we_are_looking_for, not included)</span></span></code></pre></div>
 <h2 id="sorting-algorithms">Sorting Algorithms</h2>
 <h3 id="selection-sort">Selection Sort</h3>
 <p>The idea of binary search is that you loop over the list, find the smallest element (assuming you are sorting in ascending order), remove it from the list while adding it to the end of a new (initially empty) list, and then loop back over the original list, again finding the smallest element (remember that the first smallest element has been removed), and repeat this process until you have a sorted list.</p>
 <p>Time complexity: O(<em>n<sup>2</sup></em>)</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> find_smallest(arr):</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  smallest_index <span class="op">=</span> <span class="dv">0</span>  <span class="co"># Stores the index of the smallest value</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  smallest <span class="op">=</span> arr[smallest_index]  <span class="co"># Stores the smallest value</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span> (<span class="dv">1</span>, <span class="bu">len</span>(arr)):</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> arr[i] <span class="op">&lt;</span> smallest:</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>      smallest <span class="op">=</span> arr[i]</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      smallest_index <span class="op">=</span> i</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> smallest_index</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> selection_sort(arr):  <span class="co"># Sorts an array</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  new_arr <span class="op">=</span> <span class="bu">list</span>()</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(arr)):</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    smallest <span class="op">=</span> find_smallest(arr)  <span class="co"># Finds the smallest element in the array...</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    new_arr.append(arr.pop(smallest))  <span class="co"># ...and adds it to the new array</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> new_arr</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> find_smallest(arr):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  smallest_index <span class="op">=</span> <span class="dv">0</span>  <span class="co"># Stores the index of the smallest value</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  smallest <span class="op">=</span> arr[smallest_index]  <span class="co"># Stores the smallest value</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span> (<span class="dv">1</span>, <span class="bu">len</span>(arr)):</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> arr[i] <span class="op">&lt;</span> smallest:</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>      smallest <span class="op">=</span> arr[i]</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      smallest_index <span class="op">=</span> i</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> smallest_index</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> selection_sort(arr):  <span class="co"># Sorts an array</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  new_arr <span class="op">=</span> <span class="bu">list</span>()</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(arr)):</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    smallest <span class="op">=</span> find_smallest(arr)  <span class="co"># Finds the smallest element in the array...</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    new_arr.append(arr.pop(smallest))  <span class="co"># ...and adds it to the new array</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> new_arr</span></code></pre></div>
 <h3 id="quick-sort">Quick Sort</h3>
 <p>What’s the simplest array that a sorting algorithm can handle? Well, some arrays don’t need to be sorted at all. Empty arrays and arrays with only 1 element are already sorted, so if we encounter these, we don’t have to do anything because there’s nothing to sort (base case).</p>
 <p>An array with two elements is pretty easy to sort too. If the first element is larger than the second, just swap them.</p>
@@ -87,12 +124,12 @@
 <p>No matter what pivot you pick, you can call quicksort recursively on the two sub-arrays.</p>
 </blockquote>
 <p>Time complexity: Average: O(<em>n</em> * log <em>n</em>), Worst Case: O(<em>n<sup>2</sup></em>)</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> quicksort(arr):</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="bu">len</span>(arr) <span class="op">&lt;</span> <span class="dv">2</span>:  <span class="co"># Base case: arrays with 0 or 1 elements are already &quot;sorted&quot;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> arr</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  pivot <span class="op">=</span> arr[<span class="dv">0</span>]  <span class="co"># Recursive case</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  less <span class="op">=</span> [i <span class="cf">for</span> i <span class="kw">in</span> arr[<span class="dv">1</span>:] <span class="cf">if</span> i <span class="op">&lt;=</span> pivot]  <span class="co"># Sub-array of all the elements less than the pivot</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  greater <span class="op">=</span> [i <span class="cf">for</span> i <span class="kw">in</span> arr[<span class="dv">1</span>:] <span class="cf">if</span> i <span class="op">&gt;</span> pivot]  <span class="co"># Sub-array of all the elements greater than the pivot</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> quicksort(less) <span class="op">+</span> pivot <span class="op">+</span> quicksort(greater)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> quicksort(arr):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="bu">len</span>(arr) <span class="op">&lt;</span> <span class="dv">2</span>:  <span class="co"># Base case: arrays with 0 or 1 elements are already &quot;sorted&quot;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> arr</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  pivot <span class="op">=</span> arr[<span class="dv">0</span>]  <span class="co"># Recursive case</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  less <span class="op">=</span> [i <span class="cf">for</span> i <span class="kw">in</span> arr[<span class="dv">1</span>:] <span class="cf">if</span> i <span class="op">&lt;=</span> pivot]  <span class="co"># Sub-array of all the elements less than the pivot</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  greater <span class="op">=</span> [i <span class="cf">for</span> i <span class="kw">in</span> arr[<span class="dv">1</span>:] <span class="cf">if</span> i <span class="op">&gt;</span> pivot]  <span class="co"># Sub-array of all the elements greater than the pivot</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> quicksort(less) <span class="op">+</span> pivot <span class="op">+</span> quicksort(greater)</span></code></pre></div>
 <h2 id="more-to-come">More to come…</h2>
