@@ -32,6 +32,18 @@ jobs:
           folder: dist # The folder the action should deploy.
 ```
 
+You can then navigate to your repositories `Settings` -> `Pages` where you can select that the `gh-pages` branch should be selected as the source for the GitHub Pages deployment.
+
+## Handling multiple projects under the `<username>.github.io` domain
+You can specify a project to be deployed to specific subfolders under your `<username>.github.io` domain. For example, I can add the following configuration to the `vue.config.js` file in a Vue project so that my application will be deployed at  https://brombaut.github.io/game-of-life/
+```js
+// vue.config.js
+const { defineConfig } = require('@vue/cli-service')
+module.exports = defineConfig({
+  publicPath: '/game-of-life/',
+})
+```
+
 ## Add any environment variables
 
 **Note:** There is almost certainly a better way to do this. Should probably look into it at some point.

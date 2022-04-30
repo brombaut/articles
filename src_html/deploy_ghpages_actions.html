@@ -27,6 +27,14 @@
 <span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">branch</span><span class="kw">:</span><span class="at"> gh-pages</span><span class="co"> # The branch the action should deploy to.</span></span>
 <span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">folder</span><span class="kw">:</span><span class="at"> dist</span><span class="co"> # The folder the action should deploy.</span></span></code></pre></div>
+<p>You can then navigate to your repositories <code>Settings</code> -&gt; <code>Pages</code> where you can select that the <code>gh-pages</code> branch should be selected as the source for the GitHub Pages deployment.</p>
+<h2 id="handling-multiple-projects-under-the-username.github.io-domain">Handling multiple projects under the <code>&lt;username&gt;.github.io</code> domain</h2>
+<p>You can specify a project to be deployed to specific subfolders under your <code>&lt;username&gt;.github.io</code> domain. For example, I can add the following configuration to the <code>vue.config.js</code> file in a Vue project so that my application will be deployed at https://brombaut.github.io/game-of-life/</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// vue.config.js</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> { defineConfig } <span class="op">=</span> <span class="pp">require</span>(<span class="st">&#39;@vue/cli-service&#39;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>module<span class="op">.</span><span class="at">exports</span> <span class="op">=</span> <span class="fu">defineConfig</span>({</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">publicPath</span><span class="op">:</span> <span class="st">&#39;/game-of-life/&#39;</span><span class="op">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
 <h2 id="add-any-environment-variables">Add any environment variables</h2>
 <p><strong>Note:</strong> There is almost certainly a better way to do this. Should probably look into it at some point.</p>
 <ul>
@@ -37,12 +45,12 @@
 <li>Add a <code>Create .env File</code> step before the <code>Install and Build</code> step</li>
 </ol></li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># .github/workflows/gh_pages_deploy.yml snippet</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Create .env File</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">  run</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    touch .env</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    echo API_KEY=${{ secrets.API_KEY }} &gt;&gt; .env</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    echo AUTH_DOMAIN=${{ secrets.AUTH_DOMAIN }} &gt;&gt; .env</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># .github/workflows/gh_pages_deploy.yml snippet</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Create .env File</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">  run</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    touch .env</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    echo API_KEY=${{ secrets.API_KEY }} &gt;&gt; .env</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    echo AUTH_DOMAIN=${{ secrets.AUTH_DOMAIN }} &gt;&gt; .env</span></code></pre></div>
 <h2 id="references">References</h2>
 <ul>
 <li>https://github.blog/2020-09-25-github-action-hero-james-ives-and-github-pages-deploy/</li>
