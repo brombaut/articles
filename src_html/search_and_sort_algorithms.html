@@ -90,26 +90,101 @@
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="va">False</span></span>
 <span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>search(<span class="st">&quot;you&quot;</span>)  <span class="co"># Will starting search from the &quot;you&quot; node and return true if we find the person we are looking for (implemented in person_is_who_we_are_looking_for, not included)</span></span></code></pre></div>
+<h3 id="dijkstras-algorithm">Dijkstra’s Algorithm</h3>
+<p>Lets you answer “What is the shortest path to X?” for weighted graphs (i.e., graphs with edges that have a weight or value assigned to them).</p>
+<p>There are four steps to Dijkstra’s algorith: - 1: Find the “cheapest” node. That is the node you can get to in the least amount of time. - 2: Check whether there’s a cheaper path to the neighbors of this node. If so, opdate the costs of these neighbors. - 3: Repeat until you’ve done this for every node in the graph. - 4: Calculate the final path.</p>
+<p>A full explanation on each of these steps will be a bit long-winded, so follow the code implementation below, and use Google is things aren’t clear. Still, there are a couple points to note: - You can’t use Dijkstra’s algorithm if you have negative weight edges (see <a href="https://www.geeksforgeeks.org/why-does-dijkstras-algorithm-fail-on-negative-weights/">this explanation</a>). If you have negative weights, use the <a href="https://www.geeksforgeeks.org/bellman-ford-algorithm-dp-23/">Bellman–Ford Algorithm</a>. - Dijkstra’s algorithm only works on graphs with no cycles, or on graphs with a positive weight cycle.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;&#39;&#39;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">First describe the graph</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;&#39;&#39;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>graph <span class="op">=</span> {}</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>graph[<span class="st">&quot;start&quot;</span>] <span class="op">=</span> {} <span class="co"># Start node</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>graph[<span class="st">&quot;start&quot;</span>][<span class="st">&quot;a&quot;</span>] <span class="op">=</span> <span class="dv">6</span> <span class="co"># Start node is connected to A node, with edge weight of 6</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>graph[<span class="st">&quot;start&quot;</span>][<span class="st">&quot;b&quot;</span>] <span class="op">=</span> <span class="dv">2</span> <span class="co"># Start node is connected to B node, with edge weight of 2</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>graph[<span class="st">&quot;a&quot;</span>] <span class="op">=</span> {} <span class="co"># A node </span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>graph[<span class="st">&quot;a&quot;</span>][<span class="st">&quot;fin&quot;</span>] <span class="op">=</span> <span class="dv">1</span> <span class="co"># A node is connected to Finish node, with edge weight of 1</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>graph[<span class="st">&quot;b&quot;</span>] <span class="op">=</span> {} <span class="co"># B node</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>graph[<span class="st">&quot;b&quot;</span>][<span class="st">&quot;a&quot;</span>] <span class="op">=</span> <span class="dv">3</span> <span class="co"># B node is connected to A node, with edge weight of 3</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>graph[<span class="st">&quot;b&quot;</span>][<span class="st">&quot;fin&quot;</span>] <span class="op">=</span> <span class="dv">5</span> <span class="co"># B node is connected to Finish node, with edge weight of 5</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>graph[<span class="st">&quot;fin&quot;</span>] <span class="op">=</span> {}  <span class="co"># Finish node, doesn&#39;t have any neightbors</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;&#39;&#39;</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">Then you need a has table to store the costs for each node.</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">The cost of a node is how long it takes to get to that node from the start.</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">You know it takes 2 minutes from Start to node B. </span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">You know it takes 6 minutes to get to node A (although you may find a path that takes less time).</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">You don&#39;t know how long it takes to get to the finish.</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">If you don&#39;t know the cost yet, you put down infinity.</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;&#39;&#39;</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>infinity <span class="op">=</span> <span class="bu">float</span>(<span class="st">&quot;inf&quot;</span>)</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>costs <span class="op">=</span> {}</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>costs[<span class="st">&quot;a&quot;</span>] <span class="op">=</span> <span class="dv">6</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>costs[<span class="st">&quot;b&quot;</span>] <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>costs[<span class="st">&quot;fin&quot;</span>] <span class="op">=</span> infinity</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;&#39;&#39;</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="co">You also need another has table for the parents</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;&#39;&#39;</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>parents <span class="op">=</span> {}</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>parents[<span class="st">&quot;a&quot;</span>] <span class="op">=</span> <span class="st">&quot;start&quot;</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>parents[<span class="st">&quot;b&quot;</span>] <span class="op">=</span> <span class="st">&quot;start&quot;</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>parents[<span class="st">&quot;fin&quot;</span>] <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;&#39;&#39;</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="co">Finally, you need an array to keep track of all nodes you&#39;ve already processed, because you don&#39;t need to process a node more than once.</span></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;&#39;&#39;</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>processed <span class="op">=</span> []</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;&#39;&#39;</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="co">Dijkstra&#39;s Algorithm</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;&#39;&#39;</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>node <span class="op">=</span> find_lowest_cost_node(costs) <span class="co"># Find the lowest-cost node that you haven&#39;t processed yet.</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>: <span class="co"># If you&#39;ve processed all the nodes, this while loop is done.</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>  cost <span class="op">=</span> costs[node]</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>  neighbors <span class="op">=</span> graph[node]</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> n <span class="kw">in</span> neighbors.keys(): <span class="co"># Go through all the neighbors of this node.</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>    new_cost <span class="op">=</span> cost <span class="op">+</span> neighbors[n]</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> costs[n] <span class="op">&gt;</span> new_cost: <span class="co"># If it&#39;s cheaper to get to this neighbor by going through this node...</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>      costs[n] <span class="op">=</span> new_cost <span class="co"># ...update the cost for this node.</span></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>      parents[n] <span class="op">=</span> node <span class="co"># This node becomes the new parent for this neighbor.</span></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>  processed.append(node) <span class="co"># Mark this node as processed.</span></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>  node <span class="op">=</span> find_lowest_cost_node(costs) <span class="co"># Find the next node to process, and loop.</span></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> find_lowest_cost_node(costs):</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>  lowest_cost <span class="op">=</span> <span class="bu">float</span>(<span class="st">&quot;inf&quot;</span>)</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>  lowest_cost_node <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> node <span class="kw">in</span> costs: <span class="co"># Go through each node</span></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>    cost <span class="op">=</span> costs[node]</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> cost <span class="op">&lt;</span> lowest_cost <span class="kw">and</span> node <span class="kw">not</span> <span class="kw">in</span> processed: <span class="co"># If it&#39;s the lowest cost so far and hasn&#39;t been processed yet...</span></span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>      lowest_cost <span class="op">=</span> cost <span class="co"># ...set it as the new lowest-cost node</span></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>      lowest_cost_node <span class="op">=</span> node</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> lowest_cost_node</span></code></pre></div>
 <h2 id="sorting-algorithms">Sorting Algorithms</h2>
 <h3 id="selection-sort">Selection Sort</h3>
 <p>The idea of binary search is that you loop over the list, find the smallest element (assuming you are sorting in ascending order), remove it from the list while adding it to the end of a new (initially empty) list, and then loop back over the original list, again finding the smallest element (remember that the first smallest element has been removed), and repeat this process until you have a sorted list.</p>
 <p>Time complexity: O(<em>n<sup>2</sup></em>)</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> find_smallest(arr):</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  smallest_index <span class="op">=</span> <span class="dv">0</span>  <span class="co"># Stores the index of the smallest value</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  smallest <span class="op">=</span> arr[smallest_index]  <span class="co"># Stores the smallest value</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span> (<span class="dv">1</span>, <span class="bu">len</span>(arr)):</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> arr[i] <span class="op">&lt;</span> smallest:</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>      smallest <span class="op">=</span> arr[i]</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      smallest_index <span class="op">=</span> i</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> smallest_index</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> selection_sort(arr):  <span class="co"># Sorts an array</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  new_arr <span class="op">=</span> <span class="bu">list</span>()</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(arr)):</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    smallest <span class="op">=</span> find_smallest(arr)  <span class="co"># Finds the smallest element in the array...</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    new_arr.append(arr.pop(smallest))  <span class="co"># ...and adds it to the new array</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> new_arr</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> find_smallest(arr):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  smallest_index <span class="op">=</span> <span class="dv">0</span>  <span class="co"># Stores the index of the smallest value</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  smallest <span class="op">=</span> arr[smallest_index]  <span class="co"># Stores the smallest value</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span> (<span class="dv">1</span>, <span class="bu">len</span>(arr)):</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> arr[i] <span class="op">&lt;</span> smallest:</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>      smallest <span class="op">=</span> arr[i]</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>      smallest_index <span class="op">=</span> i</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> smallest_index</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> selection_sort(arr):  <span class="co"># Sorts an array</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  new_arr <span class="op">=</span> <span class="bu">list</span>()</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(arr)):</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    smallest <span class="op">=</span> find_smallest(arr)  <span class="co"># Finds the smallest element in the array...</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    new_arr.append(arr.pop(smallest))  <span class="co"># ...and adds it to the new array</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> new_arr</span></code></pre></div>
 <h3 id="quick-sort">Quick Sort</h3>
 <p>What’s the simplest array that a sorting algorithm can handle? Well, some arrays don’t need to be sorted at all. Empty arrays and arrays with only 1 element are already sorted, so if we encounter these, we don’t have to do anything because there’s nothing to sort (base case).</p>
 <p>An array with two elements is pretty easy to sort too. If the first element is larger than the second, just swap them.</p>
@@ -124,12 +199,12 @@
 <p>No matter what pivot you pick, you can call quicksort recursively on the two sub-arrays.</p>
 </blockquote>
 <p>Time complexity: Average: O(<em>n</em> * log <em>n</em>), Worst Case: O(<em>n<sup>2</sup></em>)</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> quicksort(arr):</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="bu">len</span>(arr) <span class="op">&lt;</span> <span class="dv">2</span>:  <span class="co"># Base case: arrays with 0 or 1 elements are already &quot;sorted&quot;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> arr</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  pivot <span class="op">=</span> arr[<span class="dv">0</span>]  <span class="co"># Recursive case</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  less <span class="op">=</span> [i <span class="cf">for</span> i <span class="kw">in</span> arr[<span class="dv">1</span>:] <span class="cf">if</span> i <span class="op">&lt;=</span> pivot]  <span class="co"># Sub-array of all the elements less than the pivot</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  greater <span class="op">=</span> [i <span class="cf">for</span> i <span class="kw">in</span> arr[<span class="dv">1</span>:] <span class="cf">if</span> i <span class="op">&gt;</span> pivot]  <span class="co"># Sub-array of all the elements greater than the pivot</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> quicksort(less) <span class="op">+</span> pivot <span class="op">+</span> quicksort(greater)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> quicksort(arr):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="bu">len</span>(arr) <span class="op">&lt;</span> <span class="dv">2</span>:  <span class="co"># Base case: arrays with 0 or 1 elements are already &quot;sorted&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> arr</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  pivot <span class="op">=</span> arr[<span class="dv">0</span>]  <span class="co"># Recursive case</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  less <span class="op">=</span> [i <span class="cf">for</span> i <span class="kw">in</span> arr[<span class="dv">1</span>:] <span class="cf">if</span> i <span class="op">&lt;=</span> pivot]  <span class="co"># Sub-array of all the elements less than the pivot</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  greater <span class="op">=</span> [i <span class="cf">for</span> i <span class="kw">in</span> arr[<span class="dv">1</span>:] <span class="cf">if</span> i <span class="op">&gt;</span> pivot]  <span class="co"># Sub-array of all the elements greater than the pivot</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> quicksort(less) <span class="op">+</span> pivot <span class="op">+</span> quicksort(greater)</span></code></pre></div>
 <h2 id="more-to-come">More to come…</h2>

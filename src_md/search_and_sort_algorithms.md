@@ -120,6 +120,95 @@ search("you")  # Will starting search from the "you" node and return true if we 
 ```
 
 
+### Dijkstra's Algorithm
+
+Lets you answer "What is the shortest path to X?" for weighted graphs (i.e., graphs with edges that have a weight or value assigned to them).
+
+There are four steps to Dijkstra's algorith:
+- 1: Find the "cheapest" node. That is the node you can get to in the least amount of time.
+- 2: Check whether there's a cheaper path to the neighbors of this node. If so, opdate the costs of these neighbors.
+- 3: Repeat until you've done this for every node in the graph.
+- 4: Calculate the final path.
+
+A full explanation on each of these steps will be a bit long-winded, so follow the code implementation below, and use Google is things aren't clear. Still, there are a couple points to note:
+- You can't use Dijkstra's algorithm if you have negative weight edges (see [this explanation](https://www.geeksforgeeks.org/why-does-dijkstras-algorithm-fail-on-negative-weights/)). If you have negative weights, use the [Bellman–Ford Algorithm](https://www.geeksforgeeks.org/bellman-ford-algorithm-dp-23/).
+- Dijkstra's algorithm only works on graphs with no cycles, or on graphs with a positive weight cycle.
+
+```python
+
+'''
+First describe the graph
+'''
+graph = {}
+graph["start"] = {} # Start node
+graph["start"]["a"] = 6 # Start node is connected to A node, with edge weight of 6
+graph["start"]["b"] = 2 # Start node is connected to B node, with edge weight of 2
+
+graph["a"] = {} # A node 
+graph["a"]["fin"] = 1 # A node is connected to Finish node, with edge weight of 1
+
+graph["b"] = {} # B node
+graph["b"]["a"] = 3 # B node is connected to A node, with edge weight of 3
+graph["b"]["fin"] = 5 # B node is connected to Finish node, with edge weight of 5
+
+graph["fin"] = {}  # Finish node, doesn't have any neightbors
+
+
+'''
+Then you need a has table to store the costs for each node.
+
+The cost of a node is how long it takes to get to that node from the start.
+You know it takes 2 minutes from Start to node B. 
+You know it takes 6 minutes to get to node A (although you may find a path that takes less time).
+You don't know how long it takes to get to the finish.
+If you don't know the cost yet, you put down infinity.
+'''
+infinity = float("inf")
+costs = {}
+costs["a"] = 6
+costs["b"] = 2
+costs["fin"] = infinity
+
+'''
+You also need another has table for the parents
+'''
+parents = {}
+parents["a"] = "start"
+parents["b"] = "start"
+parents["fin"] = None
+
+'''
+Finally, you need an array to keep track of all nodes you've already processed, because you don't need to process a node more than once.
+'''
+processed = []
+
+'''
+Dijkstra's Algorithm
+'''
+node = find_lowest_cost_node(costs) # Find the lowest-cost node that you haven't processed yet.
+while node is not None: # If you've processed all the nodes, this while loop is done.
+  cost = costs[node]
+  neighbors = graph[node]
+  for n in neighbors.keys(): # Go through all the neighbors of this node.
+    new_cost = cost + neighbors[n]
+    if costs[n] > new_cost: # If it's cheaper to get to this neighbor by going through this node...
+      costs[n] = new_cost # ...update the cost for this node.
+      parents[n] = node # This node becomes the new parent for this neighbor.
+  processed.append(node) # Mark this node as processed.
+  node = find_lowest_cost_node(costs) # Find the next node to process, and loop.
+
+def find_lowest_cost_node(costs):
+  lowest_cost = float("inf")
+  lowest_cost_node = None
+  for node in costs: # Go through each node
+    cost = costs[node]
+    if cost < lowest_cost and node not in processed: # If it's the lowest cost so far and hasn't been processed yet...
+      lowest_cost = cost # ...set it as the new lowest-cost node
+      lowest_cost_node = node
+  return lowest_cost_node
+
+```
+
 ## Sorting Algorithms
 
 ### Selection Sort
