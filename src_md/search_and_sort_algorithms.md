@@ -267,4 +267,81 @@ def quicksort(arr):
 
 ```
 
+## Greedy Algorithms
+A greedy algorithm is simple: at each step, pick the optimal move. In technical terms _at each step you pick the locally optimal solution, and in the end you're left with the globally optimal solution_. It is important to note that greedy algorithms don't always work. However, sometimes, perfect is the enemy of good. Sometimes all you need is an algorithm that solves the problem pretty well. And that's where greedy algorithms shine, because ther're siple to write and usually get pretty close.
+
+### E.g., The set-covering problem
+Suppose you're starting a radio show. You want to reach listeners in all 50 states. You have to decide what stations to play on to each all those listeners. It costs money to be on each station, so you're trying to minimize the number of stations you plat on. 
+You have a list of stations. Each station covers a region, and there's overlap.
+
+How do you figure out the smallest set of stations you can play on to cover all 50 states? Sounds easy? Turns out it's extremely hard. Here's how to do it:
+1. List every possible subset of stations. This is called the _power set_. There are 2<sup>n</sup> possible subsets.
+2. From these, pick the set with the smallest number of stations that covers all 50 states. 
+
+The problem is, it takes a long time to calculate every possible subset of stations. It takes O(2<sup>n</sup>) time, because there are 2<sup>n</sup> subsets. It's possible to do if you have a small set of 5 to 10 stations, but let's say you are able to calculate 10 subsets per second, then for 100 stations, it will take 4x10<sup>21</sup> years. There's no algorithm that solves it fast enough. What can you do?
+
+#### Approximation algorithms
+You can use a greedy algorithm. Here's one that comes pretty close:
+1. Pick the station that covers the most states that haven't been covered yet. It's ok if the station covers some states that have been covered already.
+2. Repeat until all states are covered.
+
+This is called an approximation algorithm. When calculating the exact solution will take too much time, an approximation algorithm will work. Approximation algorithms are judged by
+- How fast they are
+- How close they are to the optimal solution
+
+Greedy algorithms are a good choice because not only are they simple to come up with, but that simplicity means they usually run fast too. In this case, the greedy algorithm runs in O(n<sup>2</sup>) time, where n is the number of radio stations.
+
+Here us a code example
+
+```python
+states_needed = set(["mt", "wa", "or", "id", "nv", "ut", "ca", "az"])
+
+stations = dict()
+stations["kone"] = set(["id", "nv", "ut"])
+stations["ktwo"] = set(["wa", "id", "mt"])
+stations["kthree"] = set(["or", "nv", "ca"])
+stations["kfour"] = set(["nv", "ut"])
+stations["kfive"] = set(["ca", "az"])
+
+final_stations = set()
+
+best_station = None
+states_covered = set()
+
+while states_needed:
+  best_station = None
+  states_covered = set()
+  for station, states_for_station in stations.items():
+    covered = states_needed & states_for_station  # intersection
+    if len(covered) > len(states_covered):
+      best_station = station
+      states_covered = covered
+    states_needed -= states_covered
+    final_stations.add(best_station)
+
+print(final_stations)
+```
+
+## A quick note on NP-completeness
+Some problems are famously hard to solve. The traveling salesperson and the set-covering problem are two examples. A lot of smart people think that it's not possible to write an algorithm that will solve these problems quickly.
+### How do you tell if a problem is NP-complete?
+
+Jonah is picking players for his fantasy football team. He has a list of abilities he wants: good quarterback, good running back, good in rain, good under pressure, and so on. He has a list of players, where each player fulfills some abilities. Jonah needs a team that fulfills all his abilities, and the team size is limited.
+
+This is actually a set-covering problem. Jonah can use the same approximation algorithm we just did to create his team:
+1. Find the player who fulfills the most abilities that haven't been fulfilled yet.
+2. Repeat until the team fulfills all abilities (or you run out of space on the team).
+
+NP-complete problems show up everywhere. It's nice to know if the problem you're trying to solve is NP-complete. At that point, you can stop trying to stop trying to solve it perfectly, and solve it using an approximation algorithm instead. But it's hard to tell if a problem you're working on is NP-complete. Usually there's a very small difference between a problem that's easy to solve and an NP-complete problem. For example, in the previous examples, we looked at shortest paths. You know how to calculate the shortest way to get from point A to point B. But if you want to fin the shortest path that connects several points, that's the traveling-salesman problem, which is NP-complete. The short answer: there's no easy way to tell if the problem you're working on is NP-complete. Here are some giveaways:
+- Your algorithm runs quickly with a handful of items but really slows down with more items
+- "All combinations of X" usually points to an NP-complete problem.
+- Do you have to calculate "every possible version" of X because you can't break it down into smaller sub-problems? Might be NP-complete.
+- If your problem involves a sequence (such as a sequence of cities, like traveling salesman), and it's hard to solve, it might be NP-complete.
+- If your problem involves a set (like a set of radio stations) and it's hard to solve, it might be NP-complete.
+- Can you restate your problem as the set-covering problem or the traveling salesman problem? Then your problem is definitly NP-complete.
+
+NP-complete problems show up everywhere.
+
 ## More to come...
+
+
