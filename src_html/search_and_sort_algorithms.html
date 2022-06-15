@@ -275,4 +275,45 @@
 <li>Can you restate your problem as the set-covering problem or the traveling salesman problem? Then your problem is definitly NP-complete.</li>
 </ul>
 <p>NP-complete problems show up everywhere.</p>
-<h2 id="more-to-come">More to come…</h2>
+<h2 id="dynamic-programming---briefly">Dynamic Programming - Briefly</h2>
+<p>Dynamic programming is useful <em>when you’re trying to optimize something given a constraint</em>. For example, in the knapsack problem, you had to maximize the value of the goods you stole, constrained by the size of the knapsack.</p>
+<p>You can use dynamic programming when the problem can be broken into discrete subproblems, and they don’t depend on each other.</p>
+<p>It can be hard to come up with a dynamic programming solution. Some general tips are:</p>
+<ul>
+<li>Every dynamic programming solution involves a grid.</li>
+<li>The values in the cells are usually what you’re trying to optimize. For the knapsack problem, the values were the value of the goods.</li>
+<li>Each cell is a subproblem, so think about how you can divide your problem into subproblems. That will help you figure out what the axes are.</li>
+</ul>
+<h3 id="example---longest-common-substring">Example - Longest common substring</h3>
+<p>Suppose you run dictionary.com. Someone types in a word, and you give them the definition.</p>
+<p>But if someone misspells a word, you want to be able to guess what word they meant. Alex is searching for <em>fish</em>, but he accidentally put in <em>hish</em>. That’s not a word in your dictionary, but you have a list of words that are similar</p>
+<p>Similar to “HISH” - “FISH” - “VISTA”</p>
+<p>Alex typed <em>hish</em>. Which word did Alex mean to type: <em>fish</em> or <em>vista</em>?</p>
+<h4 id="making-the-grid">Making the grid</h4>
+<p>What does the grid for this problem look like? You need to answer these question:</p>
+<ul>
+<li>What are the values of the cells?</li>
+<li>How do you divide this problem into sub-problems?</li>
+<li>What are the axes of the grid?</li>
+</ul>
+<p>In dynamic programming, you’re trying to <em>maximize</em> something. In this case, you’re trying to find the longest substring that two words have in common. What substring do <em>hish</em> and <em>fish</em> have in common? How about <em>fish</em> and <em>vista</em>? That’s what you want to calculate.</p>
+<p>Remember, the values for the cells are usually what youre trying to optimize. In this case, the values will probably be a number: the length of the longest substring that the two string have in common.</p>
+<p>How do you divide this problem into subproblems? You could compare substrings. Instead of comparing <em>hish</em> and <em>fish</em>, you could compare <em>his</em> and <em>fis</em> first. Each cell will contain the length of the longest substring that two substring have in common. This also gives a clue that the axes will probably be the two words (i.e., with the rows being [“F”, “I”, “S”, “H”’] and columns being [“H”, “I”, “S”, “H”]).</p>
+<h4 id="filling-in-the-grid">Filling in the grid</h4>
+<p>Here’s the formula for filling in each cell:</p>
+<ol type="1">
+<li>If the letters in the row/column pair don’t match, the value is zero.</li>
+<li>If they do match, this value is value of the top-left neighbor + 1</li>
+</ol>
+<p>Here’s how the formula looks in pseudocode:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> word_a[i] <span class="op">==</span> word_b[j]:</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  cell[i][j] <span class="op">=</span> cell[i<span class="op">-</span><span class="dv">1</span>][j<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  cell[i][j] <span class="op">=</span> <span class="dv">0</span></span></code></pre></div>
+<p>One thing to note: for this problem, the final solution may not be in the last cell. For the knapsack problem, this last cell always had the final solution. But for the longest common substring, the solution is the largest number in the grid - and it may not be the last cell.</p>
+<h3 id="uses-of-dynamic-programming">Uses of dynamic programming</h3>
+<ul>
+<li>Biologists use the longest common subsequence to find similarities in DNA strands.</li>
+<li>Git diff tells you the differences between two file, and it uses dynamic programming to do so.</li>
+<li>Levenshtein distance measures how similar two string are, and it uses dynamic programming. Levenshtein distance is used for everything from spell-check to figuring out whether a user is uploading copyrighted data.</li>
+</ul>

@@ -348,6 +348,63 @@ NP-complete problems show up everywhere. It's nice to know if the problem you're
 
 NP-complete problems show up everywhere.
 
-## More to come...
+## Dynamic Programming - Briefly
+Dynamic programming is useful _when you're trying to optimize something given a constraint_. For example, in the knapsack problem, you had to maximize the value of the goods you stole, constrained by the size of the knapsack.
+
+You can use dynamic programming when the problem can be broken into discrete subproblems, and they don't depend on each other.
+
+It can be hard to come up with a dynamic programming solution. Some general tips are:
+
+- Every dynamic programming solution involves a grid.
+- The values in the cells are usually what you're trying to optimize. For the knapsack problem, the values were the value of the goods.
+- Each cell is a subproblem, so think about how you can divide your problem into subproblems. That will help you figure out what the axes are.
+
+### Example - Longest common substring
+Suppose you run dictionary.com. Someone types in a word, and you give them the definition.
+
+But if someone misspells a word, you want to be able to guess what word they meant. Alex is searching for _fish_, but he accidentally put in _hish_. That's not a word in your dictionary, but you have a list of words that are similar
+
+Similar to "HISH"
+- "FISH"
+- "VISTA"
+
+Alex typed _hish_. Which word did Alex mean to type: _fish_ or _vista_?
+
+#### Making the grid
+What does the grid for this problem look like? You need to answer these question:
+
+- What are the values of the cells?
+- How do you divide this problem into sub-problems?
+- What are the axes of the grid?
+
+In dynamic programming, you're trying to _maximize_ something. In this case, you're trying to find the longest substring that two words have in common. What substring do _hish_ and _fish_ have in common? How about _fish_ and _vista_? That's what you want to calculate.
+
+Remember, the values for the cells are usually what youre trying to optimize. In this case, the values will probably be a number: the length of the longest substring that the two string have in common.
+
+How do you divide this problem into subproblems? You could compare substrings. Instead of comparing _hish_ and _fish_, you could compare _his_ and _fis_ first. Each cell will contain the length of the longest substring that two substring have in common. This also gives a clue that the axes will probably be the two words (i.e., with the rows being ["F", "I", "S", "H"'] and columns being ["H", "I", "S", "H"]).
+
+#### Filling in the grid
+Here's the formula for filling in each cell:
+
+1. If the letters in the row/column pair don't match, the value is zero.
+2. If they do match, this value is value of the top-left neighbor + 1
+
+Here's how the formula looks in pseudocode:
+
+```python
+if word_a[i] == word_b[j]:
+  cell[i][j] = cell[i-1][j-1] + 1
+else:
+  cell[i][j] = 0
+```
+
+One thing to note: for this problem, the final solution may not be in the last cell. For the knapsack problem, this last cell always had the final solution. But for the longest common substring, the solution is the largest number in the grid - and it may not be the last cell.
+
+
+### Uses of dynamic programming
+
+- Biologists use the longest common subsequence to find similarities in DNA strands.
+- Git diff tells you the differences between two file, and it uses dynamic programming to do so.
+- Levenshtein distance measures how similar two string are, and it uses dynamic programming. Levenshtein distance is used for everything from spell-check to figuring out whether a user is uploading copyrighted data.
 
 
