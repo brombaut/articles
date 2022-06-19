@@ -4,7 +4,7 @@ source $(brew --prefix nvm)/nvm.sh
 nvm use 12
 
 node \
-  syncer/build/index.js \
+  md_to_html_syncer/build/index.js \
   ./src_md \
   ./src_html \
   /Users/BenRombaut/dev/benrombaut.ca/src/articles \

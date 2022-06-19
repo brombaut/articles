@@ -1,16 +1,6 @@
-```python
-def create_md_of_notebook():
-    !jupyter nbconvert ./chpt3_classification.ipynb --to markdown
-
-create_md_of_notebook()
-```
-
-
-```python
-# %pip install pandas
-```
-
 # Classifying the MNIST dataset - the "Hello, World!" of ML
+
+Note that this is take from Chapter 3 of the Hand-on Machine Learning book
 
 
 ```python
@@ -70,7 +60,7 @@ plt.show()
 
 
     
-![png](chpt3_classification_files/chpt3_classification_10_0.png)
+![png](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_9_0.png)
     
 
 
@@ -406,7 +396,7 @@ plt.show()
 
 
     
-![png](chpt3_classification_files/chpt3_classification_54_0.png)
+![png](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_53_0.png)
     
 
 
@@ -431,7 +421,7 @@ plt.show()
 
 
     
-![png](chpt3_classification_files/chpt3_classification_56_0.png)
+![png](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_55_0.png)
     
 
 
@@ -510,7 +500,7 @@ plt.show()
 
 
     
-![png](chpt3_classification_files/chpt3_classification_67_0.png)
+![png](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_66_0.png)
     
 
 
@@ -572,7 +562,7 @@ plt.show()
 
 
     
-![png](chpt3_classification_files/chpt3_classification_76_0.png)
+![png](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_75_0.png)
     
 
 
@@ -797,7 +787,7 @@ plt.show()
 
 
     
-![png](chpt3_classification_files/chpt3_classification_102_0.png)
+![png](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_101_0.png)
     
 
 
@@ -822,7 +812,7 @@ plt.show()
 
 
     
-![png](chpt3_classification_files/chpt3_classification_106_0.png)
+![png](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_105_0.png)
     
 
 
@@ -869,7 +859,7 @@ plt.show()
 
 
     
-![png](chpt3_classification_files/chpt3_classification_109_0.png)
+![png](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_108_0.png)
     
 
 

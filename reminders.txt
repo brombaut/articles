@@ -9,3 +9,5 @@ not this:
 ```
 bash command
 ```
+
+jupyter nbconvert ./classify_mnist_hello_ml.ipynb --to markdown
