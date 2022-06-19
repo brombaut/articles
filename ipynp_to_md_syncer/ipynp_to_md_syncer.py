@@ -59,7 +59,7 @@ def copy_notebook_md(nb_dir, article_name):
 
 def copy_notebook_files_directory(nb_dir, article_name):
     articles_files_src_dir = f"{nb_dir}/{article_name}_files"
-    if articles_files_src_dir:
+    if os.path.isdir(articles_files_src_dir):
         articles_files_dst_dir = f"{ASSETS_IMAGES_DIR}/{article_name}"
         if os.path.exists(articles_files_dst_dir):
             shutil.rmtree(articles_files_dst_dir)

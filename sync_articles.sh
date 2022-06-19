@@ -1,5 +1,7 @@
 #!/bin/bash
 
+/Users/BenRombaut/opt/anaconda3/envs/articles/bin/python ./ipynp_to_md_syncer/ipynp_to_md_syncer.py
+
 source $(brew --prefix nvm)/nvm.sh
 nvm use 12
 
