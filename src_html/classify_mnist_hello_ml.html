@@ -1,0 +1,499 @@
+<h1 id="classifying-the-mnist-dataset---the-hello-world-of-ml">Classifying the MNIST dataset - the “Hello, World!” of ML</h1>
+<p>Note that this is take from Chapter 3 of the Hand-on Machine Learning book</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib <span class="im">as</span> mpl</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code></pre></div>
+<h2 id="mnist">MNIST</h2>
+<p>The MNIST dataset is a set of 70,000 small images of digits handwritten by high school students and employees of the US Census Bureau. Each image is labeled with the digit it represents. This set has been studied so much that it is often called the “hello world” of Machine Learning: whenever people come up with a new classification algorithm they are curious to see how it will perform on MNIST, and anyone who learns Machine Learning tackles this dataset sooner or later.</p>
+<p>Scikit-Learn provides many helper functions to download popular datasets. MNIST is one of the. The following code fetches the MNIST dataset.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> fetch_openml</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>mnist <span class="op">=</span> fetch_openml(<span class="st">&quot;mnist_784&quot;</span>, version<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>mnist.keys()</span></code></pre></div>
+<pre><code>dict_keys([&#39;data&#39;, &#39;target&#39;, &#39;frame&#39;, &#39;categories&#39;, &#39;feature_names&#39;, &#39;target_names&#39;, &#39;DESCR&#39;, &#39;details&#39;, &#39;url&#39;])</code></pre>
+<p>Datasets loaded by Scikit-Learn generally have a similar dictionary structure, including the following - A <code>DESCR</code> keyword describing the dataset - A <code>data</code> key containing an array with one row per instance and one column per feature - A <code>target</code> key containing an array with the labels</p>
+<p>Let’s look at these arrays</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>X, y <span class="op">=</span> mnist[<span class="st">&quot;data&quot;</span>].to_numpy(), mnist[<span class="st">&quot;target&quot;</span>].to_numpy()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X.shape)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y.shape)</span></code></pre></div>
+<pre><code>(70000, 784)
+(70000,)</code></pre>
+<p>There are 70,000 images, and each image has 784 features. This is because each image is 28x28 pixels, and each feature simply represents one pixel’s intensity, from 0 (white) to 255 (black). Let’s take a look at one digit from the dataset. All you need to do is grab an instance’s feature vector, reshape it to a 28x28 array, and display it using Matplotlib’s <code>imshow()</code> function:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>some_digit <span class="op">=</span> X[<span class="dv">0</span>]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>some_digit_image <span class="op">=</span> some_digit.reshape(<span class="dv">28</span>, <span class="dv">28</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>plt.imshow(some_digit_image, cmap<span class="op">=</span><span class="st">&quot;binary&quot;</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">&quot;off&quot;</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<figure>
+<img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_9_0.png" alt="png" /><figcaption aria-hidden="true">png</figcaption>
+</figure>
+<p>This looks like a 5, and indeed that’s what the label tells us:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>y[<span class="dv">0</span>]</span></code></pre></div>
+<pre><code>&#39;5&#39;</code></pre>
+<p>Note that the label is a string. Most ML algorithms expect numbers, so let’s cast <code>y</code> to integer:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> y.astype(np.uint8)</span></code></pre></div>
+<p>You should always create a test set and set it aside before inspecting the data closely. The MNIST dataset is actually already split into a training set (the first 60,000 images) and a test set (the last 10,000 images).</p>
+<p>The training set is already shuffled for us, which is good because this guarentees that all cross-validation folds will be similar (you don’t want one fold to be missing some digits). Moreover, some learning algorithms are sensitive to the order of the training instances, and they perform poorly if they get many similar instances in a row. Shuffling the dataset ensures that this won’t happen</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> X[:<span class="dv">60000</span>], X[<span class="dv">60000</span>:], y[:<span class="dv">60000</span>], y[<span class="dv">60000</span>:]</span></code></pre></div>
+<h2 id="training-a-binary-classifier">Training a Binary Classifier</h2>
+<p>Let’s simplify the problem for now and only try to identify one digit - for example, the number 5. This “5-detector” will be an example of a <em>binary classifier</em>, capable of distinguishing betrween just two classes, 5 and not-5. Let’s create the target vectors for this classification task:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>y_train_5 <span class="op">=</span> (y_train <span class="op">==</span> <span class="dv">5</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>y_test_5 <span class="op">=</span> (y_test <span class="op">==</span> <span class="dv">5</span>)</span></code></pre></div>
+<p>Now let’s pick a classifier and train it. A good place to start is with a <em>Stochastic Gradient Descent</em> (SGD) classifier, using Scikit-Learn’s <code>SGDClassifier</code> class. This classifier has the advantage of being capable of handling very large datasets efficiently. This is in part because SGD deals with training instances independently, one at a time (which also makes SGD well suited for online learning). Let’s create an <code>SGDClassifier</code> and train it on the whole training set:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> SGDClassifier</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>sgd_clf <span class="op">=</span> SGDClassifier(random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>sgd_clf.fit(X_train, y_train_5)</span></code></pre></div>
+<style>#sk-container-id-1 {color: black;background-color: white;}#sk-container-id-1 pre{padding: 0;}#sk-container-id-1 div.sk-toggleable {background-color: white;}#sk-container-id-1 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-1 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-1 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-1 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-1 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-1 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-1 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-1 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-1 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-1 div.sk-item {position: relative;z-index: 1;}#sk-container-id-1 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-1 div.sk-item::before, #sk-container-id-1 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-1 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-1 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-1 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-1 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-1 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-1 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-1 div.sk-label-container {text-align: center;}#sk-container-id-1 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-1 div.sk-text-repr-fallback {display: none;}</style>
+<div id="sk-container-id-1" class="sk-top-container">
+<div class="sk-text-repr-fallback">
+<pre>SGDClassifier(random_state=42)</pre>
+<b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b>
+</div>
+<div class="sk-container" hidden="">
+<div class="sk-item">
+<div class="sk-estimator sk-toggleable">
+<input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" checked><label for="sk-estimator-id-1" class="sk-toggleable__label sk-toggleable__label-arrow">SGDClassifier</label>
+<div class="sk-toggleable__content">
+<pre>SGDClassifier(random_state=42)</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<blockquote>
+<p>The <code>SGDClassifier</code> relies on randomness during training (hence the name “stochastic”). If you want reproducible results, you should set the <code>random_state</code> parameter.</p>
+</blockquote>
+<p>Now we can use it to detect images of the number 5:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>sgd_clf.predict([some_digit])</span></code></pre></div>
+<pre><code>array([ True])</code></pre>
+<p>The classifier guesses that this image represents a 5 (True). Looks like it guessed right in this particular case. Now, let’s evaluate the model’s performance.</p>
+<h2 id="performance-measures">Performance Measures</h2>
+<h3 id="measuring-accuracy-using-cross-validation">Measuring Accuracy Using Cross-Validation</h3>
+<p>A good way to evaluate a model is to use cross-validation.</p>
+<h4 id="aside---implementing-cross-validation">Aside - Implementing Cross-Validation</h4>
+<p>Occasionally you will need more control over the cross-validation process than what Scikit-Learn provides off the shelf. In these cases, you can implement cross-validation yourself. The following code does roughly the same thing as Scikit-Learn’s <code>cross_val_score()</code> function, and it prints the same result.</p>
+<p>The <code>StratifiedKFold</code> class performs stratified sampling to produce folds that contain a representative ratio of each class. At each iteration the code creates a clone of the classifier, trains that clone on the training folds, and makes predictions on the test fold. Then it counts the number of correct predictions and outputs the ratio of correct predictions.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> StratifiedKFold</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.base <span class="im">import</span> clone</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>skfolds <span class="op">=</span> StratifiedKFold(n_splits<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> train_index, test_index <span class="kw">in</span> skfolds.split(X_train, y_train_5):</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    clone_clf <span class="op">=</span> clone(sgd_clf)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    X_train_folds <span class="op">=</span> X_train[train_index]</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    y_train_folds <span class="op">=</span> y_train_5[train_index]</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    X_test_fold <span class="op">=</span> X_train[test_index]</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    y_test_fold <span class="op">=</span> y_train_5[test_index]</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    clone_clf.fit(X_train_folds, y_train_folds)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="op">=</span> clone_clf.predict(X_test_fold)</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    n_correct <span class="op">=</span> <span class="bu">sum</span>(y_pred <span class="op">==</span> y_test_fold)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(n_correct <span class="op">/</span> <span class="bu">len</span>(y_pred))</span></code></pre></div>
+<pre><code>0.95035
+0.96035
+0.9604</code></pre>
+<p>Let’s use the <code>cross_val_score()</code> function to evaluate our <code>SGDClassifier</code> model, using K-fold cross-validation with three folds. K-fold cross-validation means splitting the training set into K folds (in this case, three), then making predictions and evaluating them on each fold using a model trained on the remaining folds.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>cross_val_score(sgd_clf, X_train, y_train_5, cv<span class="op">=</span><span class="dv">3</span>, scoring<span class="op">=</span><span class="st">&quot;accuracy&quot;</span>)</span></code></pre></div>
+<pre><code>array([0.95035, 0.96035, 0.9604 ])</code></pre>
+<p>Above 95% accuracy (ratio of correct predictions) on all cross-validatin folds? This looks really good, but first let’s look at a very dumb classifier that just classifies every single image in the “not-5” class:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.base <span class="im">import</span> BaseEstimator</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Never5Classifier(BaseEstimator):</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> fit(<span class="va">self</span>, X, y<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> predict(<span class="va">self</span>, X):</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.zeros((<span class="bu">len</span>(X), <span class="dv">1</span>), dtype<span class="op">=</span><span class="bu">bool</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>never_5_clf <span class="op">=</span> Never5Classifier()</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>cross_val_score(never_5_clf, X_train, y_train_5, cv<span class="op">=</span><span class="dv">3</span>, scoring<span class="op">=</span><span class="st">&quot;accuracy&quot;</span>)</span></code></pre></div>
+<pre><code>array([0.91125, 0.90855, 0.90915])</code></pre>
+<p>This model’s accuracy has over 90%. This is simply because only about 10% of the images are 5s, so if you always guess that an image is not a 5, you will be right about 90% of the time.</p>
+<p>This demonstrates why accuracy is generally not the preffered performance measure for classifiers, especially when you are dealing with <em>skewed datasets</em> (i.e., when some classes are much more frequent than others).</p>
+<h3 id="confusion-matrix">Confusion Matrix</h3>
+<p>A much better way to evaluate the performance of a classifier is to look at the <em>confusion matrix</em>. The general idea is to count the number of times instances of class A are classified as class B. For example, to know the number of times the classifier confused images of 5s and 3s, you would look in the fifth row and third column of the confusion matrix</p>
+<p>To compute the confusion matrix, you first need to have a set of predictions so that they can be compared to the actual targets. You could make predictions on the test set, but remember that you want to use the test set only at the very end of your project, once you have a classifier that you are ready to launch, so we can use the <code>cross_val_predict()</code> function.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_predict</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>y_train_pred <span class="op">=</span> cross_val_predict(sgd_clf, X_train, y_train_5, cv<span class="op">=</span><span class="dv">3</span>)</span></code></pre></div>
+<p>Just like <code>cross_val_score()</code> function, <code>cross_val_predict()</code> performs K-fold cross-validation, but instead of returning the evaluation scores, it returns, the predictions made on each test fold. This means that you get a clean prediction for each instance in the training set (“clean meaning that the prediction is made by a model that never saw the data during training).</p>
+<p>Now you are ready to get the confusion matrix using the <code>confusion_matrix()</code> function. Just pass it the target class (<code>y_train_5</code>) and the predicted classes (<code>y_train_pred</code>):</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> confusion_matrix</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>confusion_matrix(y_train_5, y_train_pred)</span></code></pre></div>
+<pre><code>array([[53892,   687],
+       [ 1891,  3530]])</code></pre>
+<p>Each row in a confusion matrix represents an <em>actual class</em>, while each column represents a <em>predicted class</em>. The first row of this matrix considers non-5 images (the <em>negative class</em>): 53,892 of them were correctly classified as non-5s (they are called <em>true negatives</em>), while the remaining 687 were classified as 5s (<em>false positives</em>). The second row considers the images of 5s (the <em>positive class</em>): 1,891 were wrongly classified as non-5s (<em>false negatives</em>), while the remaining 3,530 were correctly classified as 5s (<em>true positives</em>). A perfect classifier would have only true positives and true negatives, so its confusion matrix would have nonzero values only on its main diagonal (top left to bottom right):</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>y_train_perfect_predictions <span class="op">=</span> y_train_5  <span class="co"># pretend we reached perfection</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>confusion_matrix(y_train_5, y_train_perfect_predictions)</span></code></pre></div>
+<pre><code>array([[54579,     0],
+       [    0,  5421]])</code></pre>
+<p>The confusion matrix gives you a lot of information, but sometimes you may prefer a more concise metric. An interesting one to look at is the accuracy of the positive predictions; this is called the <em>precision</em> of the classifier:</p>
+<p><span class="math display">$$ precision = {TP \over TP+FP} $$</span></p>
+<p><span class="math inline"><em>T</em><em>P</em></span> is the number of true positives, and <span class="math inline"><em>F</em><em>P</em></span> is the number of false positives.</p>
+<p>A trivial way to have perfect precision is to make one single positive prediction and ensure it is correct (precision = 1/1 = 100%). But this would not be very useful, since the classifier would ignore all but one positive instance. So precision is typically used along with another metric named <em>recall</em>, also called <em>sensitivity</em> or the <em>true positive rate</em> (TPR): this is the ratio of positive instances that are correctly detected by the classifier:</p>
+<p><span class="math display">$$ recall = {TP \over TP+FN} $$</span></p>
+<p>where <span class="math inline"><em>F</em><em>N</em></span> is the number of false negatives.</p>
+<h4 id="precision-and-recall">Precision and Recall</h4>
+<p>Scikit-learn provides several functions to compute classifier metrics, including precision and recall</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> precision_score, recall_score</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(precision_score(y_train_5, y_train_pred))</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(recall_score(y_train_5, y_train_pred))</span></code></pre></div>
+<pre><code>0.8370879772350012
+0.6511713705958311</code></pre>
+<p>Now the classifier doesn’t look as good as when you only looked at its accuracy. When it claims an image represents a 5, it is correct only 83.7% of the time. Moreover, it only detects 65.1% of the 5s.</p>
+<p>It is often convenient to combine precision and recall into a single metric called the <span class="math inline"><em>F</em><sub>1</sub></span> score, in particular if you need a simple way to compare two classifiers. The <span class="math inline"><em>F</em><sub>1</sub></span> score is the <em>harmonic mean</em> of precision and recall (see below). Whereas the regular mean treats all values equally, the harmonic mean gives much more weight to low values. As a result, the classifier will only get a high <span class="math inline"><em>F</em><sub>1</sub></span> score if both recall and precision are high.</p>
+<p><span class="math display">$$ F_1 = {2 \over {1 \over precision} + {1 \over recall}} = {2 * {{precision * recall} \over {precision + recall}}} = {TP \over {TP + {FN + FP \over 2}}}$$</span></p>
+<p>To compute the <span class="math inline"><em>F</em><sub>1</sub></span> score, simply call the <code>f1_score()</code> function:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> f1_score</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>f1_score(y_train_5, y_train_pred)</span></code></pre></div>
+<pre><code>0.7325171197343846</code></pre>
+<p>The <span class="math inline"><em>F</em><sub>1</sub></span> score favours classifiers that have similar precision and recall. This is not always what you want: in some contexts you mostly care about precision, and in other contexts you really care about recall. For example, if you trained a classifier to detect videos that are safe for kids, you would probably prefer a classifier that rejects many good videos (low recall) but keeps only safe ones (high precision), rather than a classifier that has a much higher recall but lets a few really bad videos show up in your product. On the other hand, suppose you train a classifier to detect shoplifters in surveillance images: it is probably fine if your classifier has only 30% precision as long as it has 99% recall (sure, the security guards will geta few false alarts, but almost all shoplifters will get caught).</p>
+<p>Unfortunately, you can’t have it both ways: increasing precision reduces recall, and vice versa. This is called the <em>precision/recall trade-off</em>.</p>
+<h4 id="precisionrecall-trade-off">Precision/Recall Trade-off</h4>
+<p>To understand this trade-off, let’s look at how the <code>SGDClassifier</code> makes its classification decision. For each instance, it computes a score based on a <em>decision function</em>. If that score is greater than a threshold, it assugns the instance to the positive class; otherwise it assigns it to the negative class. Suppose you have six actual 5s to detect and a <em>decision threshold</em> that results in 4 true positives (actual 5s) on the right of that threshold, and 1 false positive (actually a 6). Therefore, with that threshold, the precision is 80% (4 out of 5). But out of 6 actual 5s, the classifier only detects 4, so the recall is 67% (4 out of 6). If you raise the threshold (i.e., move the threshold further to the right), the false positive (the 6) becomes a true negative, thereby increasing the precision (up to 100% in this case), but one true positive becomes a false negative, decreasing recall down to 50%. Conversely, lowering the threshold increases the recall and reduces precision.</p>
+<p>Scikit-Learn does not let you set the threshold directly, but it does give you access to the decision scores that it uses to make predictions. Instead of calling the classifier;s <code>predict()</code> method, you can call its <code>decision_function()</code> method, which returns a score for each instance, and then use any threshold you want to make predictions based on those scores:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>y_scores <span class="op">=</span> sgd_clf.decision_function([some_digit])</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y_scores)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>threshold <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>y_some_digit_pred <span class="op">=</span> (y_scores <span class="op">&gt;</span> threshold)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y_some_digit_pred)</span></code></pre></div>
+<pre><code>[2164.22030239]
+[ True]</code></pre>
+<p>The <code>SGDClassifier</code> uses a threshold equal to 0, so the previous code returns the same result as the <code>predict()</code> method (i.e., <code>True</code>). Let’s raise the threshold:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>threshold <span class="op">=</span> <span class="dv">8000</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>y_some_digit_pred <span class="op">=</span> (y_scores <span class="op">&gt;</span> threshold)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y_some_digit_pred)</span></code></pre></div>
+<pre><code>[False]</code></pre>
+<p>This confirms that raising the threshold decreases recall. The image actually represents a 5, and the classifier detects it when the threshold is 0, but it misses it when the threshold is increased to 8,000.</p>
+<p>How do you decide which threshold to use? First, use the <code>cross_val_predict()</code> function to get the scores of all instances in the training set, but this time specify that you want to return decision scores instead of predictions:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>y_scores <span class="op">=</span> cross_val_predict(sgd_clf, X_train, y_train_5, cv<span class="op">=</span><span class="dv">3</span>, method<span class="op">=</span><span class="st">&quot;decision_function&quot;</span>)</span></code></pre></div>
+<p>With these scores, use the <code>precision_recall_curve()</code> function to compute precision and recall for all possible thresholds:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> precision_recall_curve</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>precisions, recalls, thresholds <span class="op">=</span> precision_recall_curve(y_train_5, y_scores)</span></code></pre></div>
+<p>Finally, use Matplotlib to plot precision and recall as functions of the threshold value.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_precision_recall_vs_threshold(precisions, recalls, thresholds):</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    plt.plot(thresholds, precisions[:<span class="op">-</span><span class="dv">1</span>], <span class="st">&quot;b--&quot;</span>, label<span class="op">=</span><span class="st">&quot;Precision&quot;</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    plt.plot(thresholds, recalls[:<span class="op">-</span><span class="dv">1</span>], <span class="st">&quot;g-&quot;</span>, label<span class="op">=</span><span class="st">&quot;Recall&quot;</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    plt.legend(loc<span class="op">=</span><span class="st">&quot;center right&quot;</span>, fontsize<span class="op">=</span><span class="dv">16</span>) <span class="co"># Not shown in the book</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">&quot;Threshold&quot;</span>, fontsize<span class="op">=</span><span class="dv">16</span>)        <span class="co"># Not shown</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    plt.grid(<span class="va">True</span>)                              <span class="co"># Not shown</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    plt.axis([<span class="op">-</span><span class="dv">50000</span>, <span class="dv">50000</span>, <span class="dv">0</span>, <span class="dv">1</span>])             <span class="co"># Not shown</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>recall_90_precision <span class="op">=</span> recalls[np.argmax(precisions <span class="op">&gt;=</span> <span class="fl">0.90</span>)]</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>threshold_90_precision <span class="op">=</span> thresholds[np.argmax(precisions <span class="op">&gt;=</span> <span class="fl">0.90</span>)]</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">4</span>))                                                                  <span class="co"># Not shown</span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>plot_precision_recall_vs_threshold(precisions, recalls, thresholds)</span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>plt.plot([threshold_90_precision, threshold_90_precision], [<span class="fl">0.</span>, <span class="fl">0.9</span>], <span class="st">&quot;r:&quot;</span>)                 <span class="co"># Not shown</span></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="op">-</span><span class="dv">50000</span>, threshold_90_precision], [<span class="fl">0.9</span>, <span class="fl">0.9</span>], <span class="st">&quot;r:&quot;</span>)                                <span class="co"># Not shown</span></span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="op">-</span><span class="dv">50000</span>, threshold_90_precision], [recall_90_precision, recall_90_precision], <span class="st">&quot;r:&quot;</span>)<span class="co"># Not shown</span></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>plt.plot([threshold_90_precision], [<span class="fl">0.9</span>], <span class="st">&quot;ro&quot;</span>)                                             <span class="co"># Not shown</span></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>plt.plot([threshold_90_precision], [recall_90_precision], <span class="st">&quot;ro&quot;</span>)                             <span class="co"># Not shown</span></span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a><span class="co"># save_fig(&quot;precision_recall_vs_threshold_plot&quot;)                                              # Not shown</span></span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<figure>
+<img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_53_0.png" alt="png" /><figcaption aria-hidden="true">png</figcaption>
+</figure>
+<p>Another way to select a good precision/recall trade-off is to plot precision directly against recall, shown below (the same threshold as earlier is highlighted).</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_precision_vs_recall(precisions, recalls):</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    plt.plot(recalls, precisions, <span class="st">&quot;b-&quot;</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">&quot;Recall&quot;</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">&quot;Precision&quot;</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    plt.axis([<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>])</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    plt.grid(<span class="va">True</span>)</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>plot_precision_vs_recall(precisions, recalls)</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>plt.plot([recall_90_precision, recall_90_precision], [<span class="fl">0.</span>, <span class="fl">0.9</span>], <span class="st">&quot;r:&quot;</span>)</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="fl">0.0</span>, recall_90_precision], [<span class="fl">0.9</span>, <span class="fl">0.9</span>], <span class="st">&quot;r:&quot;</span>)</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>plt.plot([recall_90_precision], [<span class="fl">0.9</span>], <span class="st">&quot;ro&quot;</span>)</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<figure>
+<img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_55_0.png" alt="png" /><figcaption aria-hidden="true">png</figcaption>
+</figure>
+<p>You can see that precision really starts to fall sharply around 80% recall. You will probably want to select a precision/recall trade-off before that drop - for example, at around 60% recall. But of course, the choice depends on your project.</p>
+<p>Suppose you decide to aim for 90% precision. You look up the first plot and find that you need to use a threshold of about 8,000. To be more precise you can search for the lowest threshold that gives you at least 90% precision (<code>np.argmax()</code> will give you the first index of the maximum value, which in this case means the first <code>True</code> value):</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>threshold_90_precision <span class="op">=</span> thresholds[np.argmax(precisions <span class="op">&gt;=</span> <span class="fl">0.90</span>)]</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>threshold_90_precision</span></code></pre></div>
+<pre><code>3370.0194991439594</code></pre>
+<p>To make predictions (on the training set for now), instead of calling the classifier’s <code>predict()</code> method, you can run this code:</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>y_train_pred_90 <span class="op">=</span> (y_scores <span class="op">&gt;=</span> threshold_90_precision)</span></code></pre></div>
+<p>Let’s check these predictions’ precision and recall</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(precision_score(y_train_5, y_train_pred_90))</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(recall_score(y_train_5, y_train_pred_90))</span></code></pre></div>
+<pre><code>0.9000345901072293
+0.4799852425751706</code></pre>
+<p>Now we have a 90% precision classifier! As you can see, it’s fairly easy to create a classifier with cirtually any precision you want: just set a high enough threshold, and you’re done. However, a high-precision classifier is not very useful if its recall is too low.</p>
+<h4 id="the-roc-curve">The ROC Curve</h4>
+<p>The <em>receiver operating characteristic</em> (ROC) curve is another common tool used with binary classifiers. It is very similar to the precision/recall curve, but instead of plotting precision versus recall, the ROC curve plots the <em>true positive rate</em> (another name for recall) against the <em>false positive rate</em> (FPR). The FPR is the ratio of negative instances that are incorrectly classified as positive. It is equal to 1 - the <em>the true negative rate</em> (TNR), which is the ratio of negative instances that are correctly classified as negative. The TNR is also called <em>specificity</em>. Hence, the ROC curve plots <em>sensitivity</em> (recall) versus 1 - _specificity.</p>
+<p>The plot the ROC curve, you first use the <code>roc_curve()</code> function to compute the TPR and FPR for various threshold values:</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> roc_curve</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>fpr, tpr, thresholds <span class="op">=</span> roc_curve(y_train_5, y_scores)</span></code></pre></div>
+<p>Then you can plot the FPR against the TPR using Matplotlib, shown below:</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_roc_curve(fpr, tpr, label<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>    plt.plot(fpr, tpr, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span>label)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    plt.plot([<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="dv">1</span>], <span class="st">&#39;k--&#39;</span>) <span class="co"># dashed diagonal</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    plt.axis([<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>])                                    <span class="co"># Not shown in the book</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">&#39;False Positive Rate (Fall-Out)&#39;</span>, fontsize<span class="op">=</span><span class="dv">16</span>) <span class="co"># Not shown</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">&#39;True Positive Rate (Recall)&#39;</span>, fontsize<span class="op">=</span><span class="dv">16</span>)    <span class="co"># Not shown</span></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    plt.grid(<span class="va">True</span>)                                            <span class="co"># Not shown</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))                                    <span class="co"># Not shown</span></span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>plot_roc_curve(fpr, tpr)</span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>fpr_90 <span class="op">=</span> fpr[np.argmax(tpr <span class="op">&gt;=</span> recall_90_precision)]           <span class="co"># Not shown</span></span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>plt.plot([fpr_90, fpr_90], [<span class="fl">0.</span>, recall_90_precision], <span class="st">&quot;r:&quot;</span>)   <span class="co"># Not shown</span></span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="fl">0.0</span>, fpr_90], [recall_90_precision, recall_90_precision], <span class="st">&quot;r:&quot;</span>)  <span class="co"># Not shown</span></span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>plt.plot([fpr_90], [recall_90_precision], <span class="st">&quot;ro&quot;</span>)               <span class="co"># Not shown</span></span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<figure>
+<img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_66_0.png" alt="png" /><figcaption aria-hidden="true">png</figcaption>
+</figure>
+<p>Once again there is a trade-off: the higher the recall (TPR), the more false positives (FPR) the classifier produces. The dotted line represents the ROC curve of a purely random classifier; a good classifier stays as far away from that line as possible (towards the top-left corner).</p>
+<p>One way to compare classifiers is to measyre the <em>area under the curve</em> (AUC). A perfect classifier will have a ROC AUC equal to 1, whereas a purely random classifier will have a ROC AUC equal to 0.5. Scikit-Learn provides a function to compute the ROC AUC:</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> roc_auc_score</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>roc_auc_score(y_train_5, y_scores)</span></code></pre></div>
+<pre><code>0.9604938554008616</code></pre>
+<blockquote>
+<p>Since the ROC curve is so similar to the precision/recall (PR) curve, you may wonder how to decide which one to use. As a rule of thumb, you should prefer the PR curve whenever the positive class is rare or when you care more about the false positives than the false negatives. Otherwise, use the ROC curve. For example, looking at the previous ROC curve (and the ROC AUC score), you may think that the classifier is really good. But this is mostly because there are few positives (5s) compared to the negatives (non-5s). In contrast, the PR curve makes it clear that the classifier has room for improvement (the curve could be closer to the top-left corner).</p>
+</blockquote>
+<p>Let’s now train a <code>RandomForestClassifiers</code> and compare its ROC curve and ROC AUC score to those of the <code>SGDClassifier</code>. First, you need to get scores for each instance in the training set. But due to the way it works, the <code>RandomForestClassifier</code> class does not have a <code>decision_function()</code> method. Instead, it has a <code>predict_proba()</code> method. Scikit-Learn classifiers generally have one or the other, or both. The <code>predict_proba()</code> method returns an array containing a row per instance and a column per class, each containing the probability that the given instance belongs to the given class (e.g., 70% chance that the image represents a 5):</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestClassifier</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>forest_clf <span class="op">=</span> RandomForestClassifier(n_estimators<span class="op">=</span><span class="dv">100</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>y_probas_forest <span class="op">=</span> cross_val_predict(forest_clf, X_train, y_train_5, cv<span class="op">=</span><span class="dv">3</span>, method<span class="op">=</span><span class="st">&quot;predict_proba&quot;</span>)</span></code></pre></div>
+<p>The <code>roc_curve()</code> function expects labels and scores, but instead of scores you can give it probabilities. Let’s use the positive class’s probability as he score:</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>y_scores_forest <span class="op">=</span> y_probas_forest[:, <span class="dv">1</span>] <span class="co"># score = proba of positive class</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>fpr_forest, tpr_forest, thresholds_forest <span class="op">=</span> roc_curve(y_train_5,y_scores_forest)</span></code></pre></div>
+<p>Now you are ready to plot the ROC curve. It is useful to plot the first ROC curve as well to see how they compare:</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>recall_for_forest <span class="op">=</span> tpr_forest[np.argmax(fpr_forest <span class="op">&gt;=</span> fpr_90)]</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>plt.plot(fpr, tpr, <span class="st">&quot;b:&quot;</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">&quot;SGD&quot;</span>)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>plot_roc_curve(fpr_forest, tpr_forest, <span class="st">&quot;Random Forest&quot;</span>)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>plt.plot([fpr_90, fpr_90], [<span class="fl">0.</span>, recall_90_precision], <span class="st">&quot;r:&quot;</span>)</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="fl">0.0</span>, fpr_90], [recall_90_precision, recall_90_precision], <span class="st">&quot;r:&quot;</span>)</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>plt.plot([fpr_90], [recall_90_precision], <span class="st">&quot;ro&quot;</span>)</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>plt.plot([fpr_90, fpr_90], [<span class="fl">0.</span>, recall_for_forest], <span class="st">&quot;r:&quot;</span>)</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>plt.plot([fpr_90], [recall_for_forest], <span class="st">&quot;ro&quot;</span>)</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">&quot;lower right&quot;</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<figure>
+<img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_75_0.png" alt="png" /><figcaption aria-hidden="true">png</figcaption>
+</figure>
+<p>As you can see, the <code>RandomForestClassifier</code>’s ROC curve looks much better than the <code>SGDClassifier</code>’s: it comes much claser to the top-left corner. As a result, its ROC AUC score is also significantly better:</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>roc_auc_score(y_train_5, y_scores_forest)</span></code></pre></div>
+<pre><code>0.9983436731328145</code></pre>
+<p>We can also check the prevision and recall scores:</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>y_train_pred_forest <span class="op">=</span> cross_val_predict(forest_clf, X_train, y_train_5, cv<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(precision_score(y_train_5, y_train_pred_forest))</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(recall_score(y_train_5, y_train_pred_forest))</span></code></pre></div>
+<pre><code>0.9905083315756169
+0.8662608374838591</code></pre>
+<p>We now know how to trained a binary classifier, choose the appropriate metric for the task, evaluate the classifiers using cross-validation, select the precision/recall trade-off that fits your needs, and use ROC curves and ROC AUC scores to compare various models. Now we will try to detect more than just the 5s.</p>
+<h3 id="multiclass-classification">Multiclass Classification</h3>
+<p>Whereas binary classifiers distinguish between two classes, <em>multiclass classifiers</em> (also called <em>multinomial classifiers</em>) can distinguish between more than two classes.</p>
+<p>Some algorithms (such as SGD classifiers, Random Forest classifiers, and naive Bayes classifiers) are capable of handling multiple classes natively. Others (such as Logistic Regression or Support Vector Machine classifiers) are strictly binary classifiers. However, there are various strategies that you canuse to perform multiclass classification with multiple binary classifiers.</p>
+<p>One way to create a system that can classify the digit images into 10 classes (from 0 to 9) is to train 10 binary classifiers, one for each digit (a 0-detector, a 1-detector, a 2-detector, etc.). Then when you want to classify an image, you get the decision score from each classifier for that image and you select the class whose classifier outputs the highest score. This is called the <em>one-versus-the-rest</em> (OvR) strategy (also called _one-versus-all).</p>
+<p>Another strategy is to train a binary classifier for every pair of digits: one to distinguish 0s and 1s, another to distinguish 0s and 2s, another for 1s and 2s, etc.. This is called the <em>one-versus-one</em> (OvO) strategy. If there are <em>N</em> classes, you need to train <span class="math inline">$N * (N - 1) \over 2$</span> classifiers. For the MNIST problem, this means training 45 binary classifiers! When you want to classify an image, you have to run the image through all 45 classifiers and see which class wins the most duels. The main advantage of OvO is that each classifier only needs to be trained on the part of the training set for the two classes that is must distinguish.</p>
+<p>Some algorithms (such as Support Vector Machine classifiers) scale poorly with the size of the training set. For these algorithms OvO is preferred because it is faster to train many classifiers on small training sets than to train few classifiers on large training sets. For most binary classification algorithms, however, OvR is preferred.</p>
+<p>Scikit-Learn detects when you try to use a binary classification algorithm for a multiclass classification task, and it automatically runs OvR or OvO, depending on the algorithm. Let’s try this with a Support Vector Machine classifier using the <code>sklearn.svm.SVC</code> class:</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.svm <span class="im">import</span> SVC</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>svm_clf <span class="op">=</span> SVC()</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>svm_clf.fit(X_train, y_train)</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>svm_clf.predict([some_digit])</span></code></pre></div>
+<pre><code>array([5], dtype=uint8)</code></pre>
+<p>This code trains the <code>SVC</code> on the training set using the original target classes from 0 to 9 (<code>y_train</code>), instead of the 5-versus-the-rest target classes (<code>y_train_5</code>). Then it makes a prediction (a correct one in this case). Under the hood, Scikit-Learn actually used the OvO strategy: it trained 45 binary classifiers, got their decision scores for the image, and selected the class that won the most duels.</p>
+<p>If you call the <code>decision_function()</code> method, you will see that it returns 10 scores per instance (instead of just 1). That’s one score per class:</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>some_digit_scores <span class="op">=</span> svm_clf.decision_function([some_digit])</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>some_digit_scores</span></code></pre></div>
+<pre><code>array([[ 1.72501977,  2.72809088,  7.2510018 ,  8.3076379 , -0.31087254,
+         9.3132482 ,  1.70975103,  2.76765202,  6.23049537,  4.84771048]])</code></pre>
+<p>The highest score is indeed the one corresponding to class 5:</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(np.argmax(some_digit_scores))</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(svm_clf.classes_)</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(svm_clf.classes_[<span class="dv">5</span>])</span></code></pre></div>
+<pre><code>5
+[0 1 2 3 4 5 6 7 8 9]
+5</code></pre>
+<blockquote>
+<p>When a classifier is trained, it stores the list of target classes in its <code>classes_</code> attribute, ordered by value. In this case, the index of each class in the <code>classes_</code> array conveniently matches the class itself (e.g., the class at index 5 happens to be class 5), but in general you won’t be so lucky.</p>
+</blockquote>
+<p>If you want to force Scikit-Learn to use one-versus-one or one-versus-the-rest, you can use the <code>OnveVsOneClassifier</code> or <code>OneVsRestClassifier</code> classes. Simply create an instance and pass a classifier to its constructor (it does not even have to be a binary classifier). For example, this code creates a multiclass classifier using the OvR strategy, based on an <code>SVC</code>:</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.multiclass <span class="im">import</span> OneVsRestClassifier</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>ovr_clf <span class="op">=</span> OneVsRestClassifier(SVC(gamma<span class="op">=</span><span class="st">&quot;auto&quot;</span>, random_state<span class="op">=</span><span class="dv">42</span>))</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>ovr_clf.fit(X_train[:<span class="dv">1000</span>], y_train[:<span class="dv">1000</span>])</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ovr_clf.predict([some_digit]))</span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(ovr_clf.estimators_))</span></code></pre></div>
+<pre><code>[5]
+10</code></pre>
+<p>Training an <code>SGDClassifier</code> (or a <code>RandomForestClassifier</code>) is just as easy:</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>sgd_clf.fit(X_train, y_train)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>sgd_clf.predict([some_digit])</span></code></pre></div>
+<pre><code>array([3], dtype=uint8)</code></pre>
+<p>This time Scikit-learn did not have to run OvR or OvO because SGD classifiers can directly classify instances into multiple classes. The <code>decision_function()</code> method now returns one value per class. Let’s look at the score that the SGD classifier assigned to each class:</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>sgd_clf.decision_function([some_digit])</span></code></pre></div>
+<pre><code>array([[-31893.03095419, -34419.69069632,  -9530.63950739,
+          1823.73154031, -22320.14822878,  -1385.80478895,
+        -26188.91070951, -16147.51323997,  -4604.35491274,
+        -12050.767298  ]])</code></pre>
+<p>You can see that the classifier is fairly confident about its prediction: almost all scores are largely negative, while class 5 has a high score. The model has a slight doubt regarding class 3. Now of course you want to evaluate this classifier. As usual, you can use cross-validation. Use the <code>cross_val_score()</code> function to evaluate the <code>SGDClassifier</code>’s accuracy:</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Warning: This cell may take close to 30 minutes to run, or more depending on your hardware.</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>cross_val_score(sgd_clf, X_train, y_train, cv<span class="op">=</span><span class="dv">3</span>, scoring<span class="op">=</span><span class="st">&quot;accuracy&quot;</span>)</span></code></pre></div>
+<pre><code>array([0.87365, 0.85835, 0.8689 ])</code></pre>
+<p>It gets over 84% on all test folds. If you used a random classifier, you would get 10% accuracy, so this is not such a bad score, but you can still do much better. Simply scaling the inputs increases accuracy above 89%.</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Warning: This cell may take close to 30 minutes to run, or more depending on your hardware.</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>X_train_scaled <span class="op">=</span> scaler.fit_transform(X_train.astype(np.float64))</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>cross_val_score(sgd_clf, X_train_scaled, y_train, cv<span class="op">=</span><span class="dv">3</span>, scoring<span class="op">=</span><span class="st">&quot;accuracy&quot;</span>)</span></code></pre></div>
+<pre><code>array([0.8983, 0.891 , 0.9018])</code></pre>
+<h3 id="error-analysis">Error Analysis</h3>
+<p>If this were a real project, you would have followed these steps:</p>
+<ol type="1">
+<li>You’d eplore data preparation options</li>
+<li>Try out multiple models (shortlisting the best ones and fine-tuning their hyperparameters using <code>GridSearcgCV</code>)</li>
+<li>Automate as much as possible</li>
+</ol>
+<p>Here, we will assume you have found a promising model and you want to find ways to improve it. One way to do this is to analyze the types of errors it makes.</p>
+<p>First, look at the confusion matrix. You need to make predictions using the <code>cross_val_predict()</code> function, then call the <code>confusion_matrix()</code> functions, just like you did earlier:</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>y_train_pred <span class="op">=</span> cross_val_predict(sgd_clf, X_train_scaled, y_train, cv<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>conf_mx <span class="op">=</span> confusion_matrix(y_train, y_train_pred)</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>conf_mx</span></code></pre></div>
+<pre><code>array([[5577,    0,   22,    5,    8,   43,   36,    6,  225,    1],
+       [   0, 6400,   37,   24,    4,   44,    4,    7,  212,   10],
+       [  27,   27, 5220,   92,   73,   27,   67,   36,  378,   11],
+       [  22,   17,  117, 5227,    2,  203,   27,   40,  403,   73],
+       [  12,   14,   41,    9, 5182,   12,   34,   27,  347,  164],
+       [  27,   15,   30,  168,   53, 4444,   75,   14,  535,   60],
+       [  30,   15,   42,    3,   44,   97, 5552,    3,  131,    1],
+       [  21,   10,   51,   30,   49,   12,    3, 5684,  195,  210],
+       [  17,   63,   48,   86,    3,  126,   25,   10, 5429,   44],
+       [  25,   18,   30,   64,  118,   36,    1,  179,  371, 5107]])</code></pre>
+<p>This is pretty tough to look at. It’s often more convenient to look at an image representation of the confusion matrix, using Matplotlib’s <code>matshow()</code> function:</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>plt.matshow(conf_mx, cmap<span class="op">=</span>plt.cm.gray)</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<figure>
+<img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_101_0.png" alt="png" /><figcaption aria-hidden="true">png</figcaption>
+</figure>
+<p>The confusion matrix looks pretty good, since most images are on the main diagonal, which means that they were classified correctly. The 5s look slightly darker than the other digits, which could mean that there are fewer images of 5s in the dataset or that the classifier does not perform as well on 5s as on other digits. In fact, you can verify that both are the case.</p>
+<p>Let’s focus the plot on the errors. First, you need to divide each value in the confusion matrix by the number of images in the corresponding class so that you can compare error rates instead of absolute numbers of errors (which would make abundant classes look unfairly bad):</p>
+<div class="sourceCode" id="cb73"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>row_sums <span class="op">=</span> conf_mx.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>norm_conf_mx <span class="op">=</span> conf_mx <span class="op">/</span> row_sums</span></code></pre></div>
+<p>Fill the diagonal with zeros to keep only the errors, and plot the result:</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>np.fill_diagonal(norm_conf_mx, <span class="dv">0</span>)</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>plt.matshow(norm_conf_mx, cmap<span class="op">=</span>plt.cm.gray)</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<figure>
+<img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_105_0.png" alt="png" /><figcaption aria-hidden="true">png</figcaption>
+</figure>
+<p>You can clearly see the kinds of errors the classifier makes. Remember that rows represent actual classes, while columns represent predicted classes. The column for class 8 is quite bright, which tells you that many images get misclassified as 8s. However, the row for class 8 is not that bad, telling you that actual 8s in general get properly classified as 8s. As you can see, the confusion matrix is not necessarily symmetrical. You can also see that 3s and 5s often get confused (in both directions).</p>
+<p>Analyzing the confusion matrix often gives you insights into ways to improve your classifier. Looking at this plot, it seems that your efforts should be spent on reducing the false 8s. For example, you could try to gather more training data for digits that look like 8s (but are not) so that the classifier can learn to distinguish them from real 8s. Or you could engineer new features that would help the classifier - for example, writing an algorithm to count the number of closed loops (e.g., 8 has two, 6 has one, 5 has none). Or you could preprocess the images (e.g., using Scikit-image, Pillow, or OpenCV) to make some patterns, such as closed loops, stand out.</p>
+<p>Analyzing individual errors can also be a good way to gain insights on what your classifier is doing and why it is failing, but it is more difficult and time-consuming. For example, let’s plot examples of 3s and 5s.</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># EXTRA</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_digits(instances, images_per_row<span class="op">=</span><span class="dv">10</span>, <span class="op">**</span>options):</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>    size <span class="op">=</span> <span class="dv">28</span></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>    images_per_row <span class="op">=</span> <span class="bu">min</span>(<span class="bu">len</span>(instances), images_per_row)</span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>    images <span class="op">=</span> [instance.reshape(size,size) <span class="cf">for</span> instance <span class="kw">in</span> instances]</span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>    n_rows <span class="op">=</span> (<span class="bu">len</span>(instances) <span class="op">-</span> <span class="dv">1</span>) <span class="op">//</span> images_per_row <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>    row_images <span class="op">=</span> []</span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>    n_empty <span class="op">=</span> n_rows <span class="op">*</span> images_per_row <span class="op">-</span> <span class="bu">len</span>(instances)</span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>    images.append(np.zeros((size, size <span class="op">*</span> n_empty)))</span>
+<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> row <span class="kw">in</span> <span class="bu">range</span>(n_rows):</span>
+<span id="cb75-11"><a href="#cb75-11" aria-hidden="true" tabindex="-1"></a>        rimages <span class="op">=</span> images[row <span class="op">*</span> images_per_row : (row <span class="op">+</span> <span class="dv">1</span>) <span class="op">*</span> images_per_row]</span>
+<span id="cb75-12"><a href="#cb75-12" aria-hidden="true" tabindex="-1"></a>        row_images.append(np.concatenate(rimages, axis<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb75-13"><a href="#cb75-13" aria-hidden="true" tabindex="-1"></a>    image <span class="op">=</span> np.concatenate(row_images, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb75-14"><a href="#cb75-14" aria-hidden="true" tabindex="-1"></a>    plt.imshow(image, cmap <span class="op">=</span> mpl.cm.binary, <span class="op">**</span>options)</span>
+<span id="cb75-15"><a href="#cb75-15" aria-hidden="true" tabindex="-1"></a>    plt.axis(<span class="st">&quot;off&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>cl_a, cl_b <span class="op">=</span> <span class="dv">3</span>, <span class="dv">5</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>X_aa <span class="op">=</span> X_train[(y_train <span class="op">==</span> cl_a) <span class="op">&amp;</span> (y_train_pred <span class="op">==</span> cl_a)]</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>X_ab <span class="op">=</span> X_train[(y_train <span class="op">==</span> cl_a) <span class="op">&amp;</span> (y_train_pred <span class="op">==</span> cl_b)]</span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>X_ba <span class="op">=</span> X_train[(y_train <span class="op">==</span> cl_b) <span class="op">&amp;</span> (y_train_pred <span class="op">==</span> cl_a)]</span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>X_bb <span class="op">=</span> X_train[(y_train <span class="op">==</span> cl_b) <span class="op">&amp;</span> (y_train_pred <span class="op">==</span> cl_b)]</span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">8</span>))</span>
+<span id="cb76-8"><a href="#cb76-8" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">221</span>)<span class="op">;</span> plot_digits(X_aa[:<span class="dv">25</span>], images_per_row<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb76-9"><a href="#cb76-9" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">222</span>)<span class="op">;</span> plot_digits(X_ab[:<span class="dv">25</span>], images_per_row<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb76-10"><a href="#cb76-10" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">223</span>)<span class="op">;</span> plot_digits(X_ba[:<span class="dv">25</span>], images_per_row<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb76-11"><a href="#cb76-11" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">224</span>)<span class="op">;</span> plot_digits(X_bb[:<span class="dv">25</span>], images_per_row<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb76-12"><a href="#cb76-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<figure>
+<img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_108_0.png" alt="png" /><figcaption aria-hidden="true">png</figcaption>
+</figure>
+<p>The two 5x5 blocks on the left show digits classified as 3s, and the two 5x5 blocks on the right show images classified as 5s. Some of the digits that the classifier get wrong (i.e., in the bottom-left and top-right blocks) are so badly written that even a human would have trouble classifying them (e.g., the 5 in the first row and second column truly looks like a badly written 3). However, the most misclassified images seem like obvious errors to us, and it’s hard to understand why the classifier made the mistakes it did. The reason is that we used a simple <code>SGDClassifier</code>. which is a linear model. All it does is assign a weight per class to each pixel, and when it sees a new image it just sums up the weighted pizel intensities to get a score for each class. So since 3s and 5s differ only by a few pixels, this model will easily confuse them.</p>
+<p>The main difference between 3s and 5s is the position of the small line that joins the top line to the bottom arc. If you draw a 3 with the junction slightly shifted to the left, the classifier might classify it as a 5, and vice versa. In other words, this classifier is quite sensitive to image shifting an rotation. So one way to reduce the 3/5 confusion would be to preprocess the images to ensure that they are well centered and not too rotated. This will probably help reduce other errors as well.</p>
+<h2 id="multilabel-classification">Multilabel Classification</h2>
+<p>Until now each instance has always been assigned to just one class. In some cases you may want your classifier to output multiple classes for each instance. Consider a face-recognition classifier: what should it do if it recognizes several people in the same picture? It should attach one tag per person it recognizes. Say the classifier has been trained to recognize three faces: Alice, BOb, and Charlie, it should output [1,0,1] (meaning “Alice yes, Bob no, Charlie yes”). Such a classification system that outputs multiple binary tags is called a <em>multilabel classification</em> system.</p>
+<p>As a simple example, look at the code below:</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.neighbors <span class="im">import</span> KNeighborsClassifier</span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>y_train_large <span class="op">=</span> (y_train <span class="op">&gt;=</span> <span class="dv">7</span>)</span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>y_train_odd <span class="op">=</span> (y_train <span class="op">%</span> <span class="dv">2</span> <span class="op">==</span> <span class="dv">1</span>)</span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>y_multilabel <span class="op">=</span> np.c_[y_train_large, y_train_odd]</span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a>knn_clf <span class="op">=</span> KNeighborsClassifier()</span>
+<span id="cb77-8"><a href="#cb77-8" aria-hidden="true" tabindex="-1"></a>knn_clf.fit(X_train, y_multilabel)</span></code></pre></div>
+<style>#sk-container-id-2 {color: black;background-color: white;}#sk-container-id-2 pre{padding: 0;}#sk-container-id-2 div.sk-toggleable {background-color: white;}#sk-container-id-2 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-2 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-2 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-2 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-2 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-2 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-2 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-2 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-2 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-2 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-2 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-2 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-2 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-2 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-2 div.sk-item {position: relative;z-index: 1;}#sk-container-id-2 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-2 div.sk-item::before, #sk-container-id-2 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-2 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-2 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-2 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-2 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-2 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-2 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-2 div.sk-label-container {text-align: center;}#sk-container-id-2 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-2 div.sk-text-repr-fallback {display: none;}</style>
+<div id="sk-container-id-2" class="sk-top-container">
+<div class="sk-text-repr-fallback">
+<pre>KNeighborsClassifier()</pre>
+<b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b>
+</div>
+<div class="sk-container" hidden="">
+<div class="sk-item">
+<div class="sk-estimator sk-toggleable">
+<input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-2" type="checkbox" checked><label for="sk-estimator-id-2" class="sk-toggleable__label sk-toggleable__label-arrow">KNeighborsClassifier</label>
+<div class="sk-toggleable__content">
+<pre>KNeighborsClassifier()</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>This code creates a <code>y_multilabel</code> array containing two target labels for each digit image: the first indicates whether or not the digit is large (7, 8, or 9), and the second indicates whether or not it is odd. The next lines create a <code>KNeighborsClassifier</code> instance (which supports multilabel classification, though not all classifiers do), and we train it using the multiple targets array. Now you can make a prediction, and notice that it outputs two labels:</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">&gt; Omitting this cell because it fails to run</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="co"># knn_clf.predict([some_digit])</span></span></code></pre></div>
+<pre><code>The Kernel crashed while executing code in the the current cell or a previous cell. Please review the code in the cell(s) to identify a possible cause of the failure. Click &lt;a href=&#39;https://aka.ms/vscodeJupyterKernelCrash&#39;&gt;here&lt;/a&gt; for more info. View Jupyter &lt;a href=&#39;command:jupyter.viewOutput&#39;&gt;log&lt;/a&gt; for further details.
+
+
+
+Canceled future for execute_request message before replies were done</code></pre>
+<p>And it gets it right. The digit 5 is indeed not large and odd.</p>
+<p>There are many wayt to evaluate a multilabel classifier, and selecting the right metric really depends on your project. One approach is to measure the <span class="math inline"><em>F</em><sub>1</sub></span> score for each individual label (or any other binary classifier metric discussed earlier), then simply compute the average score. This code computes the average <span class="math inline"><em>F</em><sub>1</sub></span> score across all labels:</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">&gt; Omitting this cell because the preceding cell fails to run</span></span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">WARNING</span><span class="co">: This might take a very long time (like hours)</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>y_train_knn_pred <span class="op">=</span> cross_val_predict(knn_clf, X_train, y_multilabel, cv<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>f1_score(y_multilabel, y_train_knn_pred, average<span class="op">=</span><span class="st">&quot;macro&quot;</span>)</span></code></pre></div>
+<p>This assumes that all labels are equally important, however, which may not be the case. In particular, if you have many more pictures of Alice than of Bob or Charlie, you may want to give more weight to the classifier’s score on pictures of Alice. One simple option is to give each label a weight equal to its <em>support</em> (i.e., the number of instances with that target label). To do this, simply set <code>average="weighted"</code> in the preceding code.</p>
+<h2 id="multioutput-classification">Multioutput Classification</h2>
+<p>The last type of classification task discussed here is called <em>multioutput-multiclass classification</em> (or simply <em>multioutput classification</em>). It is simply a generalization of multilabel classification where each label can be multiclass (i.e., it can have more than two possible values).</p>
+<p>To illustrate this, let’s build a system that removes noise from images. It will take as input a noisy digit image, and it will output a clean digit image, represented as an array of pixel intensities, just like the MNIST images. Notice that the cliassifier’s output is multilabel (one label per pixel) and each label can have multiple values (pixel intensity ranges from 0 to 255). It is this an example of a multioutput classification system.</p>
+<p>Let’s start by creating the training and test sets by taking the MNIST images and adding noise to their pixel intensities with NumPy’s <code>randint()</code> function. The target images will be the original images:</p>
+<div class="sourceCode" id="cb81"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>noise <span class="op">=</span> np.random.randint(<span class="dv">0</span>, <span class="dv">100</span>, (<span class="bu">len</span>(X_train), <span class="dv">784</span>))</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>X_train_mod <span class="op">=</span> X_train <span class="op">+</span> noise</span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>noise <span class="op">=</span> np.random.randint(<span class="dv">0</span>, <span class="dv">100</span>, (<span class="bu">len</span>(X_test), <span class="dv">784</span>))</span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>X_test_mod <span class="op">=</span> X_test <span class="op">+</span> noise</span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>y_train_mod <span class="op">=</span> X_train</span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>y_test_mod <span class="op">=</span> X_test</span></code></pre></div>
+<p>Let’s take a peek at an image from the test set (remember, you shouldn’t normally be looking at the test set this early)</p>
+<div class="sourceCode" id="cb82"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>some_index <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">121</span>)<span class="op">;</span> plot_digit(X_test_mod[some_index])</span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">122</span>)<span class="op">;</span> plot_digit(y_test_mod[some_index])</span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<p>On the left is the noisy input image, and on the right is the clean target image. Now let’s train the classifier and make it clean this image:</p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>knn_clf.fit(X_train_mod, y_train_mod)</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>clean_digit <span class="op">=</span> knn_clf.predict([X_test_mod[some_index]])</span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>plot_digit(clean_digit)</span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>save_fig(<span class="st">&quot;cleaned_digit_example_plot&quot;</span>)</span></code></pre></div>
+<p>Looks close enough to the target.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>We looked at how to select good metrics for classification tasks, pick the appropriate precision/recall trade-off, compared classifiers, and more generally built good classification systems for a variety of tasks.</p>
