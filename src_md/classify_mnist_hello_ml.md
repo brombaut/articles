@@ -60,7 +60,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_9_0.png)
+![](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_9_0.png)
     
 
 
@@ -396,7 +396,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_53_0.png)
+![](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_53_0.png)
     
 
 
@@ -421,7 +421,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_55_0.png)
+![](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_55_0.png)
     
 
 
@@ -500,7 +500,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_66_0.png)
+![](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_66_0.png)
     
 
 
@@ -562,7 +562,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_75_0.png)
+![](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_75_0.png)
     
 
 
@@ -787,7 +787,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_101_0.png)
+![](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_101_0.png)
     
 
 
@@ -812,7 +812,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_105_0.png)
+![](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_105_0.png)
     
 
 
@@ -859,7 +859,7 @@ plt.show()
 
 
     
-![png](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_108_0.png)
+![](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_108_0.png)
     
 
 

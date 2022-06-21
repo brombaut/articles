@@ -160,7 +160,7 @@ plt.show()
 
 
     
-![png](classify_mnist_additional_exercises_files/classify_mnist_additional_exercises_21_0.png)
+![](https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_additional_exercises/classify_mnist_additional_exercises_21_0.png)
     
 
 

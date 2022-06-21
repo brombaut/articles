@@ -24,9 +24,7 @@
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>plt.imshow(some_digit_image, cmap<span class="op">=</span><span class="st">&quot;binary&quot;</span>)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">&quot;off&quot;</span>)</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
-<figure>
-<img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_9_0.png" alt="png" /><figcaption aria-hidden="true">png</figcaption>
-</figure>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_9_0.png" /></p>
 <p>This looks like a 5, and indeed that’s what the label tells us:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>y[<span class="dv">0</span>]</span></code></pre></div>
 <pre><code>&#39;5&#39;</code></pre>
@@ -198,9 +196,7 @@
 <span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>plt.plot([threshold_90_precision], [recall_90_precision], <span class="st">&quot;ro&quot;</span>)                             <span class="co"># Not shown</span></span>
 <span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a><span class="co"># save_fig(&quot;precision_recall_vs_threshold_plot&quot;)                                              # Not shown</span></span>
 <span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
-<figure>
-<img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_53_0.png" alt="png" /><figcaption aria-hidden="true">png</figcaption>
-</figure>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_53_0.png" /></p>
 <p>Another way to select a good precision/recall trade-off is to plot precision directly against recall, shown below (the same threshold as earlier is highlighted).</p>
 <div class="sourceCode" id="cb37"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_precision_vs_recall(precisions, recalls):</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    plt.plot(recalls, precisions, <span class="st">&quot;b-&quot;</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
@@ -215,9 +211,7 @@
 <span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="fl">0.0</span>, recall_90_precision], [<span class="fl">0.9</span>, <span class="fl">0.9</span>], <span class="st">&quot;r:&quot;</span>)</span>
 <span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>plt.plot([recall_90_precision], [<span class="fl">0.9</span>], <span class="st">&quot;ro&quot;</span>)</span>
 <span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
-<figure>
-<img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_55_0.png" alt="png" /><figcaption aria-hidden="true">png</figcaption>
-</figure>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_55_0.png" /></p>
 <p>You can see that precision really starts to fall sharply around 80% recall. You will probably want to select a precision/recall trade-off before that drop - for example, at around 60% recall. But of course, the choice depends on your project.</p>
 <p>Suppose you decide to aim for 90% precision. You look up the first plot and find that you need to use a threshold of about 8,000. To be more precise you can search for the lowest threshold that gives you at least 90% precision (<code>np.argmax()</code> will give you the first index of the maximum value, which in this case means the first <code>True</code> value):</p>
 <div class="sourceCode" id="cb38"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>threshold_90_precision <span class="op">=</span> thresholds[np.argmax(precisions <span class="op">&gt;=</span> <span class="fl">0.90</span>)]</span>
@@ -253,9 +247,7 @@
 <span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="fl">0.0</span>, fpr_90], [recall_90_precision, recall_90_precision], <span class="st">&quot;r:&quot;</span>)  <span class="co"># Not shown</span></span>
 <span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>plt.plot([fpr_90], [recall_90_precision], <span class="st">&quot;ro&quot;</span>)               <span class="co"># Not shown</span></span>
 <span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
-<figure>
-<img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_66_0.png" alt="png" /><figcaption aria-hidden="true">png</figcaption>
-</figure>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_66_0.png" /></p>
 <p>Once again there is a trade-off: the higher the recall (TPR), the more false positives (FPR) the classifier produces. The dotted line represents the ROC curve of a purely random classifier; a good classifier stays as far away from that line as possible (towards the top-left corner).</p>
 <p>One way to compare classifiers is to measyre the <em>area under the curve</em> (AUC). A perfect classifier will have a ROC AUC equal to 1, whereas a purely random classifier will have a ROC AUC equal to 0.5. Scikit-Learn provides a function to compute the ROC AUC:</p>
 <div class="sourceCode" id="cb45"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> roc_auc_score</span>
@@ -286,9 +278,7 @@
 <span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
 <span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">&quot;lower right&quot;</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
 <span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
-<figure>
-<img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_75_0.png" alt="png" /><figcaption aria-hidden="true">png</figcaption>
-</figure>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_75_0.png" /></p>
 <p>As you can see, the <code>RandomForestClassifier</code>’s ROC curve looks much better than the <code>SGDClassifier</code>’s: it comes much claser to the top-left corner. As a result, its ROC AUC score is also significantly better:</p>
 <div class="sourceCode" id="cb50"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>roc_auc_score(y_train_5, y_scores_forest)</span></code></pre></div>
 <pre><code>0.9983436731328145</code></pre>
@@ -382,9 +372,7 @@
 <p>This is pretty tough to look at. It’s often more convenient to look at an image representation of the confusion matrix, using Matplotlib’s <code>matshow()</code> function:</p>
 <div class="sourceCode" id="cb72"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>plt.matshow(conf_mx, cmap<span class="op">=</span>plt.cm.gray)</span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
-<figure>
-<img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_101_0.png" alt="png" /><figcaption aria-hidden="true">png</figcaption>
-</figure>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_101_0.png" /></p>
 <p>The confusion matrix looks pretty good, since most images are on the main diagonal, which means that they were classified correctly. The 5s look slightly darker than the other digits, which could mean that there are fewer images of 5s in the dataset or that the classifier does not perform as well on 5s as on other digits. In fact, you can verify that both are the case.</p>
 <p>Let’s focus the plot on the errors. First, you need to divide each value in the confusion matrix by the number of images in the corresponding class so that you can compare error rates instead of absolute numbers of errors (which would make abundant classes look unfairly bad):</p>
 <div class="sourceCode" id="cb73"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>row_sums <span class="op">=</span> conf_mx.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
@@ -393,9 +381,7 @@
 <div class="sourceCode" id="cb74"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>np.fill_diagonal(norm_conf_mx, <span class="dv">0</span>)</span>
 <span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>plt.matshow(norm_conf_mx, cmap<span class="op">=</span>plt.cm.gray)</span>
 <span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
-<figure>
-<img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_105_0.png" alt="png" /><figcaption aria-hidden="true">png</figcaption>
-</figure>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_105_0.png" /></p>
 <p>You can clearly see the kinds of errors the classifier makes. Remember that rows represent actual classes, while columns represent predicted classes. The column for class 8 is quite bright, which tells you that many images get misclassified as 8s. However, the row for class 8 is not that bad, telling you that actual 8s in general get properly classified as 8s. As you can see, the confusion matrix is not necessarily symmetrical. You can also see that 3s and 5s often get confused (in both directions).</p>
 <p>Analyzing the confusion matrix often gives you insights into ways to improve your classifier. Looking at this plot, it seems that your efforts should be spent on reducing the false 8s. For example, you could try to gather more training data for digits that look like 8s (but are not) so that the classifier can learn to distinguish them from real 8s. Or you could engineer new features that would help the classifier - for example, writing an algorithm to count the number of closed loops (e.g., 8 has two, 6 has one, 5 has none). Or you could preprocess the images (e.g., using Scikit-image, Pillow, or OpenCV) to make some patterns, such as closed loops, stand out.</p>
 <p>Analyzing individual errors can also be a good way to gain insights on what your classifier is doing and why it is failing, but it is more difficult and time-consuming. For example, let’s plot examples of 3s and 5s.</p>
@@ -426,9 +412,7 @@
 <span id="cb76-10"><a href="#cb76-10" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">223</span>)<span class="op">;</span> plot_digits(X_ba[:<span class="dv">25</span>], images_per_row<span class="op">=</span><span class="dv">5</span>)</span>
 <span id="cb76-11"><a href="#cb76-11" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">224</span>)<span class="op">;</span> plot_digits(X_bb[:<span class="dv">25</span>], images_per_row<span class="op">=</span><span class="dv">5</span>)</span>
 <span id="cb76-12"><a href="#cb76-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
-<figure>
-<img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_108_0.png" alt="png" /><figcaption aria-hidden="true">png</figcaption>
-</figure>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/classify_mnist_hello_ml/classify_mnist_hello_ml_108_0.png" /></p>
 <p>The two 5x5 blocks on the left show digits classified as 3s, and the two 5x5 blocks on the right show images classified as 5s. Some of the digits that the classifier get wrong (i.e., in the bottom-left and top-right blocks) are so badly written that even a human would have trouble classifying them (e.g., the 5 in the first row and second column truly looks like a badly written 3). However, the most misclassified images seem like obvious errors to us, and it’s hard to understand why the classifier made the mistakes it did. The reason is that we used a simple <code>SGDClassifier</code>. which is a linear model. All it does is assign a weight per class to each pixel, and when it sees a new image it just sums up the weighted pizel intensities to get a score for each class. So since 3s and 5s differ only by a few pixels, this model will easily confuse them.</p>
 <p>The main difference between 3s and 5s is the position of the small line that joins the top line to the bottom arc. If you draw a 3 with the junction slightly shifted to the left, the classifier might classify it as a 5, and vice versa. In other words, this classifier is quite sensitive to image shifting an rotation. So one way to reduce the 3/5 confusion would be to preprocess the images to ensure that they are well centered and not too rotated. This will probably help reduce other errors as well.</p>
 <h2 id="multilabel-classification">Multilabel Classification</h2>

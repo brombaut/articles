@@ -44,7 +44,7 @@ def copy_notebook_md(nb_dir, article_name):
 
     def replace_image_paths_with_correct_path(md_str):
         search_str = f"![png]({article_name}_files"
-        replace_str = f"![png]({GH_IMAGES_PREFIX}/{article_name}"
+        replace_str = f"![]({GH_IMAGES_PREFIX}/{article_name}"
         return md_str.replace(search_str, replace_str)
     
     def write_new_md_to_src_md(md_str):
