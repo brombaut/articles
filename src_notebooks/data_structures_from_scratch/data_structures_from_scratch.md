@@ -117,6 +117,66 @@ queue.remove()
 assert(queue.is_empty())
 ```
 
+## Linked List
+
+
+```python
+class Node:
+    def __init__(self, d):
+        self.next = None
+        self.data = d
+
+    def append_to_tail(self, d):
+        end = Node(d)
+        n = self
+        while n.next is not None:
+            n = n.next
+        n.next = end
+
+    def delete_node(self, head, d):
+        n = head
+        if n.data == d:
+            return head.next
+        while n.next is not None:
+            if n.next.data == d:
+                n.next = n.next.next
+                return head
+            n = n.next
+        return head
+
+class LinkedList:
+    def __init__(self, d):
+        self.head = Node(d)
+
+    def append_to_tail(self, d):
+        self.head.append_to_tail(d)
+
+    def delete_node(self, d):
+        self.head = self.head.delete_node(self.head, d)
+
+    def linked_list_as_list(self):
+        result = list()
+        n = self.head
+        while n is not None:
+            result.append(n.data)
+            n = n.next
+        return result
+```
+
+
+```python
+ll = LinkedList(4)
+ll.append_to_tail(6)
+assert(ll.linked_list_as_list() == [4, 6])
+
+ll.append_to_tail(8)
+assert(ll.linked_list_as_list() == [4, 6, 8])
+ll.delete_node(4)
+assert(ll.linked_list_as_list() == [6, 8])
+
+
+```
+
 ## Hash Table
 TODO
 
