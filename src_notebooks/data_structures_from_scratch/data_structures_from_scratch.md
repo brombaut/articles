@@ -144,6 +144,14 @@ class Node:
             n = n.next
         return head
 
+    def find(self, head, d):
+        n = head
+        while n:
+            if n.data == d:
+                return n.data
+            n = n.next
+        return None
+
 class LinkedList:
     def __init__(self, d):
         self.head = Node(d)
@@ -161,6 +169,9 @@ class LinkedList:
             result.append(n.data)
             n = n.next
         return result
+
+    def find(self, d):
+        return self.head.find(self.head, d)
 ```
 
 
@@ -173,12 +184,64 @@ ll.append_to_tail(8)
 assert(ll.linked_list_as_list() == [4, 6, 8])
 ll.delete_node(4)
 assert(ll.linked_list_as_list() == [6, 8])
+assert(ll.find(8) == 8)
 
 
 ```
 
 ## Hash Table
-TODO
+
+In a simple has map implementation, we use an array of linked lists and a hash code function. To insert a key (which might be a strin g or essentially any other data type) and value, we do the following:
+
+1. First, compute the key's hash code. Note that two different keys could have the same hash code, as there may be an infinite number of keys and a finite number of hash codes.
+2. Then map the hash code to an index in the array. This could be done with something like `hash(key) % array_length`. Two different hash codes could, of course, map to the same index.
+3. At this index, there is a linked list of keys and values. Store they key and value in this index. We must use a linked list because of collisions: you could have two different keys with the same has code, or two different hash codes that map to the same index.
+
+To retrieve the value pair by its key, you repeat the process. Compute the hash code from the key, and then compute the index from the hash code. Then, search through the linked list for the value with this key.
+
+
+```python
+class HashMap:
+    class KeyValPair:
+        def __init__(self, k, v):
+            self.key = k
+            self.val = v
+            self.next = None
+
+    def __init__(self):
+        self.array_len = 5
+        self.array = [None] * self.array_len
+    
+    def add(self, key, value):
+        h = hash(key)
+        array_pos = h % self.array_len
+        if self.array[array_pos] is None:
+            self.array[array_pos] = self.KeyValPair(key, value)
+        else:
+            kv = self.array[array_pos]
+            while kv.next is not None:
+                kv = kv.next
+            kv.next = self.KeyValPair(key, value)
+
+    def get(self, key):
+        h = hash(key)
+        array_pos = h % self.array_len
+        kv = self.array[array_pos]
+        while kv is not None:
+            if kv.key == key:
+                return kv.val
+            kv = kv.next
+        return None
+
+
+```
+
+
+```python
+hm = HashMap()
+hm.add("ben", "rombaut")
+assert(hm.get("ben") == "rombaut")
+```
 
 ## Array List
 TODO
