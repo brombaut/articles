@@ -256,7 +256,65 @@ assert(hm.get("alice") == "doe")
 ```
 
 ## Array List
-TODO
+
+In some languages, arrays (often called lists in this case) are automatically resizable. The array or list will grow as you append items. In other languages, like Java, arrays are fixed length. The size is defined when you create the array.
+
+When you need an array-like data structure that offers dynamic resizing, you would usually use an `ArrayList`. An `ArrayList` is an array that resizes itself as needed while still providing O(1) access. A typical implementation is that when the array is full, the array doubles in size. Each doubling takes O(n) time, but happens so rarely that its amortized insertion time is still O(1).
+
+
+```python
+class ArrayList:
+    def __init__(self):
+        self._length = 1
+        self._end_pointer = 0
+        self._inner_array = [None] * self._length
+        self._expand_factor = 2
+
+    def size(self):
+        return self._end_pointer
+
+    def add(self, d):
+        self._inner_array[self._end_pointer] = d
+        self._end_pointer += 1
+        if self._end_pointer >= self._length:
+            self._expand_array()
+
+    def set(self, idx, d):
+        while idx >= self._length:
+            self._expand_array()
+        self._inner_array[idx] = d
+
+    def get(self, idx):
+        while idx >= self._length:
+            self._expand_array()
+        return self._inner_array[idx]
+
+    def _expand_array(self):
+        self._length = self._length * self._expand_factor
+        new_array = [None] * self._length
+        for i in range(self._end_pointer):
+            new_array[i] = self._inner_array[i]
+        self._inner_array = new_array
+
+```
+
+
+```python
+al = ArrayList()
+assert(al.size() == 0)
+al.add("apple")
+al.add("banana")
+al.add("tomato")
+al.add("pear")
+assert(al.size() == 4)
+assert(al.get(0) == "apple")
+assert(al.get(3) == "pear")
+assert(al.get(4) == None)
+assert(al.get(100) == None)
+al.set(1, "squash")
+assert(al.get(1) == "squash")
+
+```
 
 ## StringBuilder
 TODO
