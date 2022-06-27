@@ -261,4 +261,36 @@
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>al.<span class="bu">set</span>(<span class="dv">1</span>, <span class="st">&quot;squash&quot;</span>)</span>
 <span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span>(al.get(<span class="dv">1</span>) <span class="op">==</span> <span class="st">&quot;squash&quot;</span>)</span></code></pre></div>
 <h2 id="stringbuilder">StringBuilder</h2>
+<p>Imagine your were concatenating a list of strings, as shown below. What would the running time of this code be? For simplicity, assume that the strings are all the same length (call it <span class="math inline"><em>x</em></span>) and that there are <span class="math inline"><em>n</em></span> strings.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">String</span> <span class="fu">joinWords</span><span class="op">(</span><span class="bu">String</span><span class="op">[]</span> words<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">String</span> sentence <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="bu">String</span> w <span class="op">:</span> words<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    sentence <span class="op">=</span> sentence <span class="op">+</span> w<span class="op">;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> sentence<span class="op">;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>On each concatenation, a new copy of the string is created, and the two strings are copied over, character by character. The first iteration requires us to copy <span class="math inline"><em>x</em></span> characters. The second iteration requires copying <span class="math inline">2<em>x</em></span> characters. The third iteration requires <span class="math inline">3<em>x</em></span>, and so on. The total time therefore is <span class="math inline"><em>O</em>(<em>x</em>+2<em>x</em>+...+<em>n</em><em>x</em>)</span>. This reduces to <span class="math inline"><em>O</em>(<em>x</em><em>n</em><sup>2</sup>)</span>.</p>
+<p><code>StringBuilder</code> can help you avoid this problem. <code>StringBuilder</code> simply creates a resizable array of all the strings, copying them back to a string only when necessary.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">String</span> <span class="fu">joinWords</span><span class="op">(</span><span class="bu">String</span><span class="op">[]</span> words<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">StringBuilder</span> sentence <span class="op">=</span> <span class="kw">new</span> <span class="bu">StringBuilder</span><span class="op">();</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="bu">String</span> w <span class="op">:</span> words<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    sentence<span class="op">.</span><span class="fu">append</span><span class="op">(</span>w<span class="op">);</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> sentence<span class="op">.</span><span class="fu">toString</span><span class="op">();</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>A quick Python implementation:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> StringBuilder:</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>._words <span class="op">=</span> <span class="bu">list</span>()</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> append(<span class="va">self</span>, word):</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>._words.append(word)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> to_string(<span class="va">self</span>):</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">&quot;&quot;</span>.join(<span class="va">self</span>._words)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>sb <span class="op">=</span> StringBuilder()</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>sb.append(<span class="st">&quot;hello&quot;</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>sb.append(<span class="st">&quot;there&quot;</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span>(sb.to_string() <span class="op">==</span> <span class="st">&quot;hellothere&quot;</span>)</span></code></pre></div>
+<h2 id="trees">Trees</h2>
+<p>TODO</p>
+<h2 id="graphs">Graphs</h2>
 <p>TODO</p>

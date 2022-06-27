@@ -317,4 +317,56 @@ assert(al.get(1) == "squash")
 ```
 
 ## StringBuilder
+
+Imagine your were concatenating a list of strings, as shown below. What would the running time of this code be? For simplicity, assume that the strings are all the same length (call it $x$) and that there are $n$ strings.
+
+```java
+String joinWords(String[] words) {
+  String sentence = "";
+  for (String w : words) {
+    sentence = sentence + w;
+  }
+  return sentence;
+}
+```
+
+On each concatenation, a new copy of the string is created, and the two strings are copied over, character by character. The first iteration requires us to copy $x$ characters. The second iteration requires copying $2x$ characters. The third iteration requires $3x$, and so on. The total time therefore is $O(x + 2x + ... + nx)$. This reduces to $O(xn^2)$.
+
+`StringBuilder` can help you avoid this problem. `StringBuilder` simply creates a resizable array of all the strings, copying them back to a string only when necessary.
+
+```java
+String joinWords(String[] words) {
+  StringBuilder sentence = new StringBuilder();
+  for (String w : words) {
+    sentence.append(w);
+  }
+  return sentence.toString();
+}
+```
+
+A quick Python implementation:
+
+
+```python
+class StringBuilder:
+    def __init__(self):
+        self._words = list()
+    def append(self, word):
+        self._words.append(word)
+    def to_string(self):
+        return "".join(self._words)
+```
+
+
+```python
+sb = StringBuilder()
+sb.append("hello")
+sb.append("there")
+assert(sb.to_string() == "hellothere")
+```
+
+## Trees
+TODO
+
+## Graphs
 TODO
