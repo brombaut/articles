@@ -1,10 +1,3 @@
-```python
-def create_md_of_notebook():
-    !jupyter nbconvert ./spam_classifier.ipynb --to markdown
-
-create_md_of_notebook()
-```
-
 # Spam Classifier
 
 The goal is to build a spam classifier. We will need to:
@@ -651,8 +644,3 @@ print("Recall: {:.2f}%".format(100 * recall_score(y_test, y_pred)))
     Precision: 96.88%
     Recall: 97.89%
 
-
-
-```python
-
-```

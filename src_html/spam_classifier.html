@@ -1,7 +1,3 @@
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_md_of_notebook():</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">!</span>jupyter nbconvert .<span class="op">/</span>spam_classifier.ipynb <span class="op">--</span>to markdown</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>create_md_of_notebook()</span></code></pre></div>
 <h1 id="spam-classifier">Spam Classifier</h1>
 <p>The goal is to build a spam classifier. We will need to:</p>
 <ul>
@@ -13,47 +9,47 @@
 <p>You may want to add hyperparameters to your preparation pipeline to control whether or not to strip off email headers, convert each email to lowercase, remove punctuation, replace all URLs with “URL”, replace all numbers with “NUMBER”, or even perform <em>stemming</em> (i.e., trim off word endings, there are Python libraries available to do this).</p>
 <p>Finally, try out several classifiers and see if you can build a great spam classifier, with both high recall and high precision.</p>
 <p>First, let’s fetch the data:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tarfile</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>DOWNLOAD_ROOT <span class="op">=</span> <span class="st">&quot;http://spamassassin.apache.org/old/publiccorpus/&quot;</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>HAM_URL <span class="op">=</span> DOWNLOAD_ROOT <span class="op">+</span> <span class="st">&quot;20030228_easy_ham.tar.bz2&quot;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>SPAM_URL <span class="op">=</span> DOWNLOAD_ROOT <span class="op">+</span> <span class="st">&quot;20030228_spam.tar.bz2&quot;</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>SPAM_PATH <span class="op">=</span> os.path.join(<span class="st">&quot;datasets&quot;</span>, <span class="st">&quot;spam&quot;</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fetch_spam_data(ham_url<span class="op">=</span>HAM_URL, spam_url<span class="op">=</span>SPAM_URL, spam_path<span class="op">=</span>SPAM_PATH):</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> os.path.isdir(spam_path):</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        os.makedirs(spam_path)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> filename, url <span class="kw">in</span> ((<span class="st">&quot;ham.tar.bz2&quot;</span>, ham_url), (<span class="st">&quot;spam.tar.bz2&quot;</span>, spam_url)):</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        path <span class="op">=</span> os.path.join(spam_path, filename)</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> os.path.isfile(path):</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>            urllib.request.urlretrieve(url, path)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        tar_bz2_file <span class="op">=</span> tarfile.<span class="bu">open</span>(path)</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        tar_bz2_file.extractall(path<span class="op">=</span>spam_path)</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        tar_bz2_file.close()</span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fetch_spam_data()</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tarfile</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>DOWNLOAD_ROOT <span class="op">=</span> <span class="st">&quot;http://spamassassin.apache.org/old/publiccorpus/&quot;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>HAM_URL <span class="op">=</span> DOWNLOAD_ROOT <span class="op">+</span> <span class="st">&quot;20030228_easy_ham.tar.bz2&quot;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>SPAM_URL <span class="op">=</span> DOWNLOAD_ROOT <span class="op">+</span> <span class="st">&quot;20030228_spam.tar.bz2&quot;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>SPAM_PATH <span class="op">=</span> os.path.join(<span class="st">&quot;datasets&quot;</span>, <span class="st">&quot;spam&quot;</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fetch_spam_data(ham_url<span class="op">=</span>HAM_URL, spam_url<span class="op">=</span>SPAM_URL, spam_path<span class="op">=</span>SPAM_PATH):</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> os.path.isdir(spam_path):</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        os.makedirs(spam_path)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> filename, url <span class="kw">in</span> ((<span class="st">&quot;ham.tar.bz2&quot;</span>, ham_url), (<span class="st">&quot;spam.tar.bz2&quot;</span>, spam_url)):</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        path <span class="op">=</span> os.path.join(spam_path, filename)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> os.path.isfile(path):</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>            urllib.request.urlretrieve(url, path)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        tar_bz2_file <span class="op">=</span> tarfile.<span class="bu">open</span>(path)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        tar_bz2_file.extractall(path<span class="op">=</span>spam_path)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        tar_bz2_file.close()</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>fetch_spam_data()</span></code></pre></div>
 <p>Next, let’s load all the emails:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>HAM_DIR <span class="op">=</span> os.path.join(SPAM_PATH, <span class="st">&quot;easy_ham&quot;</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>SPAM_DIR <span class="op">=</span> os.path.join(SPAM_PATH, <span class="st">&quot;spam&quot;</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>ham_filenames <span class="op">=</span> [name <span class="cf">for</span> name <span class="kw">in</span> <span class="bu">sorted</span>(os.listdir(HAM_DIR)) <span class="cf">if</span> <span class="bu">len</span>(name) <span class="op">&gt;</span> <span class="dv">20</span>]</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>spam_filenames <span class="op">=</span> [name <span class="cf">for</span> name <span class="kw">in</span> <span class="bu">sorted</span>(os.listdir(SPAM_DIR)) <span class="cf">if</span> <span class="bu">len</span>(name) <span class="op">&gt;</span> <span class="dv">20</span>]</span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(ham_filenames)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>HAM_DIR <span class="op">=</span> os.path.join(SPAM_PATH, <span class="st">&quot;easy_ham&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>SPAM_DIR <span class="op">=</span> os.path.join(SPAM_PATH, <span class="st">&quot;spam&quot;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ham_filenames <span class="op">=</span> [name <span class="cf">for</span> name <span class="kw">in</span> <span class="bu">sorted</span>(os.listdir(HAM_DIR)) <span class="cf">if</span> <span class="bu">len</span>(name) <span class="op">&gt;</span> <span class="dv">20</span>]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>spam_filenames <span class="op">=</span> [name <span class="cf">for</span> name <span class="kw">in</span> <span class="bu">sorted</span>(os.listdir(SPAM_DIR)) <span class="cf">if</span> <span class="bu">len</span>(name) <span class="op">&gt;</span> <span class="dv">20</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(ham_filenames)</span></code></pre></div>
 <pre><code>2500</code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(spam_filenames)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(spam_filenames)</span></code></pre></div>
 <pre><code>500</code></pre>
 <p>We can use Python’s <code>email</code> module to parse these emails (this handles headers, encoding, etc.)</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> email</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> email.policy</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_email(is_spam, filename, spam_path<span class="op">=</span>SPAM_PATH):</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    directory <span class="op">=</span> <span class="st">&quot;spam&quot;</span> <span class="cf">if</span> is_spam <span class="cf">else</span> <span class="st">&quot;easy_ham&quot;</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(os.path.join(spam_path, directory, filename), <span class="st">&quot;rb&quot;</span>) <span class="im">as</span> f:</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> email.parser.BytesParser(policy<span class="op">=</span>email.policy.default).parse(f)</span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ham_emails <span class="op">=</span> [load_email(is_spam<span class="op">=</span><span class="va">False</span>, filename<span class="op">=</span>name) <span class="cf">for</span> name <span class="kw">in</span> ham_filenames]</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>spam_emails <span class="op">=</span> [load_email(is_spam<span class="op">=</span><span class="va">True</span>, filename<span class="op">=</span>name) <span class="cf">for</span> name <span class="kw">in</span> spam_filenames]</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> email</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> email.policy</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_email(is_spam, filename, spam_path<span class="op">=</span>SPAM_PATH):</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    directory <span class="op">=</span> <span class="st">&quot;spam&quot;</span> <span class="cf">if</span> is_spam <span class="cf">else</span> <span class="st">&quot;easy_ham&quot;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(os.path.join(spam_path, directory, filename), <span class="st">&quot;rb&quot;</span>) <span class="im">as</span> f:</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> email.parser.BytesParser(policy<span class="op">=</span>email.policy.default).parse(f)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ham_emails <span class="op">=</span> [load_email(is_spam<span class="op">=</span><span class="va">False</span>, filename<span class="op">=</span>name) <span class="cf">for</span> name <span class="kw">in</span> ham_filenames]</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>spam_emails <span class="op">=</span> [load_email(is_spam<span class="op">=</span><span class="va">True</span>, filename<span class="op">=</span>name) <span class="cf">for</span> name <span class="kw">in</span> spam_filenames]</span></code></pre></div>
 <p>Let’s look at one example of ham and one example of spam, to get a feel of what the data looks like:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ham_emails[<span class="dv">1</span>].get_content().strip())</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ham_emails[<span class="dv">1</span>].get_content().strip())</span></code></pre></div>
 <pre><code>Martin A posted:
 Tassos Papadopoulos, the Greek sculptor behind the plan, judged that the
  limestone of Mount Kerdylio, 70 miles east of Salonika and not far from the
@@ -77,7 +73,7 @@ forteana-unsubscribe@egroups.com
  
 
 Your use of Yahoo! Groups is subject to http://docs.yahoo.com/info/terms/</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(spam_emails[<span class="dv">6</span>].get_content().strip())</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(spam_emails[<span class="dv">6</span>].get_content().strip())</span></code></pre></div>
 <pre><code>Help wanted.  We are a 14 year old fortune 500 company, that is
 growing at a tremendous rate.  We are looking for individuals who
 want to work from home.
@@ -101,26 +97,26 @@ http://www.basetel.com/remove.html
 
 4139vOLW7-758DoDY1425FRhM1-764SMFc8513fCsLl40</code></pre>
 <p>Some emails are actually multipart, with images and attachments (which can have their own attachments). Let’s look at the various types of structures we have:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_email_structure(email):</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(email, <span class="bu">str</span>):</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> email</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    payload <span class="op">=</span> email.get_payload()</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(payload, <span class="bu">list</span>):</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">&quot;multipart(</span><span class="sc">{}</span><span class="st">)&quot;</span>.<span class="bu">format</span>(<span class="st">&quot;, &quot;</span>.join([</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>            get_email_structure(sub_email)</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> sub_email <span class="kw">in</span> payload</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>        ]))</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> email.get_content_type()</span></code></pre></div>
-<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> structures_counter(emails):</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    structures <span class="op">=</span> Counter()</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> email <span class="kw">in</span> emails:</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>        structure <span class="op">=</span> get_email_structure(email)</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>        structures[structure] <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> structures</span></code></pre></div>
-<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>structures_counter(ham_emails).most_common()</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_email_structure(email):</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(email, <span class="bu">str</span>):</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> email</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    payload <span class="op">=</span> email.get_payload()</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(payload, <span class="bu">list</span>):</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">&quot;multipart(</span><span class="sc">{}</span><span class="st">)&quot;</span>.<span class="bu">format</span>(<span class="st">&quot;, &quot;</span>.join([</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>            get_email_structure(sub_email)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> sub_email <span class="kw">in</span> payload</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        ]))</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> email.get_content_type()</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> structures_counter(emails):</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    structures <span class="op">=</span> Counter()</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> email <span class="kw">in</span> emails:</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        structure <span class="op">=</span> get_email_structure(email)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        structures[structure] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> structures</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>structures_counter(ham_emails).most_common()</span></code></pre></div>
 <pre><code>[(&#39;text/plain&#39;, 2408),
  (&#39;multipart(text/plain, application/pgp-signature)&#39;, 66),
  (&#39;multipart(text/plain, text/html)&#39;, 8),
@@ -139,7 +135,7 @@ http://www.basetel.com/remove.html
  (&#39;multipart(text/plain, multipart(text/plain, text/plain), multipart(multipart(text/plain, application/x-pkcs7-signature)))&#39;,
   1),
  (&#39;multipart(text/plain, application/x-java-applet)&#39;, 1)]</code></pre>
-<div class="sourceCode" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>structures_counter(spam_emails).most_common()</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>structures_counter(spam_emails).most_common()</span></code></pre></div>
 <pre><code>[(&#39;text/plain&#39;, 218),
  (&#39;text/html&#39;, 183),
  (&#39;multipart(text/plain, text/html)&#39;, 45),
@@ -155,8 +151,8 @@ http://www.basetel.com/remove.html
  (&#39;multipart/alternative&#39;, 1)]</code></pre>
 <p>It seems that the ham emails are more often plain text, while spam has quite a lot of HTML. Moreover, quite a few ham emails are signed using PGP, while no spam is. In short, it seems that the email structure is useful information to have.</p>
 <p>Now let’s take a look at the email headers:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> header, value <span class="kw">in</span> spam_emails[<span class="dv">0</span>].items():</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(header,<span class="st">&quot;:&quot;</span>,value)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> header, value <span class="kw">in</span> spam_emails[<span class="dv">0</span>].items():</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(header,<span class="st">&quot;:&quot;</span>,value)</span></code></pre></div>
 <pre><code>Return-Path : &lt;12a1mailbot1@web.de&gt;
 Delivered-To : zzzz@localhost.spamassassin.taint.org
 Received : from localhost (localhost [127.0.0.1])   by phobos.labs.spamassassin.taint.org (Postfix) with ESMTP id 136B943C32    for &lt;zzzz@localhost&gt;; Thu, 22 Aug 2002 08:17:21 -0400 (EDT)
@@ -172,30 +168,30 @@ Message-ID : &lt;0103c1042001882DD_IT7@dd_it7&gt;
 Content-Type : text/html; charset=&quot;iso-8859-1&quot;
 Content-Transfer-Encoding : quoted-printable</code></pre>
 <p>There’s probably a lot of useful information in there, such as the sender’s email address (12a1mailbot1@web.de looks fishy), but we will just focus on the Subject header:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>spam_emails[<span class="dv">0</span>][<span class="st">&quot;Subject&quot;</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>spam_emails[<span class="dv">0</span>][<span class="st">&quot;Subject&quot;</span>]</span></code></pre></div>
 <pre><code>&#39;Life Insurance - Why Pay More?&#39;</code></pre>
 <p>Okay, before we learn too much about the data, let’s not forget to split it into a training set and a test set:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.array(ham_emails <span class="op">+</span> spam_emails, dtype<span class="op">=</span><span class="bu">object</span>)</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.array([<span class="dv">0</span>] <span class="op">*</span> <span class="bu">len</span>(ham_emails) <span class="op">+</span> [<span class="dv">1</span>] <span class="op">*</span> <span class="bu">len</span>(spam_emails))</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.array(ham_emails <span class="op">+</span> spam_emails, dtype<span class="op">=</span><span class="bu">object</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.array([<span class="dv">0</span>] <span class="op">*</span> <span class="bu">len</span>(ham_emails) <span class="op">+</span> [<span class="dv">1</span>] <span class="op">*</span> <span class="bu">len</span>(spam_emails))</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code></pre></div>
 <p>Now, let’s start writing the preprocessing functions. First, we will need a function to convert HTML to plain text. We could use the BeautifulSoup library, but let’s just hack a solution using regular expressions. The following function first drops the <code>&lt;head&gt;</code> section, then converts all <code>&lt;a&gt;</code> tags to the word HYPERLINK, then it gets rid of all HTML tags, leaving only the plain text. For readability, it also replaces multiple newlines with single newlines, and finally it unescapes html entities (such as <code>&amp;gt;</code> or <code>&amp;nbsp;</code>):</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> html <span class="im">import</span> unescape</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> html_to_plain_text(html):</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> re.sub(<span class="st">&#39;&lt;head.*?&gt;.*?&lt;/head&gt;&#39;</span>, <span class="st">&#39;&#39;</span>, html, flags<span class="op">=</span>re.M <span class="op">|</span> re.S <span class="op">|</span> re.I)</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> re.sub(<span class="st">&#39;&lt;a\s.*?&gt;&#39;</span>, <span class="st">&#39; HYPERLINK &#39;</span>, text, flags<span class="op">=</span>re.M <span class="op">|</span> re.S <span class="op">|</span> re.I)</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> re.sub(<span class="st">&#39;&lt;.*?&gt;&#39;</span>, <span class="st">&#39;&#39;</span>, text, flags<span class="op">=</span>re.M <span class="op">|</span> re.S)</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> re.sub(<span class="vs">r&#39;(\s*\n)+&#39;</span>, <span class="st">&#39;</span><span class="ch">\n</span><span class="st">&#39;</span>, text, flags<span class="op">=</span>re.M <span class="op">|</span> re.S)</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> unescape(text)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> html <span class="im">import</span> unescape</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> html_to_plain_text(html):</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> re.sub(<span class="st">&#39;&lt;head.*?&gt;.*?&lt;/head&gt;&#39;</span>, <span class="st">&#39;&#39;</span>, html, flags<span class="op">=</span>re.M <span class="op">|</span> re.S <span class="op">|</span> re.I)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> re.sub(<span class="st">&#39;&lt;a\s.*?&gt;&#39;</span>, <span class="st">&#39; HYPERLINK &#39;</span>, text, flags<span class="op">=</span>re.M <span class="op">|</span> re.S <span class="op">|</span> re.I)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> re.sub(<span class="st">&#39;&lt;.*?&gt;&#39;</span>, <span class="st">&#39;&#39;</span>, text, flags<span class="op">=</span>re.M <span class="op">|</span> re.S)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> re.sub(<span class="vs">r&#39;(\s*\n)+&#39;</span>, <span class="st">&#39;</span><span class="ch">\n</span><span class="st">&#39;</span>, text, flags<span class="op">=</span>re.M <span class="op">|</span> re.S)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> unescape(text)</span></code></pre></div>
 <p>Let’s see if it works. This is HTML spam:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>html_spam_emails <span class="op">=</span> [email <span class="cf">for</span> email <span class="kw">in</span> X_train[y_train<span class="op">==</span><span class="dv">1</span>] <span class="cf">if</span> get_email_structure(email) <span class="op">==</span> <span class="st">&quot;text/html&quot;</span>]</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>sample_html_spam <span class="op">=</span> html_spam_emails[<span class="dv">7</span>]</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sample_html_spam.get_content().strip()[:<span class="dv">1000</span>], <span class="st">&quot;...&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>html_spam_emails <span class="op">=</span> [email <span class="cf">for</span> email <span class="kw">in</span> X_train[y_train<span class="op">==</span><span class="dv">1</span>] <span class="cf">if</span> get_email_structure(email) <span class="op">==</span> <span class="st">&quot;text/html&quot;</span>]</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>sample_html_spam <span class="op">=</span> html_spam_emails[<span class="dv">7</span>]</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sample_html_spam.get_content().strip()[:<span class="dv">1000</span>], <span class="st">&quot;...&quot;</span>)</span></code></pre></div>
 <pre><code>&lt;HTML&gt;&lt;HEAD&gt;&lt;TITLE&gt;&lt;/TITLE&gt;&lt;META http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=windows-1252&quot;&gt;&lt;STYLE&gt;A:link {TEX-DECORATION: none}A:active {TEXT-DECORATION: none}A:visited {TEXT-DECORATION: none}A:hover {COLOR: #0033ff; TEXT-DECORATION: underline}&lt;/STYLE&gt;&lt;META content=&quot;MSHTML 6.00.2713.1100&quot; name=&quot;GENERATOR&quot;&gt;&lt;/HEAD&gt;
 &lt;BODY text=&quot;#000000&quot; vLink=&quot;#0033ff&quot; link=&quot;#0033ff&quot; bgColor=&quot;#CCCC99&quot;&gt;&lt;TABLE borderColor=&quot;#660000&quot; cellSpacing=&quot;0&quot; cellPadding=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot;&gt;&lt;TR&gt;&lt;TD bgColor=&quot;#CCCC99&quot; valign=&quot;top&quot; colspan=&quot;2&quot; height=&quot;27&quot;&gt;
 &lt;font size=&quot;6&quot; face=&quot;Arial, Helvetica, sans-serif&quot; color=&quot;#660000&quot;&gt;
@@ -204,7 +200,7 @@ Content-Transfer-Encoding : quoted-printable</code></pre>
 &lt;b&gt;&amp;nbsp;Newsletter&lt;/b&gt;&lt;/font&gt;&lt;/TD&gt;&lt;TD height=&quot;2&quot; bgcolor=&quot;#6a694f&quot;&gt;&lt;div align=&quot;right&quot;&gt;&lt;font color=&quot;#FFFFFF&quot;&gt;
 &lt;b&gt;Discover Tomorrow&#39;s Winners&amp;nbsp;&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;TR&gt;&lt;TD height=&quot;25&quot; colspan=&quot;2&quot; bgcolor=&quot;#CCCC99&quot;&gt;&lt;table width=&quot;100%&quot; border=&quot;0&quot;  ...</code></pre>
 <p>And this is the resulting plain text:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(html_to_plain_text(sample_html_spam.get_content())[:<span class="dv">1000</span>], <span class="st">&quot;...&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(html_to_plain_text(sample_html_spam.get_content())[:<span class="dv">1000</span>], <span class="st">&quot;...&quot;</span>)</span></code></pre></div>
 <pre><code>OTC
  Newsletter
 Discover Tomorrow&#39;s Winners 
@@ -219,23 +215,23 @@ Excellent management team, several EXCLUSIVE contracts.  IMPRESSIVE client list 
 RAPIDLY GROWING INDUSTRY
 Industry revenues exceed $900 million, estimates indicate that there could be as much as $25 billi ...</code></pre>
 <p>Great! Now let’s write a function that takes an email as input and returns its content as plain text, whatever its format is:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> email_to_text(email):</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    html <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> part <span class="kw">in</span> email.walk():</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>        ctype <span class="op">=</span> part.get_content_type()</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> ctype <span class="kw">in</span> (<span class="st">&quot;text/plain&quot;</span>, <span class="st">&quot;text/html&quot;</span>):</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>            content <span class="op">=</span> part.get_content()</span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span>: <span class="co"># in case of encoding issues</span></span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>            content <span class="op">=</span> <span class="bu">str</span>(part.get_payload())</span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ctype <span class="op">==</span> <span class="st">&quot;text/plain&quot;</span>:</span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> content</span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>            html <span class="op">=</span> content</span>
-<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> html:</span>
-<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> html_to_plain_text(html)</span></code></pre></div>
-<div class="sourceCode" id="cb32"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(email_to_text(sample_html_spam)[:<span class="dv">100</span>], <span class="st">&quot;...&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> email_to_text(email):</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    html <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> part <span class="kw">in</span> email.walk():</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>        ctype <span class="op">=</span> part.get_content_type()</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> ctype <span class="kw">in</span> (<span class="st">&quot;text/plain&quot;</span>, <span class="st">&quot;text/html&quot;</span>):</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>            content <span class="op">=</span> part.get_content()</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span>: <span class="co"># in case of encoding issues</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>            content <span class="op">=</span> <span class="bu">str</span>(part.get_payload())</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ctype <span class="op">==</span> <span class="st">&quot;text/plain&quot;</span>:</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> content</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>            html <span class="op">=</span> content</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> html:</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> html_to_plain_text(html)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(email_to_text(sample_html_spam)[:<span class="dv">100</span>], <span class="st">&quot;...&quot;</span>)</span></code></pre></div>
 <pre><code>OTC
  Newsletter
 Discover Tomorrow&#39;s Winners 
@@ -243,15 +239,15 @@ For Immediate Release
 Cal-Bay (Stock Symbol: CBYI)
 Wat ...</code></pre>
 <p>Let’s throw in some stemming! For this to work, you need to install the Natural Language Toolkit (NLTK).</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> nltk</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    stemmer <span class="op">=</span> nltk.PorterStemmer()</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> word <span class="kw">in</span> (<span class="st">&quot;Computations&quot;</span>, <span class="st">&quot;Computation&quot;</span>, <span class="st">&quot;Computing&quot;</span>, <span class="st">&quot;Computed&quot;</span>, <span class="st">&quot;Compute&quot;</span>, <span class="st">&quot;Compulsive&quot;</span>):</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(word, <span class="st">&quot;=&gt;&quot;</span>, stemmer.stem(word))</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">ImportError</span>:</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Error: stemming requires the NLTK module.&quot;</span>)</span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>    stemmer <span class="op">=</span> <span class="va">None</span></span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> nltk</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    stemmer <span class="op">=</span> nltk.PorterStemmer()</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> word <span class="kw">in</span> (<span class="st">&quot;Computations&quot;</span>, <span class="st">&quot;Computation&quot;</span>, <span class="st">&quot;Computing&quot;</span>, <span class="st">&quot;Computed&quot;</span>, <span class="st">&quot;Compute&quot;</span>, <span class="st">&quot;Compulsive&quot;</span>):</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(word, <span class="st">&quot;=&gt;&quot;</span>, stemmer.stem(word))</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">ImportError</span>:</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Error: stemming requires the NLTK module.&quot;</span>)</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>    stemmer <span class="op">=</span> <span class="va">None</span></span></code></pre></div>
 <pre><code>Computations =&gt; comput
 Computation =&gt; comput
 Computing =&gt; comput
@@ -259,97 +255,97 @@ Computed =&gt; comput
 Compute =&gt; comput
 Compulsive =&gt; compuls</code></pre>
 <p>We will also need a way to replace URLs with the word “URL”. For this, we could use hard core regular expressions but we will just use the urlextract library.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> urlextract <span class="co"># may require an Internet connection to download root domain names</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    url_extractor <span class="op">=</span> urlextract.URLExtract()</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(url_extractor.find_urls(<span class="st">&quot;Will it detect github.com and https://youtu.be/7Pq-S557XQU?t=3m32s&quot;</span>))</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">ImportError</span>:</span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Error: replacing URLs requires the urlextract module.&quot;</span>)</span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>    url_extractor <span class="op">=</span> <span class="va">None</span></span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> urlextract <span class="co"># may require an Internet connection to download root domain names</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    url_extractor <span class="op">=</span> urlextract.URLExtract()</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(url_extractor.find_urls(<span class="st">&quot;Will it detect github.com and https://youtu.be/7Pq-S557XQU?t=3m32s&quot;</span>))</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">ImportError</span>:</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Error: replacing URLs requires the urlextract module.&quot;</span>)</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    url_extractor <span class="op">=</span> <span class="va">None</span></span></code></pre></div>
 <pre><code>[&#39;github.com&#39;, &#39;https://youtu.be/7Pq-S557XQU?t=3m32s&#39;]</code></pre>
 <p>We are ready to put all this together into a transformer that we will use to convert emails to word counters. Note that we split sentences into words using Python’s <code>split()</code> method, which uses whitespaces for word boundaries. This works for many written languages, but not all. For example, Chinese and Japanese scripts generally don’t use spaces between words, and Vietnamese often uses spaces even between syllables. It’s okay in this exercise, because the dataset is (mostly) in English.</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.base <span class="im">import</span> BaseEstimator, TransformerMixin</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> EmailToWordCounterTransformer(BaseEstimator, TransformerMixin):</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, strip_headers<span class="op">=</span><span class="va">True</span>, lower_case<span class="op">=</span><span class="va">True</span>, remove_punctuation<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>                 replace_urls<span class="op">=</span><span class="va">True</span>, replace_numbers<span class="op">=</span><span class="va">True</span>, stemming<span class="op">=</span><span class="va">True</span>):</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.strip_headers <span class="op">=</span> strip_headers</span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.lower_case <span class="op">=</span> lower_case</span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.remove_punctuation <span class="op">=</span> remove_punctuation</span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.replace_urls <span class="op">=</span> replace_urls</span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.replace_numbers <span class="op">=</span> replace_numbers</span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.stemming <span class="op">=</span> stemming</span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> fit(<span class="va">self</span>, X, y<span class="op">=</span><span class="va">None</span>):</span>
-<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span></span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> transform(<span class="va">self</span>, X, y<span class="op">=</span><span class="va">None</span>):</span>
-<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>        X_transformed <span class="op">=</span> []</span>
-<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> email <span class="kw">in</span> X:</span>
-<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>            text <span class="op">=</span> email_to_text(email) <span class="kw">or</span> <span class="st">&quot;&quot;</span></span>
-<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="va">self</span>.lower_case:</span>
-<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>                text <span class="op">=</span> text.lower()</span>
-<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="va">self</span>.replace_urls <span class="kw">and</span> url_extractor <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
-<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>                urls <span class="op">=</span> <span class="bu">list</span>(<span class="bu">set</span>(url_extractor.find_urls(text)))</span>
-<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>                urls.sort(key<span class="op">=</span><span class="kw">lambda</span> url: <span class="bu">len</span>(url), reverse<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> url <span class="kw">in</span> urls:</span>
-<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>                    text <span class="op">=</span> text.replace(url, <span class="st">&quot; URL &quot;</span>)</span>
-<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="va">self</span>.replace_numbers:</span>
-<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>                text <span class="op">=</span> re.sub(<span class="vs">r&#39;\d+(?:\.\d*)?(?:[eE][+-]?\d+)?&#39;</span>, <span class="st">&#39;NUMBER&#39;</span>, text)</span>
-<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="va">self</span>.remove_punctuation:</span>
-<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>                text <span class="op">=</span> re.sub(<span class="vs">r&#39;\W+&#39;</span>, <span class="st">&#39; &#39;</span>, text, flags<span class="op">=</span>re.M)</span>
-<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a>            word_counts <span class="op">=</span> Counter(text.split())</span>
-<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="va">self</span>.stemming <span class="kw">and</span> stemmer <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
-<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a>                stemmed_word_counts <span class="op">=</span> Counter()</span>
-<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> word, count <span class="kw">in</span> word_counts.items():</span>
-<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a>                    stemmed_word <span class="op">=</span> stemmer.stem(word)</span>
-<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a>                    stemmed_word_counts[stemmed_word] <span class="op">+=</span> count</span>
-<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a>                word_counts <span class="op">=</span> stemmed_word_counts</span>
-<span id="cb38-36"><a href="#cb38-36" aria-hidden="true" tabindex="-1"></a>            X_transformed.append(word_counts)</span>
-<span id="cb38-37"><a href="#cb38-37" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.array(X_transformed)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.base <span class="im">import</span> BaseEstimator, TransformerMixin</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> EmailToWordCounterTransformer(BaseEstimator, TransformerMixin):</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, strip_headers<span class="op">=</span><span class="va">True</span>, lower_case<span class="op">=</span><span class="va">True</span>, remove_punctuation<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>                 replace_urls<span class="op">=</span><span class="va">True</span>, replace_numbers<span class="op">=</span><span class="va">True</span>, stemming<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.strip_headers <span class="op">=</span> strip_headers</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.lower_case <span class="op">=</span> lower_case</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.remove_punctuation <span class="op">=</span> remove_punctuation</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.replace_urls <span class="op">=</span> replace_urls</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.replace_numbers <span class="op">=</span> replace_numbers</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.stemming <span class="op">=</span> stemming</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> fit(<span class="va">self</span>, X, y<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> transform(<span class="va">self</span>, X, y<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>        X_transformed <span class="op">=</span> []</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> email <span class="kw">in</span> X:</span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>            text <span class="op">=</span> email_to_text(email) <span class="kw">or</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="va">self</span>.lower_case:</span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>                text <span class="op">=</span> text.lower()</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="va">self</span>.replace_urls <span class="kw">and</span> url_extractor <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>                urls <span class="op">=</span> <span class="bu">list</span>(<span class="bu">set</span>(url_extractor.find_urls(text)))</span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>                urls.sort(key<span class="op">=</span><span class="kw">lambda</span> url: <span class="bu">len</span>(url), reverse<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> url <span class="kw">in</span> urls:</span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>                    text <span class="op">=</span> text.replace(url, <span class="st">&quot; URL &quot;</span>)</span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="va">self</span>.replace_numbers:</span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>                text <span class="op">=</span> re.sub(<span class="vs">r&#39;\d+(?:\.\d*)?(?:[eE][+-]?\d+)?&#39;</span>, <span class="st">&#39;NUMBER&#39;</span>, text)</span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="va">self</span>.remove_punctuation:</span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>                text <span class="op">=</span> re.sub(<span class="vs">r&#39;\W+&#39;</span>, <span class="st">&#39; &#39;</span>, text, flags<span class="op">=</span>re.M)</span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>            word_counts <span class="op">=</span> Counter(text.split())</span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="va">self</span>.stemming <span class="kw">and</span> stemmer <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>                stemmed_word_counts <span class="op">=</span> Counter()</span>
+<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> word, count <span class="kw">in</span> word_counts.items():</span>
+<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a>                    stemmed_word <span class="op">=</span> stemmer.stem(word)</span>
+<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a>                    stemmed_word_counts[stemmed_word] <span class="op">+=</span> count</span>
+<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a>                word_counts <span class="op">=</span> stemmed_word_counts</span>
+<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a>            X_transformed.append(word_counts)</span>
+<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.array(X_transformed)</span></code></pre></div>
 <p>Let’s try this transformer on a few emails:</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>X_few <span class="op">=</span> X_train[:<span class="dv">3</span>]</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>X_few_wordcounts <span class="op">=</span> EmailToWordCounterTransformer().fit_transform(X_few)</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>X_few_wordcounts</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>X_few <span class="op">=</span> X_train[:<span class="dv">3</span>]</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>X_few_wordcounts <span class="op">=</span> EmailToWordCounterTransformer().fit_transform(X_few)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>X_few_wordcounts</span></code></pre></div>
 <pre><code>array([Counter({&#39;chuck&#39;: 1, &#39;murcko&#39;: 1, &#39;wrote&#39;: 1, &#39;stuff&#39;: 1, &#39;yawn&#39;: 1, &#39;r&#39;: 1}),
        Counter({&#39;the&#39;: 11, &#39;of&#39;: 9, &#39;and&#39;: 8, &#39;all&#39;: 3, &#39;christian&#39;: 3, &#39;to&#39;: 3, &#39;by&#39;: 3, &#39;jefferson&#39;: 2, &#39;i&#39;: 2, &#39;have&#39;: 2, &#39;superstit&#39;: 2, &#39;one&#39;: 2, &#39;on&#39;: 2, &#39;been&#39;: 2, &#39;ha&#39;: 2, &#39;half&#39;: 2, &#39;rogueri&#39;: 2, &#39;teach&#39;: 2, &#39;jesu&#39;: 2, &#39;some&#39;: 1, &#39;interest&#39;: 1, &#39;quot&#39;: 1, &#39;url&#39;: 1, &#39;thoma&#39;: 1, &#39;examin&#39;: 1, &#39;known&#39;: 1, &#39;word&#39;: 1, &#39;do&#39;: 1, &#39;not&#39;: 1, &#39;find&#39;: 1, &#39;in&#39;: 1, &#39;our&#39;: 1, &#39;particular&#39;: 1, &#39;redeem&#39;: 1, &#39;featur&#39;: 1, &#39;they&#39;: 1, &#39;are&#39;: 1, &#39;alik&#39;: 1, &#39;found&#39;: 1, &#39;fabl&#39;: 1, &#39;mytholog&#39;: 1, &#39;million&#39;: 1, &#39;innoc&#39;: 1, &#39;men&#39;: 1, &#39;women&#39;: 1, &#39;children&#39;: 1, &#39;sinc&#39;: 1, &#39;introduct&#39;: 1, &#39;burnt&#39;: 1, &#39;tortur&#39;: 1, &#39;fine&#39;: 1, &#39;imprison&#39;: 1, &#39;what&#39;: 1, &#39;effect&#39;: 1, &#39;thi&#39;: 1, &#39;coercion&#39;: 1, &#39;make&#39;: 1, &#39;world&#39;: 1, &#39;fool&#39;: 1, &#39;other&#39;: 1, &#39;hypocrit&#39;: 1, &#39;support&#39;: 1, &#39;error&#39;: 1, &#39;over&#39;: 1, &#39;earth&#39;: 1, &#39;six&#39;: 1, &#39;histor&#39;: 1, &#39;american&#39;: 1, &#39;john&#39;: 1, &#39;e&#39;: 1, &#39;remsburg&#39;: 1, &#39;letter&#39;: 1, &#39;william&#39;: 1, &#39;short&#39;: 1, &#39;again&#39;: 1, &#39;becom&#39;: 1, &#39;most&#39;: 1, &#39;pervert&#39;: 1, &#39;system&#39;: 1, &#39;that&#39;: 1, &#39;ever&#39;: 1, &#39;shone&#39;: 1, &#39;man&#39;: 1, &#39;absurd&#39;: 1, &#39;untruth&#39;: 1, &#39;were&#39;: 1, &#39;perpetr&#39;: 1, &#39;upon&#39;: 1, &#39;a&#39;: 1, &#39;larg&#39;: 1, &#39;band&#39;: 1, &#39;dupe&#39;: 1, &#39;import&#39;: 1, &#39;led&#39;: 1, &#39;paul&#39;: 1, &#39;first&#39;: 1, &#39;great&#39;: 1, &#39;corrupt&#39;: 1}),
        Counter({&#39;url&#39;: 4, &#39;s&#39;: 3, &#39;group&#39;: 3, &#39;to&#39;: 3, &#39;in&#39;: 2, &#39;forteana&#39;: 2, &#39;martin&#39;: 2, &#39;an&#39;: 2, &#39;and&#39;: 2, &#39;we&#39;: 2, &#39;is&#39;: 2, &#39;yahoo&#39;: 2, &#39;unsubscrib&#39;: 2, &#39;y&#39;: 1, &#39;adamson&#39;: 1, &#39;wrote&#39;: 1, &#39;for&#39;: 1, &#39;altern&#39;: 1, &#39;rather&#39;: 1, &#39;more&#39;: 1, &#39;factual&#39;: 1, &#39;base&#39;: 1, &#39;rundown&#39;: 1, &#39;on&#39;: 1, &#39;hamza&#39;: 1, &#39;career&#39;: 1, &#39;includ&#39;: 1, &#39;hi&#39;: 1, &#39;belief&#39;: 1, &#39;that&#39;: 1, &#39;all&#39;: 1, &#39;non&#39;: 1, &#39;muslim&#39;: 1, &#39;yemen&#39;: 1, &#39;should&#39;: 1, &#39;be&#39;: 1, &#39;murder&#39;: 1, &#39;outright&#39;: 1, &#39;know&#39;: 1, &#39;how&#39;: 1, &#39;unbias&#39;: 1, &#39;memri&#39;: 1, &#39;don&#39;: 1, &#39;t&#39;: 1, &#39;html&#39;: 1, &#39;rob&#39;: 1, &#39;sponsor&#39;: 1, &#39;number&#39;: 1, &#39;dvd&#39;: 1, &#39;free&#39;: 1, &#39;p&#39;: 1, &#39;join&#39;: 1, &#39;now&#39;: 1, &#39;from&#39;: 1, &#39;thi&#39;: 1, &#39;send&#39;: 1, &#39;email&#39;: 1, &#39;egroup&#39;: 1, &#39;com&#39;: 1, &#39;your&#39;: 1, &#39;use&#39;: 1, &#39;of&#39;: 1, &#39;subject&#39;: 1})],
       dtype=object)</code></pre>
 <p>This looks about right!</p>
 <p>Now we have the word counts, and we need to convert them to vectors. For this, we will build another transformer whose <code>fit()</code> method will build the vocabulary (an ordered list of the most common words) and whose <code>transform()</code> method will use the vocabulary to convert word counts to vectors. The output is a sparse matrix.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.sparse <span class="im">import</span> csr_matrix</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> WordCounterToVectorTransformer(BaseEstimator, TransformerMixin):</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, vocabulary_size<span class="op">=</span><span class="dv">1000</span>):</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.vocabulary_size <span class="op">=</span> vocabulary_size</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> fit(<span class="va">self</span>, X, y<span class="op">=</span><span class="va">None</span>):</span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>        total_count <span class="op">=</span> Counter()</span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> word_count <span class="kw">in</span> X:</span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> word, count <span class="kw">in</span> word_count.items():</span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>                total_count[word] <span class="op">+=</span> <span class="bu">min</span>(count, <span class="dv">10</span>)</span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>        most_common <span class="op">=</span> total_count.most_common()[:<span class="va">self</span>.vocabulary_size]</span>
-<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.vocabulary_ <span class="op">=</span> {word: index <span class="op">+</span> <span class="dv">1</span> <span class="cf">for</span> index, (word, count) <span class="kw">in</span> <span class="bu">enumerate</span>(most_common)}</span>
-<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span></span>
-<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> transform(<span class="va">self</span>, X, y<span class="op">=</span><span class="va">None</span>):</span>
-<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>        rows <span class="op">=</span> []</span>
-<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>        cols <span class="op">=</span> []</span>
-<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> []</span>
-<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> row, word_count <span class="kw">in</span> <span class="bu">enumerate</span>(X):</span>
-<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> word, count <span class="kw">in</span> word_count.items():</span>
-<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a>                rows.append(row)</span>
-<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>                cols.append(<span class="va">self</span>.vocabulary_.get(word, <span class="dv">0</span>))</span>
-<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>                data.append(count)</span>
-<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> csr_matrix((data, (rows, cols)), shape<span class="op">=</span>(<span class="bu">len</span>(X), <span class="va">self</span>.vocabulary_size <span class="op">+</span> <span class="dv">1</span>))</span></code></pre></div>
-<div class="sourceCode" id="cb42"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>vocab_transformer <span class="op">=</span> WordCounterToVectorTransformer(vocabulary_size<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>X_few_vectors <span class="op">=</span> vocab_transformer.fit_transform(X_few_wordcounts)</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>X_few_vectors</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.sparse <span class="im">import</span> csr_matrix</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> WordCounterToVectorTransformer(BaseEstimator, TransformerMixin):</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, vocabulary_size<span class="op">=</span><span class="dv">1000</span>):</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.vocabulary_size <span class="op">=</span> vocabulary_size</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> fit(<span class="va">self</span>, X, y<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>        total_count <span class="op">=</span> Counter()</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> word_count <span class="kw">in</span> X:</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> word, count <span class="kw">in</span> word_count.items():</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>                total_count[word] <span class="op">+=</span> <span class="bu">min</span>(count, <span class="dv">10</span>)</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>        most_common <span class="op">=</span> total_count.most_common()[:<span class="va">self</span>.vocabulary_size]</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.vocabulary_ <span class="op">=</span> {word: index <span class="op">+</span> <span class="dv">1</span> <span class="cf">for</span> index, (word, count) <span class="kw">in</span> <span class="bu">enumerate</span>(most_common)}</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span></span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> transform(<span class="va">self</span>, X, y<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>        rows <span class="op">=</span> []</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>        cols <span class="op">=</span> []</span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> []</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> row, word_count <span class="kw">in</span> <span class="bu">enumerate</span>(X):</span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> word, count <span class="kw">in</span> word_count.items():</span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>                rows.append(row)</span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>                cols.append(<span class="va">self</span>.vocabulary_.get(word, <span class="dv">0</span>))</span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>                data.append(count)</span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> csr_matrix((data, (rows, cols)), shape<span class="op">=</span>(<span class="bu">len</span>(X), <span class="va">self</span>.vocabulary_size <span class="op">+</span> <span class="dv">1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>vocab_transformer <span class="op">=</span> WordCounterToVectorTransformer(vocabulary_size<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>X_few_vectors <span class="op">=</span> vocab_transformer.fit_transform(X_few_wordcounts)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>X_few_vectors</span></code></pre></div>
 <pre><code>&lt;3x11 sparse matrix of type &#39;&lt;class &#39;numpy.int64&#39;&gt;&#39;
     with 20 stored elements in Compressed Sparse Row format&gt;</code></pre>
-<div class="sourceCode" id="cb44"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>X_few_vectors.toarray()</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>X_few_vectors.toarray()</span></code></pre></div>
 <pre><code>array([[ 6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0],
        [99, 11,  9,  8,  3,  1,  3,  1,  3,  2,  3],
        [67,  0,  1,  2,  3,  4,  1,  2,  0,  1,  0]])</code></pre>
 <p>What does this matrix mean? Well, the 99 in the second row, first column, means that the second email contains 99 words that are not part of the vocabulary. The 11 next to it means that the first word in the vocabulary is present 11 times in this email. The 9 next to it means that the second word is present 9 times, and so on. You can look at the vocabulary to know which words we are talking about. The first word is “the”, the second word is “of”, etc.</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>vocab_transformer.vocabulary_</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>vocab_transformer.vocabulary_</span></code></pre></div>
 <pre><code>{&#39;the&#39;: 1,
  &#39;of&#39;: 2,
  &#39;and&#39;: 3,
@@ -361,21 +357,21 @@ Compulsive =&gt; compuls</code></pre>
  &#39;on&#39;: 9,
  &#39;by&#39;: 10}</code></pre>
 <p>We are now ready to train our first spam classifier! Let’s transform the whole dataset:</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>preprocess_pipeline <span class="op">=</span> Pipeline([</span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>    (<span class="st">&quot;email_to_wordcount&quot;</span>, EmailToWordCounterTransformer()),</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>    (<span class="st">&quot;wordcount_to_vector&quot;</span>, WordCounterToVectorTransformer()),</span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>])</span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>X_train_transformed <span class="op">=</span> preprocess_pipeline.fit_transform(X_train)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>preprocess_pipeline <span class="op">=</span> Pipeline([</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    (<span class="st">&quot;email_to_wordcount&quot;</span>, EmailToWordCounterTransformer()),</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    (<span class="st">&quot;wordcount_to_vector&quot;</span>, WordCounterToVectorTransformer()),</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>X_train_transformed <span class="op">=</span> preprocess_pipeline.fit_transform(X_train)</span></code></pre></div>
 <p>Note: to be future-proof, we set solver=“lbfgs” since this will be the default value in Scikit-Learn 0.22.</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>log_clf <span class="op">=</span> LogisticRegression(solver<span class="op">=</span><span class="st">&quot;lbfgs&quot;</span>, max_iter<span class="op">=</span><span class="dv">1000</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>score <span class="op">=</span> cross_val_score(log_clf, X_train_transformed, y_train, cv<span class="op">=</span><span class="dv">3</span>, verbose<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>score.mean()</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>log_clf <span class="op">=</span> LogisticRegression(solver<span class="op">=</span><span class="st">&quot;lbfgs&quot;</span>, max_iter<span class="op">=</span><span class="dv">1000</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>score <span class="op">=</span> cross_val_score(log_clf, X_train_transformed, y_train, cv<span class="op">=</span><span class="dv">3</span>, verbose<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>score.mean()</span></code></pre></div>
 <pre><code>[Parallel(n_jobs=1)]: Using backend SequentialBackend with 1 concurrent workers.
 
 
@@ -403,17 +399,16 @@ Compulsive =&gt; compuls</code></pre>
 0.985</code></pre>
 <p>Over 98.5%, not bad. However, remember that we are using the “easy” dataset. You can try with the harder datasets, the results won’t be so amazing. You would have to try multiple models, select the best ones and fine-tune them using cross-validation, and so on.</p>
 <p>To conclude here, we’ll just print out the precision/recall we get on the test set:</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> precision_score, recall_score</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>X_test_transformed <span class="op">=</span> preprocess_pipeline.transform(X_test)</span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>log_clf <span class="op">=</span> LogisticRegression(solver<span class="op">=</span><span class="st">&quot;lbfgs&quot;</span>, max_iter<span class="op">=</span><span class="dv">1000</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>log_clf.fit(X_train_transformed, y_train)</span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> log_clf.predict(X_test_transformed)</span>
-<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Precision: </span><span class="sc">{:.2f}</span><span class="st">%&quot;</span>.<span class="bu">format</span>(<span class="dv">100</span> <span class="op">*</span> precision_score(y_test, y_pred)))</span>
-<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Recall: </span><span class="sc">{:.2f}</span><span class="st">%&quot;</span>.<span class="bu">format</span>(<span class="dv">100</span> <span class="op">*</span> recall_score(y_test, y_pred)))</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> precision_score, recall_score</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>X_test_transformed <span class="op">=</span> preprocess_pipeline.transform(X_test)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>log_clf <span class="op">=</span> LogisticRegression(solver<span class="op">=</span><span class="st">&quot;lbfgs&quot;</span>, max_iter<span class="op">=</span><span class="dv">1000</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>log_clf.fit(X_train_transformed, y_train)</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> log_clf.predict(X_test_transformed)</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Precision: </span><span class="sc">{:.2f}</span><span class="st">%&quot;</span>.<span class="bu">format</span>(<span class="dv">100</span> <span class="op">*</span> precision_score(y_test, y_pred)))</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Recall: </span><span class="sc">{:.2f}</span><span class="st">%&quot;</span>.<span class="bu">format</span>(<span class="dv">100</span> <span class="op">*</span> recall_score(y_test, y_pred)))</span></code></pre></div>
 <pre><code>Precision: 96.88%
 Recall: 97.89%</code></pre>
-<div class="sourceCode" id="cb53"><pre class="sourceCode python"><code class="sourceCode python"></code></pre></div>
