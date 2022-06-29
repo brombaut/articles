@@ -36,7 +36,7 @@ class Tree:
 
 A binary tree is a tree in which each node has up to two children. Not all trees are binary trees. For example, this tree is not a binary tree. You could call it a ternary tree.
 
-![](./trees_and_graphs_files/00_ternary_tree.png)
+![png](trees_and_graphs_files/00_ternary_tree.png)
 
 There are occasions when you might have a tree that is not a binary tree. For example, suppose you were using a tree to represent a bunch of phone numbers. In this case, you might use a 10-ary tree, with each node having up to 10 children (one for each digit).
 
@@ -50,11 +50,11 @@ Note that this inequality must be true for all of a node's descendents, not just
 
 A binary search tree:
 
-![](./trees_and_graphs_files/01_binary_search_tree.png)
+![png](trees_and_graphs_files/01_binary_search_tree.png)
 
 Not a binary search tree:
 
-![](./trees_and_graphs_files/02_not_binary_search_tree.png)
+![png](trees_and_graphs_files/02_not_binary_search_tree.png)
 
 A binary search tree imposes the condition that, for each node, its left descendents are less than or equal to the current node, which is less than the right descendents.
 
@@ -70,11 +70,11 @@ A complete binary tree is a binary tree in which every level of the tree is full
 
 Not a complete binary tree:
 
-![](./trees_and_graphs_files/03_not_complete_binary_tree.png)
+![png](trees_and_graphs_files/03_not_complete_binary_tree.png)
 
 A complete binary tree:
 
-![](./trees_and_graphs_files/04_complete_binary_tree.png)
+![png](trees_and_graphs_files/04_complete_binary_tree.png)
 
 #### Full Binary Trees
 
@@ -82,17 +82,17 @@ A full binary tree is a binary tree in which every node has either zero or two c
 
 Not a full binary tree:
 
-![](./trees_and_graphs_files/05_not_full_binary_tree.png)
+![png](trees_and_graphs_files/05_not_full_binary_tree.png)
 
 A full binary tree:
 
-![](./trees_and_graphs_files/06_full_binary_tree.png)
+![png](trees_and_graphs_files/06_full_binary_tree.png)
 
 #### Perfect Binary Trees
 
 A perfect binary tree is one that is both full and complete. All leaf nodes will be at the same level, and the level has the maximum number of nodes.
 
-![](./trees_and_graphs_files/07_perfect_binary_tree.png)
+![png](trees_and_graphs_files/07_perfect_binary_tree.png)
 
 Note that perfect trees are rare, as a perfect tree must have exactly $2^k - 1$ nodes (where $k$ is the number of levels).
 
@@ -149,7 +149,7 @@ A min-heap is a _complete_ binary tree (that is, totally filled other than the r
 
 For example:
 
-![](./trees_and_graphs_files/08_min_heap.png)
+![png](trees_and_graphs_files/08_min_heap.png)
 
 We have two key operations on a min-heap: `insert` and `extract_min`.
 
@@ -161,15 +161,15 @@ Then, we "fix" the tree by swapping the new element with its parent, until we fi
 
 - Step 1: Insert 2
 
-![](./trees_and_graphs_files/09_min_heap_insert_1.png)
+![png](trees_and_graphs_files/09_min_heap_insert_1.png)
 
 - Step 2: Swap 2 and 7
 
-![](./trees_and_graphs_files/10_min_heap_insert_2.png)
+![png](trees_and_graphs_files/10_min_heap_insert_2.png)
 
 - Step 3: Swap 2 and 4
 
-![](./trees_and_graphs_files/11_min_heap_insert_3.png)
+![png](trees_and_graphs_files/11_min_heap_insert_3.png)
 
 This take `O(log n)` time, where `n` is the number of nodes in the heap.
 
@@ -183,15 +183,15 @@ Do we swap it with the left child or the right child? This depends on their valu
 
 - Step 1: Replace min with 80
 
-![](./trees_and_graphs_files/12_min_heap_remove_min_1.png)
+![png](trees_and_graphs_files/12_min_heap_remove_min_1.png)
 
 - Step 2: Swap 23 and 80
 
-![](./trees_and_graphs_files/13_min_heap_remove_min_2.png)
+![png](trees_and_graphs_files/13_min_heap_remove_min_2.png)
 
 - Step 3: Swap 32 and 80
 
-![](./trees_and_graphs_files/14_min_heap_remove_min_3.png)
+![png](trees_and_graphs_files/14_min_heap_remove_min_3.png)
 
 This algorithm will take `O(log n)` time.
 
@@ -205,7 +205,7 @@ The actual implementation of these `*` nodes might be a special type of child (s
 
 A node in a trie could have anywhere from `0` to `ALPHABET_SIZE + 1` children.
 
-![](./trees_and_graphs_files/15_prefix_trees.png)
+![png](trees_and_graphs_files/15_prefix_trees.png)
 
 Very commonly, a trie us used to store the entire (English) language for quick prefix lookups. While a hash table can quickly look up where a string is a valid word, it cannot tell us if a string is a prefix of any valid words. A trie can do this very quickly.
 
@@ -215,16 +215,3 @@ Many problems involving lists of valid words leverage a trie as an optimization.
 
 ## Graphs
 TODO
-
-
-```python
-def create_md_of_notebook():
-    !jupyter nbconvert ./trees_and_graphs.ipynb --to markdown
-
-create_md_of_notebook()
-```
-
-
-```python
-
-```
