@@ -364,9 +364,3 @@ sb.append("hello")
 sb.append("there")
 assert(sb.to_string() == "hellothere")
 ```
-
-## Trees
-TODO
-
-## Graphs
-TODO

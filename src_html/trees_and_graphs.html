@@ -1,0 +1,132 @@
+<h1 id="trees-and-graphs">Trees and Graphs</h1>
+<h2 id="trees">Trees</h2>
+<p>We’ll discuss trees first and then graphs, even though trees are really just a type of graph</p>
+<h3 id="types-of-trees">Types of Trees</h3>
+<p>A nice way to understand a tree is with a recursive explanation. A tree is a data structure composed of nodes.</p>
+<ul>
+<li>Each tree has a root node.</li>
+<li>The root node has zero or more child nodes.</li>
+<li>Each child node has zero or more childe nodes, and so on.</li>
+</ul>
+<p>A tree cannot contain cycles. The nodes may or may not be in a particular order, they could have any data type as values, and they may or may not have links back to their parent nodes.</p>
+<p>A very simple class definition for <code>Node</code> is:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Node:</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, name):</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.name <span class="op">=</span> name</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.children <span class="op">=</span> <span class="bu">list</span>()</span></code></pre></div>
+<p>You might also have a <code>Tree</code> class to wrap this node.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Tree:</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, root):</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.root: Node <span class="op">=</span> root</span></code></pre></div>
+<h4 id="trees-vs.-binary-trees">Trees vs. Binary Trees</h4>
+<p>A binary tree is a tree in which each node has up to two children. Not all trees are binary trees. For example, this tree is not a binary tree. You could call it a ternary tree.</p>
+<p><img src="./trees_and_graphs_files/00_ternary_tree.png" /></p>
+<p>There are occasions when you might have a tree that is not a binary tree. For example, suppose you were using a tree to represent a bunch of phone numbers. In this case, you might use a 10-ary tree, with each node having up to 10 children (one for each digit).</p>
+<p>A node is called a “leaf” node if it has no children.</p>
+<h4 id="binary-tree-vs-binary-search-tree">Binary Tree vs Binary Search Tree</h4>
+<p>A binary search tree is a binary tree in which every node fits a specific ordering property: <strong>all left descendents &lt;= n &lt; all right descendents</strong>. This must be true for each node n.</p>
+<p>Note that this inequality must be true for all of a node’s descendents, not just its immediate children.</p>
+<p>A binary search tree:</p>
+<p><img src="./trees_and_graphs_files/01_binary_search_tree.png" /></p>
+<p>Not a binary search tree:</p>
+<p><img src="./trees_and_graphs_files/02_not_binary_search_tree.png" /></p>
+<p>A binary search tree imposes the condition that, for each node, its left descendents are less than or equal to the current node, which is less than the right descendents.</p>
+<h4 id="balanced-vs.-unbalanced">Balanced vs. Unbalanced</h4>
+<p>While many trees are balanced, not all are. Note that balancing a tree does not mean the left and right subtrees are exactly the same size (like you see under “perfect binary trees” below).</p>
+<p>One way to think about it is that a “balanced” tree really means something more like “not terribly imbalanced”. It’s balanced enought to ensure <code>O(log n)</code> times for <code>insert</code> and <code>find</code>, but it’s not necessarily as balanced as it could be.</p>
+<h4 id="complete-binary-trees">Complete Binary Trees</h4>
+<p>A complete binary tree is a binary tree in which every level of the tree is fully filled, except for perhaps the last level. To the extent that the last level is filled, it is filled left to right.</p>
+<p>Not a complete binary tree:</p>
+<p><img src="./trees_and_graphs_files/03_not_complete_binary_tree.png" /></p>
+<p>A complete binary tree:</p>
+<p><img src="./trees_and_graphs_files/04_complete_binary_tree.png" /></p>
+<h4 id="full-binary-trees">Full Binary Trees</h4>
+<p>A full binary tree is a binary tree in which every node has either zero or two children. That is, no nodes have only one child.</p>
+<p>Not a full binary tree:</p>
+<p><img src="./trees_and_graphs_files/05_not_full_binary_tree.png" /></p>
+<p>A full binary tree:</p>
+<p><img src="./trees_and_graphs_files/06_full_binary_tree.png" /></p>
+<h4 id="perfect-binary-trees">Perfect Binary Trees</h4>
+<p>A perfect binary tree is one that is both full and complete. All leaf nodes will be at the same level, and the level has the maximum number of nodes.</p>
+<p><img src="./trees_and_graphs_files/07_perfect_binary_tree.png" /></p>
+<p>Note that perfect trees are rare, as a perfect tree must have exactly <span class="math inline">2<sup><em>k</em></sup> − 1</span> nodes (where <span class="math inline"><em>k</em></span> is the number of levels).</p>
+<h3 id="binary-tree-traversal">Binary Tree Traversal</h3>
+<h4 id="in-order-traversal">In-Order Traversal</h4>
+<p>In-order traversal means to “visit” (often, print) the left branch, then the current node, then the right branch.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> in_order_traversal(node):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    in_order_traversal(node.left)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    visit(node)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    in_order_traversal(node.right)</span></code></pre></div>
+<p>When performed on a binary search tree, it visits the nodes in ascending order (hence the name “in-order”).</p>
+<h4 id="pre-order-traversal">Pre-Order Traversal</h4>
+<p>Pre-order traversal visits the current node before its child nodes (hence the name “pre-order”).</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> in_order_traversal(node):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    visit(node)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    in_order_traversal(node.left)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    in_order_traversal(node.right)</span></code></pre></div>
+<p>In a pre-order traversal, the root is always the first node visited.</p>
+<h4 id="post-order-traversal">Post-Order Traversal</h4>
+<p>Post-order traversal visits the current node after its child nodes (hence the name “post-order”).</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> in_order_traversal(node):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> node <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    in_order_traversal(node.left)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    in_order_traversal(node.right)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    visit(node)</span></code></pre></div>
+<p>In a post-order traversal, the root is always the last node visited.</p>
+<h3 id="binary-heaps-min-heaps-and-max-heaps">Binary Heaps (Min-Heaps and Max-Heaps)</h3>
+<p>We’ll only discuss min-heaps here. Max-heaps are essentially equivalent, but the elements are in descending order rather than ascending order.</p>
+<p>A min-heap is a <em>complete</em> binary tree (that is, totally filled other than the rightmost elements on the last level) where each node is smaller than its children. The root, therefore, it the minimum element in the tree.</p>
+<p>For example:</p>
+<p><img src="./trees_and_graphs_files/08_min_heap.png" /></p>
+<p>We have two key operations on a min-heap: <code>insert</code> and <code>extract_min</code>.</p>
+<p><code>Insert</code></p>
+<p>When we insert into a min-heap, we always start by inserting the element at the bottom. We insert at the rightmost spot so as to maintain the complete tree property.</p>
+<p>Then, we “fix” the tree by swapping the new element with its parent, until we find an appropriate spot for the element. We essentially bubble up the minimum element.</p>
+<ul>
+<li>Step 1: Insert 2</li>
+</ul>
+<p><img src="./trees_and_graphs_files/09_min_heap_insert_1.png" /></p>
+<ul>
+<li>Step 2: Swap 2 and 7</li>
+</ul>
+<p><img src="./trees_and_graphs_files/10_min_heap_insert_2.png" /></p>
+<ul>
+<li>Step 3: Swap 2 and 4</li>
+</ul>
+<p><img src="./trees_and_graphs_files/11_min_heap_insert_3.png" /></p>
+<p>This take <code>O(log n)</code> time, where <code>n</code> is the number of nodes in the heap.</p>
+<p><code>Extract Minimum Element</code></p>
+<p>Finding the minimum element of a min-heap is easy: it’s always at the top. The trickier part is how to remove it (in fact, this isn’t that tricky).</p>
+<p>First, we remove the minimum element and swap it with the last element in the heap (the bottommost rightnost element). Then, we bubble down this element, swapping it with one of its children until the min-heap property is restored.</p>
+<p>Do we swap it with the left child or the right child? This depends on their values. There’s no inherent ordering between the left and right element, but you’ll need to take the smaller one in order to maintain the min-heap ordering.</p>
+<ul>
+<li>Step 1: Replace min with 80</li>
+</ul>
+<p><img src="./trees_and_graphs_files/12_min_heap_remove_min_1.png" /></p>
+<ul>
+<li>Step 2: Swap 23 and 80</li>
+</ul>
+<p><img src="./trees_and_graphs_files/13_min_heap_remove_min_2.png" /></p>
+<ul>
+<li>Step 3: Swap 32 and 80</li>
+</ul>
+<p><img src="./trees_and_graphs_files/14_min_heap_remove_min_3.png" /></p>
+<p>This algorithm will take <code>O(log n)</code> time.</p>
+<h3 id="tries-prefix-trees">Tries (Prefix Trees)</h3>
+<p>A trie (sometimes called a prefix tree) is a funny data structure. A trie is a variant of an n-ary tree in which characters are stored at each node. Each path down the tree may represent a word.</p>
+<p>The <code>*</code> nodes (sometimes called “null nodes”) are often used to indicate complete words. For example, the fact that there is a <code>*</code> node under <code>MANY</code> indicates that <code>MANY</code> is a complete word. The existence of the <code>MA</code> path indicates there are words that start with <code>MA</code>.</p>
+<p>The actual implementation of these <code>*</code> nodes might be a special type of child (such as a <code>TerminatingTrieNode</code>, which inherits from <code>TrieNode</code>). Or, we could use just a boolean flat <code>terminates</code> within the “parent” node.</p>
+<p>A node in a trie could have anywhere from <code>0</code> to <code>ALPHABET_SIZE + 1</code> children.</p>
+<p><img src="./trees_and_graphs_files/15_prefix_trees.png" /></p>
+<p>Very commonly, a trie us used to store the entire (English) language for quick prefix lookups. While a hash table can quickly look up where a string is a valid word, it cannot tell us if a string is a prefix of any valid words. A trie can do this very quickly.</p>
+<p>How quickly? A trie can check is a string is a valid prefix in <code>O(K)</code> time, where <code>K</code> is the length of the string. This is actually the same runtime as a hash table will take. Although we often refer to has table lookups as being <code>O(1)</code> time, this isn’t entirely true. A hash table must read through all the characters in the input, which take <code>O(K)</code> time in the case of a word lookup.</p>
+<p>Many problems involving lists of valid words leverage a trie as an optimization. In situations when we search through the tree on related prefixes repeatedly (e.g., looking up <code>M</code>, then <code>MA</code>, then <code>MAN</code>, the <code>MANY</code>), we might pass around a reference to the current node in the tree. This will allow us to just check if <code>Y</code> is a child of <code>MAN</code>, rather than starting from the root each time.</p>
+<h2 id="graphs">Graphs</h2>
+<p>TODO</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_md_of_notebook():</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">!</span>jupyter nbconvert .<span class="op">/</span>trees_and_graphs.ipynb <span class="op">--</span>to markdown</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>create_md_of_notebook()</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"></code></pre></div>
