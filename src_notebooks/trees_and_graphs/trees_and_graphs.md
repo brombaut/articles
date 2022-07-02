@@ -214,4 +214,177 @@ How quickly? A trie can check is a string is a valid prefix in `O(K)` time, wher
 Many problems involving lists of valid words leverage a trie as an optimization. In situations when we search through the tree on related prefixes repeatedly (e.g., looking up `M`, then `MA`, then `MAN`, the `MANY`), we might pass around a reference to the current node in the tree. This will allow us to just check if `Y` is a child of `MAN`, rather than starting from the root each time.
 
 ## Graphs
-TODO
+
+A tree is actually a type of graph, but not all graphs are trees. Simply put, a tree is a connected graph without cycles.
+
+A graph is simply a collection of nodes with edges between (some of) them
+
+- Graphs can be either directed (like the following graph) or undirected. While directed edges are like a one-way street, undirected edges are like a two-way street.
+- The graph might consist of multiple isolated subgraphs. If there is a path between every pair of vertices, it is called a "connected graph".
+- Teh graph can also have cycles (or not). An "acyclic graph" is one without cycles.
+
+Visually, you could draw a graph like this:
+
+![png](trees_and_graphs_files/16_graph_directed_example.png)
+
+In terms of programming, there are two common ways to represent a graph.
+
+### Adjacency List 
+
+This is the most common way to represent a graph. Every vertex (or node) stores a list of adjacent vertices. In an undirected graph, an edge like `(a, b)` would be stored twice: once in `a`'s adjacent vertices and once in `b`'s adjacent vertices.
+
+A simple class definition for a graph node could look essentially the same as a tree node.
+
+```java
+class Graph {
+  public Node[] Nodes;
+}
+
+class Node {
+  public String name;
+  public Node[] children;
+}
+```
+
+The `Graph` class is used because, unlike in a tree, you can't necessarily reach all the nodes from a single node.
+
+You don't necessarily need any additional classes to represent a graph. An array (or a hash table) of lists (arrays, arraylists, linked lists, etc.) can store the adjacency list. The graph above could be represented as:
+
+```python
+0: 1
+1: 2
+2: 0, 3
+3: 2
+4: 6
+5: 4
+6: 5
+```
+
+This is a bit more compact, but it isn't quite as clean. We tend to use node classes unless there's a compelling reason not to.
+
+### Adjacency Matrices
+
+An adjacency matrix is an NxN boolean matrix (where N is the number of nodes), where a `true` value at `matrix[i][j]` indicates an edge from node `i` to node `j`. (You can also use an integer matrix with 0s and 1s).
+
+In an undirected graph, an adjacency matrix will be symmetrics. In a directed graph, it will not (necessarily) be.
+
+![png](trees_and_graphs_files/17_adjacency_matrix_graph.png)
+
+|       | **0** | **1** | **2** | **3** |
+|-------|-------|-------|-------|-------|
+| **0** | 0     | 1     | 0     | 0     |
+| **1** | 0     | 0     | 1     | 0     |
+| **2** | 1     | 0     | 0     | 0     |
+| **3** | 0     | 0     | 1     | 0     |
+
+The same graph algorithms that are used on adjacency lists (breadth-first search, etc.) can be performed with adjacency matrices, but they may be somewhat less efficient. In the same adjacency list representation, you can easily iterate through the neighbors of a node. In the adjacency matrix representation, you will need to iterate through all the nodes to identify a node's neighbors.
+
+### Graph Search
+
+The two most common ways to search a graph are depth-first search and breadth-first search.
+
+In depth-first search (DFS), we start at the root (or another arbitrarily selected node) and explore each branch completly before moving on to the next branch. That is, we go deep first (hence the name _depth-first_ search) before we got wide.
+
+In breadth-first search (BFS), we start a the root (or another arbitrarily selected node) and explore each neighbor before going on to any of their children. That is, we got wide (hence the name _breadth-first_ search) before we got deep.
+
+See the below depiction of a graph and its depth-first and breadth-first search (assuming neighbors are iterated in numerical order).
+
+![png](trees_and_graphs_files/18_graph_search_graph.png)
+
+#### Depth-First Search
+```python
+1:  Node 0
+2:    Node 1
+3:      Node 3
+4:        Node 2
+5:        Node 4
+6:  Node 5
+```
+
+#### Breadth-First Search
+```python
+1:  Node 0
+2:  Node 1
+3:  Node 4
+4:  Node 5
+5:  Node 3
+6:  Node 2
+```
+
+Breadth-first search and depth-first search tend to be used in different scenarios. DFS is often preferred if we want to visit every node in the graph. Both will work just fine, but depth-first search is a bit simpler.
+
+However, if we want to find the shortest path (or just any path) between two nodes, BFS is generally better. Consider representing all the friendships in the entire world in a graph and trying to find a path of frienships between `Ash` and `Vanessa`.
+
+In depth-first search, we could take a path like `Ash -> Brian -> Carleton -> Davis -> Eric -> Farah -> Gayle -> Harry -> Isabella -> John -> Kari...` and then find ourselves very far away. We could go through most of the world without realizing that, in fact, `Vanessa` is `Ash`'s friend. We will still eventually find the path, but it may take a long time. It also won't find us the shortest path.
+
+
+In breadth-first search, we would stay close to `Ash` for as long as possible. We might iterate through many of `Ash`'s friends, but we wouldn't go to his more distance connections until absolutly necessary. If `Vanessa` is `Ash`'s friend, or his friend-of-a-friend, we'll find this out relatively quickly.
+
+##### Depth-First Search (DFS)
+
+In DFS, we visit a node `a` and the iterate through each of `a`'s neighbors. When visiting a node `b` that is a neighbor of `a`, we visit all of `b`'s neighbors before going on to `a`'s other neighbors. That is, `a` exhaustively searches `b`'s branch before any of its other neighbors.
+
+Note that pre-order and other forms of tree traversal are a form of DFS. The key difference is that when implementing this algorithm for a graph, we must check if the node has been visited. If we don't we risk getting stuck in an infinite loop.
+
+The pseudocode below implements DFS:
+
+```java
+void search (Node root) {
+  if (root == null) return;
+  visit(root);
+  root.visited = true;
+  foreach (Node n in root.adjacent) {
+    if (n.visited == false) {
+      search(n)
+    }
+  }
+}
+```
+
+##### Breadth-First Search (DFS)
+BFS is a bit less intuitive. The main tripping point is the false assumption that BFS is recursive. It's not. Instead, it uses a queue.
+
+In BFS, node `a` visits each of `a`'s neighbors before visiting any of _their_ neighbors. You can think of this as searching level by level out from `a`. An interative solution involving a queue usually works best.
+
+```java
+void search(Node root) {
+  Queue queue = new Queue();
+  root.marked = true;
+  queue.enqueue(root); // Add to the end of queue
+
+  while (!queue.isEmpty()) {
+    Node r  = queue.dequeue(); // Remove from the front of the queue
+    visit(r);
+    foreach (Node n in r.adjacent) {
+      n.marked = true;
+      queue.enqueue(n);
+    }
+  }
+}
+```
+
+Always remember for BFS that you use a queue.
+
+##### Bidirectional Search
+
+Bidirectional search is used to find the shortest path between a source and destination. It operates by essentially running two simultaneous breadth-first searches, one from each node. When their searches collide, we have found a path.
+
+
+**Breadth-First Search**
+Single search from `s` to `t` that collides after four levels.
+
+![png](trees_and_graphs_files/19_bfs_graph.png)
+
+**Bidirectional Search**
+Two searches (one from `s` and one from `t`) that collide after four levels total (two levels each).
+
+![png](trees_and_graphs_files/20_bidirectional_search_graph.png)
+
+To see why this is faster, consider a graph where every node has at most $k$ adjacent nodes and the shortest path from node $s$ to node $t$ has length $d$.
+
+- In traditional breadth-first search, we would search up to $k$ nodes in the first "level" of the search. In the second level, we would search up to $k$ nodes for each of those first $k$ nodes, so $k^2$ nodes total (thus far). We would do this $d$ times, so that's $O(k^d)$.
+- In bidirectional search, we have two searches that collide after approximately $d/2$ levels (the midpoint of the path). The search from $s$ visits approximately $k^{d/2}$, as does the search from $t$. That's approximately $2*k^{d/2}$, or $O(k^{d/2})$, nodes total.
+
+This might seem like a minor difference, but it's not. It's huge. Recall that $(k^{d/2})*(k^{d/2}) = k^d$. The bidirectional search is actually faster by a factor of $k^{d/2}$.
+
+Put another way: if our system could only support searching "friend of friend" paths in breadth-first search, it could now likely support "friend of friend of friend of friend" paths. We can support paths that are twice as long.

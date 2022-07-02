@@ -124,4 +124,149 @@
 <p>How quickly? A trie can check is a string is a valid prefix in <code>O(K)</code> time, where <code>K</code> is the length of the string. This is actually the same runtime as a hash table will take. Although we often refer to has table lookups as being <code>O(1)</code> time, this isn’t entirely true. A hash table must read through all the characters in the input, which take <code>O(K)</code> time in the case of a word lookup.</p>
 <p>Many problems involving lists of valid words leverage a trie as an optimization. In situations when we search through the tree on related prefixes repeatedly (e.g., looking up <code>M</code>, then <code>MA</code>, then <code>MAN</code>, the <code>MANY</code>), we might pass around a reference to the current node in the tree. This will allow us to just check if <code>Y</code> is a child of <code>MAN</code>, rather than starting from the root each time.</p>
 <h2 id="graphs">Graphs</h2>
-<p>TODO</p>
+<p>A tree is actually a type of graph, but not all graphs are trees. Simply put, a tree is a connected graph without cycles.</p>
+<p>A graph is simply a collection of nodes with edges between (some of) them</p>
+<ul>
+<li>Graphs can be either directed (like the following graph) or undirected. While directed edges are like a one-way street, undirected edges are like a two-way street.</li>
+<li>The graph might consist of multiple isolated subgraphs. If there is a path between every pair of vertices, it is called a “connected graph”.</li>
+<li>Teh graph can also have cycles (or not). An “acyclic graph” is one without cycles.</li>
+</ul>
+<p>Visually, you could draw a graph like this:</p>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/trees_and_graphs/16_graph_directed_example.png" /></p>
+<p>In terms of programming, there are two common ways to represent a graph.</p>
+<h3 id="adjacency-list">Adjacency List</h3>
+<p>This is the most common way to represent a graph. Every vertex (or node) stores a list of adjacent vertices. In an undirected graph, an edge like <code>(a, b)</code> would be stored twice: once in <code>a</code>’s adjacent vertices and once in <code>b</code>’s adjacent vertices.</p>
+<p>A simple class definition for a graph node could look essentially the same as a tree node.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Graph <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span> <span class="bu">Node</span><span class="op">[]</span> Nodes<span class="op">;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="bu">Node</span> <span class="op">{</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span> <span class="bu">String</span> name<span class="op">;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span> <span class="bu">Node</span><span class="op">[]</span> children<span class="op">;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>The <code>Graph</code> class is used because, unlike in a tree, you can’t necessarily reach all the nodes from a single node.</p>
+<p>You don’t necessarily need any additional classes to represent a graph. An array (or a hash table) of lists (arrays, arraylists, linked lists, etc.) can store the adjacency list. The graph above could be represented as:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dv">0</span>: <span class="dv">1</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span>: <span class="dv">2</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span>: <span class="dv">0</span>, <span class="dv">3</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span>: <span class="dv">2</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span>: <span class="dv">6</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span>: <span class="dv">4</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span>: <span class="dv">5</span></span></code></pre></div>
+<p>This is a bit more compact, but it isn’t quite as clean. We tend to use node classes unless there’s a compelling reason not to.</p>
+<h3 id="adjacency-matrices">Adjacency Matrices</h3>
+<p>An adjacency matrix is an NxN boolean matrix (where N is the number of nodes), where a <code>true</code> value at <code>matrix[i][j]</code> indicates an edge from node <code>i</code> to node <code>j</code>. (You can also use an integer matrix with 0s and 1s).</p>
+<p>In an undirected graph, an adjacency matrix will be symmetrics. In a directed graph, it will not (necessarily) be.</p>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/trees_and_graphs/17_adjacency_matrix_graph.png" /></p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>0</strong></th>
+<th><strong>1</strong></th>
+<th><strong>2</strong></th>
+<th><strong>3</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>0</strong></td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td><strong>1</strong></td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td><strong>2</strong></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td><strong>3</strong></td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>The same graph algorithms that are used on adjacency lists (breadth-first search, etc.) can be performed with adjacency matrices, but they may be somewhat less efficient. In the same adjacency list representation, you can easily iterate through the neighbors of a node. In the adjacency matrix representation, you will need to iterate through all the nodes to identify a node’s neighbors.</p>
+<h3 id="graph-search">Graph Search</h3>
+<p>The two most common ways to search a graph are depth-first search and breadth-first search.</p>
+<p>In depth-first search (DFS), we start at the root (or another arbitrarily selected node) and explore each branch completly before moving on to the next branch. That is, we go deep first (hence the name <em>depth-first</em> search) before we got wide.</p>
+<p>In breadth-first search (BFS), we start a the root (or another arbitrarily selected node) and explore each neighbor before going on to any of their children. That is, we got wide (hence the name <em>breadth-first</em> search) before we got deep.</p>
+<p>See the below depiction of a graph and its depth-first and breadth-first search (assuming neighbors are iterated in numerical order).</p>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/trees_and_graphs/18_graph_search_graph.png" /></p>
+<h4 id="depth-first-search">Depth-First Search</h4>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span>:  Node <span class="dv">0</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span>:    Node <span class="dv">1</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span>:      Node <span class="dv">3</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span>:        Node <span class="dv">2</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span>:        Node <span class="dv">4</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span>:  Node <span class="dv">5</span></span></code></pre></div>
+<h4 id="breadth-first-search">Breadth-First Search</h4>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span>:  Node <span class="dv">0</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span>:  Node <span class="dv">1</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span>:  Node <span class="dv">4</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span>:  Node <span class="dv">5</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span>:  Node <span class="dv">3</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span>:  Node <span class="dv">2</span></span></code></pre></div>
+<p>Breadth-first search and depth-first search tend to be used in different scenarios. DFS is often preferred if we want to visit every node in the graph. Both will work just fine, but depth-first search is a bit simpler.</p>
+<p>However, if we want to find the shortest path (or just any path) between two nodes, BFS is generally better. Consider representing all the friendships in the entire world in a graph and trying to find a path of frienships between <code>Ash</code> and <code>Vanessa</code>.</p>
+<p>In depth-first search, we could take a path like <code>Ash -&gt; Brian -&gt; Carleton -&gt; Davis -&gt; Eric -&gt; Farah -&gt; Gayle -&gt; Harry -&gt; Isabella -&gt; John -&gt; Kari...</code> and then find ourselves very far away. We could go through most of the world without realizing that, in fact, <code>Vanessa</code> is <code>Ash</code>’s friend. We will still eventually find the path, but it may take a long time. It also won’t find us the shortest path.</p>
+<p>In breadth-first search, we would stay close to <code>Ash</code> for as long as possible. We might iterate through many of <code>Ash</code>’s friends, but we wouldn’t go to his more distance connections until absolutly necessary. If <code>Vanessa</code> is <code>Ash</code>’s friend, or his friend-of-a-friend, we’ll find this out relatively quickly.</p>
+<h5 id="depth-first-search-dfs">Depth-First Search (DFS)</h5>
+<p>In DFS, we visit a node <code>a</code> and the iterate through each of <code>a</code>’s neighbors. When visiting a node <code>b</code> that is a neighbor of <code>a</code>, we visit all of <code>b</code>’s neighbors before going on to <code>a</code>’s other neighbors. That is, <code>a</code> exhaustively searches <code>b</code>’s branch before any of its other neighbors.</p>
+<p>Note that pre-order and other forms of tree traversal are a form of DFS. The key difference is that when implementing this algorithm for a graph, we must check if the node has been visited. If we don’t we risk getting stuck in an infinite loop.</p>
+<p>The pseudocode below implements DFS:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="fu">search</span> <span class="op">(</span><span class="bu">Node</span> root<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>root <span class="op">==</span> <span class="kw">null</span><span class="op">)</span> <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visit</span><span class="op">(</span>root<span class="op">);</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  root<span class="op">.</span><span class="fu">visited</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">foreach</span> <span class="op">(</span><span class="bu">Node</span> n in root<span class="op">.</span><span class="fu">adjacent</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>n<span class="op">.</span><span class="fu">visited</span> <span class="op">==</span> <span class="kw">false</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">search</span><span class="op">(</span>n<span class="op">)</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h5 id="breadth-first-search-dfs">Breadth-First Search (DFS)</h5>
+<p>BFS is a bit less intuitive. The main tripping point is the false assumption that BFS is recursive. It’s not. Instead, it uses a queue.</p>
+<p>In BFS, node <code>a</code> visits each of <code>a</code>’s neighbors before visiting any of <em>their</em> neighbors. You can think of this as searching level by level out from <code>a</code>. An interative solution involving a queue usually works best.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="fu">search</span><span class="op">(</span><span class="bu">Node</span> root<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">Queue</span> queue <span class="op">=</span> <span class="kw">new</span> <span class="bu">Queue</span><span class="op">();</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  root<span class="op">.</span><span class="fu">marked</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  queue<span class="op">.</span><span class="fu">enqueue</span><span class="op">(</span>root<span class="op">);</span> <span class="co">// Add to the end of queue</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> <span class="op">(!</span>queue<span class="op">.</span><span class="fu">isEmpty</span><span class="op">())</span> <span class="op">{</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Node</span> r  <span class="op">=</span> queue<span class="op">.</span><span class="fu">dequeue</span><span class="op">();</span> <span class="co">// Remove from the front of the queue</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visit</span><span class="op">(</span>r<span class="op">);</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">foreach</span> <span class="op">(</span><span class="bu">Node</span> n in r<span class="op">.</span><span class="fu">adjacent</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>      n<span class="op">.</span><span class="fu">marked</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>      queue<span class="op">.</span><span class="fu">enqueue</span><span class="op">(</span>n<span class="op">);</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Always remember for BFS that you use a queue.</p>
+<h5 id="bidirectional-search">Bidirectional Search</h5>
+<p>Bidirectional search is used to find the shortest path between a source and destination. It operates by essentially running two simultaneous breadth-first searches, one from each node. When their searches collide, we have found a path.</p>
+<p><strong>Breadth-First Search</strong> Single search from <code>s</code> to <code>t</code> that collides after four levels.</p>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/trees_and_graphs/19_bfs_graph.png" /></p>
+<p><strong>Bidirectional Search</strong> Two searches (one from <code>s</code> and one from <code>t</code>) that collide after four levels total (two levels each).</p>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/trees_and_graphs/20_bidirectional_search_graph.png" /></p>
+<p>To see why this is faster, consider a graph where every node has at most <span class="math inline"><em>k</em></span> adjacent nodes and the shortest path from node <span class="math inline"><em>s</em></span> to node <span class="math inline"><em>t</em></span> has length <span class="math inline"><em>d</em></span>.</p>
+<ul>
+<li>In traditional breadth-first search, we would search up to <span class="math inline"><em>k</em></span> nodes in the first “level” of the search. In the second level, we would search up to <span class="math inline"><em>k</em></span> nodes for each of those first <span class="math inline"><em>k</em></span> nodes, so <span class="math inline"><em>k</em><sup>2</sup></span> nodes total (thus far). We would do this <span class="math inline"><em>d</em></span> times, so that’s <span class="math inline"><em>O</em>(<em>k</em><sup><em>d</em></sup>)</span>.</li>
+<li>In bidirectional search, we have two searches that collide after approximately <span class="math inline"><em>d</em>/2</span> levels (the midpoint of the path). The search from <span class="math inline"><em>s</em></span> visits approximately <span class="math inline"><em>k</em><sup><em>d</em>/2</sup></span>, as does the search from <span class="math inline"><em>t</em></span>. That’s approximately <span class="math inline">2 * <em>k</em><sup><em>d</em>/2</sup></span>, or <span class="math inline"><em>O</em>(<em>k</em><sup><em>d</em>/2</sup>)</span>, nodes total.</li>
+</ul>
+<p>This might seem like a minor difference, but it’s not. It’s huge. Recall that <span class="math inline">(<em>k</em><sup><em>d</em>/2</sup>) * (<em>k</em><sup><em>d</em>/2</sup>) = <em>k</em><sup><em>d</em></sup></span>. The bidirectional search is actually faster by a factor of <span class="math inline"><em>k</em><sup><em>d</em>/2</sup></span>.</p>
+<p>Put another way: if our system could only support searching “friend of friend” paths in breadth-first search, it could now likely support “friend of friend of friend of friend” paths. We can support paths that are twice as long.</p>
