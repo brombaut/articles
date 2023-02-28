@@ -8,9 +8,14 @@ ASSETS_IMAGES_DIR = f"{os.path.dirname(os.path.realpath(__file__))}/../assets/im
 GH_IMAGES_PREFIX = "https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images"
 
 def main():
+    print("ipynb_to_md_syncer -- start")
     nb_dirs = get_list_of_notebook_directories()
+    print(f"nb_dirs to handle:")
+    for d in nb_dirs:
+        print(f"\t{d}")
     for nb_dir in nb_dirs:
         copy_notebook(nb_dir)
+    print("ipynb_to_md_syncer -- done")
 
 
 def get_list_of_notebook_directories():

@@ -10,4 +10,4 @@ not this:
 bash command
 ```
 
-jupyter nbconvert ./classify_mnist_hello_ml.ipynb --to markdown
+/Users/BenRombaut/opt/anaconda3/envs/articles/bin/jupyter nbconvert ./classify_mnist_hello_ml.ipynb --to markdown

@@ -1,0 +1,266 @@
+<h1 id="simple-mnist-neural-net-from-scratch">Simple MNIST Neural Net from scratch</h1>
+<p>Here we implemented a simple two-layer neural network and trained it on the MNIST digit recognizer dataset. It’s meant to be an instructional example, through which you can understand the underlying math of neural networks better.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> fetch_openml</span></code></pre></div>
+<pre><code>/Users/BenRombaut/opt/anaconda3/envs/nn_from_scratch/lib/python3.10/site-packages/scipy/__init__.py:146: UserWarning: A NumPy version &gt;=1.16.5 and &lt;1.23.0 is required for this version of SciPy (detected version 1.23.5
+  warnings.warn(f&quot;A NumPy version &gt;={np_minversion} and &lt;{np_maxversion}&quot;</code></pre>
+<p>Get the dataset</p>
+<p>Once you download and save the dataset, you can just reload them using the commented code</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mnist <span class="op">=</span> fetch_openml(<span class="st">&quot;mnist_784&quot;</span>, version<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>mnist[<span class="st">&#39;data&#39;</span>].to_csv(<span class="st">&#39;./mnist_data.csv&#39;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>mnist[<span class="st">&#39;target&#39;</span>].to_csv(<span class="st">&#39;./mnist_target.csv&#39;</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>mnist.keys()</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># mnist = dict()</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># mnist[&#39;data&#39;] = pd.read_csv(&#39;./mnist_data.csv&#39;, index_col=0)</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># mnist[&#39;target&#39;] = pd.read_csv(&#39;./mnist_target.csv&#39;, index_col=0).squeeze(&#39;columns&#39;)</span></span></code></pre></div>
+<p>Preprocess the data so it’s in a format we want (Numpy arrays) and shuffle into dev and train sets</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data, target <span class="op">=</span> mnist[<span class="st">&quot;data&quot;</span>].to_numpy(), mnist[<span class="st">&quot;target&quot;</span>].to_numpy()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> target.astype(np.uint8)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> np.c_[target, data]</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.astype(np.uint8)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>m, n <span class="op">=</span> data.shape</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>np.random.shuffle(data)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>data_dev <span class="op">=</span> data[<span class="dv">0</span>:<span class="dv">1000</span>].T</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>Y_dev <span class="op">=</span> data_dev[<span class="dv">0</span>]</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>X_dev <span class="op">=</span> data_dev[<span class="dv">1</span>:n]</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>X_dev <span class="op">=</span> X_dev <span class="op">/</span> <span class="fl">255.</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>data_train <span class="op">=</span> data[<span class="dv">1000</span>:m].T</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>Y_train <span class="op">=</span> data_train[<span class="dv">0</span>]</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> data_train[<span class="dv">1</span>:n]</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> X_train <span class="op">/</span> <span class="fl">255.</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>_, m_train <span class="op">=</span> X_train.shape</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(Y_train)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X_train[:, <span class="dv">0</span>].shape)</span></code></pre></div>
+<pre><code>[8 1 9 ... 8 3 9]
+(784,)</code></pre>
+<p>Our NN will have a simple two-layer architecture. Input layer <span class="math inline"><em>a</em><sup>[0]</sup></span> will have 784 units corresponding to the 784 pixels in each 28x28 input image. A hidden layer <span class="math inline"><em>a</em><sup>[1]</sup></span> will have 10 units with ReLU activation, and finally our output layer <span class="math inline"><em>a</em><sup>[2]</sup></span> will have 10 units corresponding to the ten digit classes with softmax activation.</p>
+<p><strong>Forward propagation</strong></p>
+<p><span class="math display"><em>Z</em><sup>[1]</sup> = <em>W</em><sup>[1]</sup><em>X</em> + <em>b</em><sup>[1]</sup></span> <span class="math display"><em>A</em><sup>[1]</sup> = <em>g</em><sub>ReLU</sub>(<em>Z</em><sup>[1]</sup>))</span> <span class="math display"><em>Z</em><sup>[2]</sup> = <em>W</em><sup>[2]</sup><em>A</em><sup>[1]</sup> + <em>b</em><sup>[2]</sup></span> <span class="math display"><em>A</em><sup>[2]</sup> = <em>g</em><sub>softmax</sub>(<em>Z</em><sup>[2]</sup>)</span></p>
+<p><strong>Backward propagation</strong></p>
+<p><span class="math display"><em>d</em><em>Z</em><sup>[2]</sup> = <em>A</em><sup>[2]</sup> − <em>Y</em></span> <span class="math display">$$dW^{[2]} = \frac{1}{m} dZ^{[2]} A^{[1]T}$$</span> <span class="math display">$$dB^{[2]} = \frac{1}{m} \Sigma {dZ^{[2]}}$$</span> <span class="math display"><em>d</em><em>Z</em><sup>[1]</sup> = <em>W</em><sup>[2]<em>T</em></sup><em>d</em><em>Z</em><sup>[2]</sup>. * <em>g</em><sup>[1]′</sup>(<em>z</em><sup>[1]</sup>)</span> <span class="math display">$$dW^{[1]} = \frac{1}{m} dZ^{[1]} A^{[0]T}$$</span> <span class="math display">$$dB^{[1]} = \frac{1}{m} \Sigma {dZ^{[1]}}$$</span></p>
+<p><strong>Parameter updates</strong></p>
+<p><span class="math display"><em>W</em><sup>[2]</sup> := <em>W</em><sup>[2]</sup> − <em>α</em><em>d</em><em>W</em><sup>[2]</sup></span> <span class="math display"><em>b</em><sup>[2]</sup> := <em>b</em><sup>[2]</sup> − <em>α</em><em>d</em><em>b</em><sup>[2]</sup></span> <span class="math display"><em>W</em><sup>[1]</sup> := <em>W</em><sup>[1]</sup> − <em>α</em><em>d</em><em>W</em><sup>[1]</sup></span> <span class="math display"><em>b</em><sup>[1]</sup> := <em>b</em><sup>[1]</sup> − <em>α</em><em>d</em><em>b</em><sup>[1]</sup></span></p>
+<p><strong>Vars and shapes</strong></p>
+<p>Forward prop</p>
+<ul>
+<li><span class="math inline"><em>A</em><sup>[0]</sup> = <em>X</em></span>: 784 x m</li>
+<li><span class="math inline"><em>Z</em><sup>[1]</sup> ∼ <em>A</em><sup>[1]</sup></span>: 10 x m</li>
+<li><span class="math inline"><em>W</em><sup>[1]</sup></span>: 10 x 784 (as <span class="math inline"><em>W</em><sup>[1]</sup><em>A</em><sup>[0]</sup> ∼ <em>Z</em><sup>[1]</sup></span>)</li>
+<li><span class="math inline"><em>B</em><sup>[1]</sup></span>: 10 x 1</li>
+<li><span class="math inline"><em>Z</em><sup>[2]</sup> ∼ <em>A</em><sup>[2]</sup></span>: 10 x m</li>
+<li><span class="math inline"><em>W</em><sup>[1]</sup></span>: 10 x 10 (as <span class="math inline"><em>W</em><sup>[2]</sup><em>A</em><sup>[1]</sup> ∼ <em>Z</em><sup>[2]</sup></span>)</li>
+<li><span class="math inline"><em>B</em><sup>[2]</sup></span>: 10 x 1</li>
+</ul>
+<p>Backprop</p>
+<ul>
+<li><span class="math inline"><em>d</em><em>Z</em><sup>[2]</sup></span>: 10 x m (<span class="math inline"> <em>A</em><sup>[2]</sup></span>)</li>
+<li><span class="math inline"><em>d</em><em>W</em><sup>[2]</sup></span>: 10 x 10</li>
+<li><span class="math inline"><em>d</em><em>B</em><sup>[2]</sup></span>: 10 x 1</li>
+<li><span class="math inline"><em>d</em><em>Z</em><sup>[1]</sup></span>: 10 x m (<span class="math inline"> <em>A</em><sup>[1]</sup></span>)</li>
+<li><span class="math inline"><em>d</em><em>W</em><sup>[1]</sup></span>: 10 x 10</li>
+<li><span class="math inline"><em>d</em><em>B</em><sup>[1]</sup></span>: 10 x 1</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> init_params():</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    W1 <span class="op">=</span> np.random.rand(<span class="dv">10</span>, <span class="dv">784</span>) <span class="op">-</span> <span class="fl">0.5</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    b1 <span class="op">=</span> np.random.rand(<span class="dv">10</span>, <span class="dv">1</span>) <span class="op">-</span> <span class="fl">0.5</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    W2 <span class="op">=</span> np.random.rand(<span class="dv">10</span>, <span class="dv">10</span>) <span class="op">-</span> <span class="fl">0.5</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    b2 <span class="op">=</span> np.random.rand(<span class="dv">10</span>, <span class="dv">1</span>) <span class="op">-</span> <span class="fl">0.5</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> W1, b1, W2, b2</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ReLU(Z):</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.maximum(Z, <span class="dv">0</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> softmax(Z):</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    A <span class="op">=</span> np.exp(Z) <span class="op">/</span> <span class="bu">sum</span>(np.exp(Z))</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> A</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> forward_prop(W1, b1, W2, b2, X):</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    Z1 <span class="op">=</span> W1.dot(X) <span class="op">+</span> b1</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    A1 <span class="op">=</span> ReLU(Z1)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    Z2 <span class="op">=</span> W2.dot(A1) <span class="op">+</span> b2</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    A2 <span class="op">=</span> softmax(Z2)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Z1, A1, Z2, A2</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ReLU_deriv(Z):</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If Z &gt; 0, return 1, which is the slope of the line.</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Else return 0 (which is still the slope, but recall that values less than 0 are 0)</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Z <span class="op">&gt;</span> <span class="dv">0</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> one_hot(Y):</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    one_hot_Y <span class="op">=</span> np.zeros((Y.size, Y.<span class="bu">max</span>() <span class="op">+</span> <span class="dv">1</span>))</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    one_hot_Y[np.arange(Y.size), Y] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    one_hot_Y <span class="op">=</span> one_hot_Y.T</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> one_hot_Y</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> back_prop(Z1, A1, Z2, A2, W2, X, Y):</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># m = Y.size</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    one_hot_Y <span class="op">=</span> one_hot(Y)</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>    dZ2 <span class="op">=</span> A2 <span class="op">-</span> one_hot_Y</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>    dW2 <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> m <span class="op">*</span> dZ2.dot(A1.T)</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    db2 <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> m <span class="op">*</span> np.<span class="bu">sum</span>(dZ2)</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>    dZ1 <span class="op">=</span> W2.T.dot(dZ2) <span class="op">*</span> ReLU_deriv(Z1)</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>    dW1 <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> m <span class="op">*</span> dZ1.dot(X.T)</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    db1 <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> m <span class="op">*</span> np.<span class="bu">sum</span>(dZ1)</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> dW1, db1, dW2, db2</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> update_params(W1, b1, W2, b2, dW1, db1, dW2, db2, alpha):</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>    W1 <span class="op">=</span> W1 <span class="op">-</span> alpha <span class="op">*</span> dW1</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>    b1 <span class="op">=</span> b1 <span class="op">-</span> alpha <span class="op">*</span> db1</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>    W2 <span class="op">=</span> W2 <span class="op">-</span> alpha <span class="op">*</span> dW2</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>    b2 <span class="op">=</span> b2 <span class="op">-</span> alpha <span class="op">*</span> db2</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> W1, b1, W2, b2</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_predictions(A2):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.argmax(A2, <span class="dv">0</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_accuracy(predictions, Y):</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(predictions, Y)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.<span class="bu">sum</span>(predictions <span class="op">==</span> Y) <span class="op">/</span> Y.size</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gradient_descnet(X, Y, iterations, alpha):</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    W1, b1, W2, b2 <span class="op">=</span> init_params()</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(iterations):</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        Z1, A1, Z2, A2 <span class="op">=</span> forward_prop(W1, b1, W2, b2, X)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        dW1, db1, dW2, db2 <span class="op">=</span> back_prop(Z1, A1, Z2, A2, W2, X, Y)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        W1, b1, W2, b2 <span class="op">=</span> update_params(W1, b1, W2, b2, dW1, db1, dW2, db2, alpha)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i <span class="op">%</span> <span class="dv">50</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f&quot;Iteration: </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>            predictions <span class="op">=</span> get_predictions(A2)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f&quot;Accuracy: </span><span class="sc">{</span>get_accuracy(predictions, Y)<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> W1, b1, W2, b2</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>W1, b1, W2, b2 <span class="op">=</span> gradient_descnet(X_train, Y_train, <span class="dv">500</span>, <span class="fl">0.1</span>)</span></code></pre></div>
+<pre><code>Iteration: 0
+[5 1 8 ... 1 1 8] [8 1 9 ... 8 3 9]
+Accuracy: 0.10685507246376812
+Iteration: 50
+[4 1 9 ... 1 3 7] [8 1 9 ... 8 3 9]
+Accuracy: 0.4947536231884058
+Iteration: 100
+[4 1 9 ... 1 3 9] [8 1 9 ... 8 3 9]
+Accuracy: 0.6599855072463768
+Iteration: 150
+[8 1 9 ... 1 3 9] [8 1 9 ... 8 3 9]
+Accuracy: 0.7343188405797102
+Iteration: 200
+[8 1 9 ... 3 3 9] [8 1 9 ... 8 3 9]
+Accuracy: 0.7734927536231884
+Iteration: 250
+[8 3 9 ... 8 3 9] [8 1 9 ... 8 3 9]
+Accuracy: 0.7977826086956522
+Iteration: 300
+[8 3 9 ... 8 3 9] [8 1 9 ... 8 3 9]
+Accuracy: 0.8144492753623188
+Iteration: 350
+[8 8 9 ... 8 3 9] [8 1 9 ... 8 3 9]
+Accuracy: 0.8259565217391305
+Iteration: 400
+[8 8 9 ... 8 3 9] [8 1 9 ... 8 3 9]
+Accuracy: 0.8347536231884058
+Iteration: 450
+[8 1 9 ... 8 3 9] [8 1 9 ... 8 3 9]
+Accuracy: 0.8427101449275363</code></pre>
+<p>~85% accuracy on training set</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_predictions(X, W1, b1, W2, b2):</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    _, _, _, A2 <span class="op">=</span> forward_prop(W1, b1, W2, b2, X)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    predictions <span class="op">=</span> get_predictions(A2)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> predictions</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test_prediction(index, W1, b1, W2, b2):</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    current_image <span class="op">=</span> X_train[:, index, <span class="va">None</span>]</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    prediction <span class="op">=</span> make_predictions(X_train[:, index, <span class="va">None</span>], W1, b1, W2, b2)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    label <span class="op">=</span> Y_train[index]</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Prediction: &quot;</span>, prediction)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Label: &quot;</span>, label)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    current_image <span class="op">=</span> current_image.reshape((<span class="dv">28</span>, <span class="dv">28</span>)) <span class="op">*</span> <span class="dv">255</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    plt.gray()</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    plt.imshow(current_image, interpolation<span class="op">=</span><span class="st">&#39;nearest&#39;</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div>
+<p>Let’s look at a couple of examples:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>test_prediction(<span class="dv">0</span>, W1, b1, W2, b2)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>test_prediction(<span class="dv">1</span>, W1, b1, W2, b2)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>test_prediction(<span class="dv">2</span>, W1, b1, W2, b2)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>test_prediction(<span class="dv">3</span>, W1, b1, W2, b2)</span></code></pre></div>
+<pre><code>Prediction:  [8]
+Label:  8</code></pre>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/nn_from_scratch/nn_from_scratch_13_1.png" /></p>
+<pre><code>Prediction:  [1]
+Label:  1</code></pre>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/nn_from_scratch/nn_from_scratch_13_3.png" /></p>
+<pre><code>Prediction:  [9]
+Label:  9</code></pre>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/nn_from_scratch/nn_from_scratch_13_5.png" /></p>
+<pre><code>Prediction:  [1]
+Label:  1</code></pre>
+<p><img src="https://raw.githubusercontent.com/brombaut/articles-authored/main/assets/images/nn_from_scratch/nn_from_scratch_13_7.png" /></p>
+<p>Finally, let’s find the accuracy on the dev set:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>dev_predictions <span class="op">=</span> make_predictions(X_dev, W1, b1, W2, b2)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>get_accuracy(dev_predictions, Y_dev)</span></code></pre></div>
+<pre><code>[7 3 1 4 8 6 6 2 4 4 8 7 9 4 5 2 8 1 2 1 9 3 5 2 1 1 0 7 0 9 9 8 8 2 1 5 4
+ 3 1 7 9 2 6 7 4 6 1 6 6 3 0 7 5 0 5 7 1 8 8 5 8 3 6 5 5 7 3 6 6 2 1 5 5 4
+ 6 9 1 8 1 3 7 6 5 9 9 6 1 9 0 4 7 4 9 1 3 5 8 8 0 7 5 7 1 9 4 5 7 6 1 8 4
+ 5 0 3 1 6 1 6 3 4 4 0 7 6 1 1 3 5 8 7 3 6 2 0 0 6 1 8 4 3 4 4 4 2 0 0 0 8
+ 5 4 6 0 6 5 7 7 4 4 3 4 1 3 4 7 9 3 1 7 5 7 5 4 6 1 6 9 7 6 2 2 2 8 1 3 3
+ 6 3 7 5 6 7 8 2 7 9 5 3 2 2 5 6 9 9 6 1 2 8 8 4 0 0 5 9 8 9 1 3 1 1 5 0 2
+ 7 2 3 8 6 9 2 1 0 6 0 0 6 0 2 8 1 1 4 7 4 4 9 1 4 2 0 4 4 1 0 3 8 3 5 0 5
+ 4 1 3 7 9 5 1 3 7 5 0 2 3 5 6 5 7 9 5 3 8 5 8 8 8 9 3 6 3 4 4 4 4 6 5 6 4
+ 9 1 5 1 1 1 6 9 0 4 4 1 3 6 5 3 1 1 6 0 4 4 1 4 0 1 9 6 3 6 9 4 9 9 3 3 3
+ 7 4 9 1 7 8 9 5 5 1 8 1 8 1 3 4 1 2 7 5 9 0 3 8 5 0 1 1 1 5 0 0 1 0 2 5 0
+ 4 4 1 7 8 4 5 7 5 3 3 3 2 5 6 4 3 8 0 9 3 6 8 6 1 3 6 9 0 8 3 8 3 2 0 2 8
+ 1 0 2 8 8 1 0 0 3 7 1 3 8 1 4 6 4 1 4 0 2 3 7 1 1 8 7 5 8 1 8 3 4 6 5 0 4
+ 9 0 0 6 1 3 2 5 3 9 7 9 5 9 7 8 5 9 5 3 9 8 6 1 2 9 8 9 5 5 2 9 1 7 2 1 4
+ 3 9 7 1 0 9 3 2 0 7 5 4 1 8 8 9 7 7 0 9 6 2 3 0 1 1 9 0 1 6 8 8 2 6 1 3 2
+ 2 7 0 2 5 3 3 2 1 7 0 5 3 0 0 9 8 8 5 7 2 2 9 9 1 6 0 5 7 2 8 2 0 5 8 0 8
+ 8 3 4 1 9 2 1 9 2 0 5 9 1 0 2 5 6 0 3 1 5 6 2 7 1 3 8 3 1 8 5 6 3 8 4 6 9
+ 7 4 1 0 0 8 4 1 1 1 0 3 0 5 7 8 4 2 5 2 7 5 0 9 5 1 7 8 7 1 6 0 9 4 7 3 6
+ 7 9 4 6 5 2 7 9 6 4 4 8 1 6 3 2 8 9 4 4 3 7 5 3 3 9 1 8 7 1 6 8 6 6 5 7 9
+ 6 6 6 4 5 6 5 7 5 2 0 4 7 1 2 6 5 2 3 0 1 0 4 1 2 8 7 1 3 1 1 3 8 3 6 0 5
+ 0 5 7 2 0 0 7 8 7 1 3 4 4 4 4 3 7 5 9 2 2 9 6 3 4 4 0 8 5 3 1 2 6 7 1 8 5
+ 0 2 7 4 4 5 7 5 0 6 7 7 4 2 8 6 0 6 1 0 9 6 3 0 5 8 2 5 4 0 9 5 4 4 8 3 0
+ 0 9 7 9 1 9 0 1 4 9 9 3 4 4 6 1 4 5 6 2 8 9 4 2 7 0 1 3 9 2 2 0 2 6 9 9 9
+ 6 4 2 1 5 9 2 5 3 9 2 1 1 9 9 2 8 5 6 3 5 5 5 4 2 4 6 6 6 8 8 4 2 3 8 5 9
+ 3 9 7 6 6 8 6 4 2 1 1 7 4 0 7 9 8 2 1 3 4 7 1 3 7 2 4 0 7 8 7 8 2 0 1 5 9
+ 9 6 4 6 1 9 5 6 4 0 8 7 2 4 3 3 6 9 0 1 2 4 2 1 5 0 0 4 9 0 0 7 2 3 8 6 2
+ 1 1 6 9 3 9 5 2 4 0 2 3 0 4 4 5 3 2 1 0 1 1 0 9 6 3 8 2 3 6 7 4 5 3 6 0 6
+ 8 1 5 0 1 8 3 2 1 3 4 9 2 1 0 3 8 6 5 6 2 9 0 2 1 6 0 5 1 8 7 2 7 1 2 4 3
+ 3] [9 3 1 9 8 6 6 2 4 4 5 7 7 4 5 6 4 1 2 1 9 3 5 2 8 1 0 7 0 5 4 8 8 2 1 5 4
+ 3 1 7 4 2 6 4 4 6 1 6 6 3 0 7 5 0 5 9 1 8 8 5 8 3 5 5 5 7 3 6 6 2 1 5 8 4
+ 6 7 1 8 1 3 7 6 5 9 9 6 1 9 0 6 5 4 9 1 3 5 8 8 0 7 5 7 6 9 4 8 7 5 5 8 4
+ 2 0 3 1 6 1 6 3 4 4 0 9 6 1 1 3 0 8 7 3 6 2 0 0 6 1 8 4 3 2 4 6 2 0 0 0 8
+ 5 4 6 6 6 5 7 7 4 4 3 4 3 3 4 7 9 3 1 7 7 7 5 9 6 1 6 4 7 6 2 2 2 1 1 3 3
+ 6 3 7 5 6 7 8 2 9 9 5 3 2 2 5 6 4 7 6 1 8 9 8 9 0 0 5 4 4 9 1 3 1 1 5 0 2
+ 7 2 3 8 6 9 3 1 0 6 0 0 6 0 2 8 1 1 9 7 4 4 9 1 4 3 0 4 9 1 2 5 8 3 5 0 5
+ 4 1 3 7 9 5 1 3 7 5 6 2 5 5 6 8 7 9 8 3 8 5 8 8 8 4 3 5 3 4 4 4 9 6 5 6 4
+ 9 1 5 1 1 1 6 9 0 4 4 1 3 6 5 3 1 1 6 0 4 4 1 4 0 1 9 6 3 6 0 4 9 9 3 5 2
+ 7 4 9 1 7 8 9 5 3 1 1 1 8 1 3 2 1 2 7 5 9 0 3 8 5 0 1 1 1 5 0 0 1 0 2 5 0
+ 4 4 1 7 2 4 5 7 0 3 3 3 2 3 6 4 0 8 0 4 3 6 8 6 1 3 6 9 0 8 3 1 3 0 0 2 8
+ 1 0 2 8 8 1 0 0 3 7 8 3 8 2 4 5 4 1 4 0 2 3 7 1 1 9 7 0 1 1 8 3 4 6 5 0 4
+ 9 0 0 6 1 2 2 5 3 7 7 2 5 7 7 9 5 9 5 5 9 5 6 1 2 9 8 9 5 5 2 5 1 9 6 1 4
+ 9 2 9 1 0 8 3 2 8 7 5 4 1 8 8 9 7 7 0 9 6 2 5 0 1 1 8 0 1 6 8 4 2 6 1 3 2
+ 2 7 0 2 5 3 3 2 1 0 0 5 3 0 0 9 8 2 4 7 2 4 9 9 1 6 0 5 7 2 8 2 0 0 8 0 8
+ 8 8 4 8 9 2 1 4 2 0 5 9 1 0 2 5 6 0 3 1 3 6 2 9 1 3 3 3 1 8 5 6 3 8 4 5 7
+ 7 4 1 0 0 8 4 1 1 1 0 3 0 5 2 8 4 2 5 2 7 5 0 9 5 1 7 8 7 7 6 0 9 4 7 3 6
+ 7 2 4 6 5 2 7 9 6 4 4 8 1 6 7 2 8 9 5 4 3 9 5 3 3 9 1 8 7 2 6 8 6 6 5 7 9
+ 6 6 6 4 5 6 5 7 3 2 0 4 7 1 2 6 5 2 3 0 1 0 4 1 3 8 7 1 9 1 1 3 8 3 6 0 5
+ 0 8 7 2 0 0 7 8 7 1 3 4 4 9 4 3 7 5 9 2 3 9 6 3 4 4 0 2 5 3 1 2 6 9 1 9 5
+ 0 2 7 4 4 3 7 5 0 6 7 7 4 2 8 6 0 6 1 0 9 6 3 9 5 3 2 5 4 0 9 8 4 4 8 3 0
+ 0 4 7 8 1 8 5 1 9 9 9 3 4 4 2 1 4 8 6 3 8 9 4 2 7 0 1 3 9 2 2 0 2 6 9 9 9
+ 0 4 2 1 5 3 2 5 3 9 2 1 7 9 4 2 8 5 6 3 5 5 7 4 2 9 5 6 6 8 8 9 2 3 8 5 4
+ 3 4 7 6 6 8 6 4 2 1 1 9 4 0 9 9 8 3 1 3 9 7 8 3 7 2 4 0 7 8 7 8 2 0 1 5 9
+ 9 6 4 6 1 9 5 5 4 0 8 7 2 4 3 2 6 5 6 1 2 4 2 1 5 0 0 9 9 2 0 7 2 2 8 6 2
+ 1 1 6 7 8 9 4 8 4 0 2 3 0 4 9 5 3 2 1 0 1 1 0 9 6 3 8 2 3 6 7 4 5 3 6 0 6
+ 5 1 5 0 1 8 3 2 1 3 4 9 2 1 0 3 8 6 3 6 3 9 0 2 1 8 0 5 1 8 9 3 5 1 2 7 5
+ 3]
+
+
+
+
+
+0.833</code></pre>
+<p>Still 83% accuracy, so our model generalized from the training data pretty well.</p>
